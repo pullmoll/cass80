@@ -50,5 +50,3 @@ public:
 private:
     Ui::cass80InfoDlg *ui;
 };
-
-#endif // CASS80INFODLG_H
