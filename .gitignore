@@ -1,0 +1,13 @@
+# Qmake generated source
+moc_*
+ui_*
+*.user
+*.user.*
+
+# cgenie1.fnt Fontforge files
+cgenie1.cfg
+cgenie1.fnt
+cgenie1.sfd
+
+# BDF font generator
+bdfgen

@@ -1,0 +1,582 @@
+<?xml version="1.0" standalone="yes"?>
+<def system="cgenie">
+	<entry addr="0" type="code">
+		<symbol>COLD</symbol>
+	</entry>
+	<entry addr="5" arg0="addr">
+	</entry>
+	<entry addr="8">
+		<symbol>SYNTAX</symbol>
+	</entry>
+	<entry addr="10">
+		<symbol>SKIPSPC</symbol>
+	</entry>
+	<entry addr="50" type="defb">
+	</entry>
+        <entry addr="60">
+		<symbol>DELAY</symbol>
+		<comment>Delay execution by BC * 11.6us</comment>
+	</entry>
+	<entry addr="7b">
+		<comment>LOWMEM with FGR enabled</comment>
+	</entry>
+	<entry addr="7e">
+	</entry>
+	<entry addr="81">
+		<comment>Test MODSEL key (disable FGR buffer)</comment>
+	</entry>
+	<entry addr="85">
+	</entry>
+	<entry addr="118" type="text">
+		<symbol>aMEMSIZE</symbol>
+	</entry>
+	<entry addr="121" type="text">
+		<symbol>aSIGNON</symbol>
+	</entry>
+	<entry addr="12f" type="defb" maxelem="3">
+	</entry>
+	<entry addr="132" type="code">
+	</entry>
+	<entry addr="135" type="code">
+		<symbol>SET</symbol>
+	</entry>
+	<entry addr="138" type="code">
+		<symbol>RESET</symbol>
+	</entry>
+	<entry addr="176">
+	</entry>
+	<entry addr="195" type="defs">
+	</entry>
+	<entry addr="19d">
+	</entry>
+	<entry addr="1c9" type="code">
+		<symbol>CLS</symbol>
+	</entry>
+	<entry addr="1d3" type="code">
+		<symbol>RANDOM</symbol>
+	</entry>
+	<entry addr="1e4">
+		<symbol>TOGSTAR</symbol>
+		<comment>Toggle the display at pos 39,0</comment>
+	</entry>
+	<entry addr="1e7">
+		<comment>intended is 20h&lt;-&gt;2ah, " "&lt;-&gt;"*"</comment>
+	</entry>
+	<entry addr="1ed">
+		<symbol>GETBYTE</symbol>
+	</entry>
+	<entry addr="1f2">
+		<symbol>GETBYTE1</symbol>
+	</entry>
+	<entry addr="1fa">
+		<symbol>GETBIT</symbol>
+		<comment>Read a bit from cassette</comment>
+	</entry>
+	<entry addr="1ff">
+		<comment>current port status</comment>
+	</entry>
+	<entry addr="200">
+		<symbol>GETBIT1</symbol>
+	</entry>
+	<entry addr="206">
+		<comment>wait for toggle</comment>
+	</entry>
+	<entry addr="20f">
+		<symbol>BITWAIT</symbol>
+	</entry>
+	<entry addr="24f">
+	</entry>
+	<entry addr="27f" type="code">
+	</entry>
+	<entry addr="283" type="defs">
+	</entry>
+	<entry addr="2ac">
+	</entry>
+	<entry addr="2b2" type="code">
+		<symbol>SYSTEM</symbol>
+	</entry>
+	<entry addr="338" type="defs">
+	</entry>
+	<entry addr="33a">
+	</entry>
+	<entry addr="6cb" type="defs">
+	</entry>
+	<entry addr="6d2">
+		<symbol>INITRAM</symbol>
+	</entry>
+	<entry addr="809" type="code">
+		<symbol>LOG</symbol>
+	</entry>
+	<entry addr="977" type="code">
+		<symbol>ABS</symbol>
+	</entry>
+	<entry addr="98a" type="code">
+		<symbol>SGN</symbol>
+	</entry>
+	<entry addr="9fc" arg0="dec">
+	</entry>
+	<entry addr="a7f" type="code">
+		<symbol>CINT</symbol>
+	</entry>
+	<entry addr="ab1" type="code">
+		<symbol>CSNG</symbol>
+	</entry>
+	<entry addr="adb" type="code">
+		<symbol>CDBL</symbol>
+	</entry>
+	<entry addr="b26" type="code">
+		<symbol>FIX</symbol>
+	</entry>
+	<entry addr="b37" type="code">
+		<symbol>INT</symbol>
+	</entry>
+	<entry addr="13e7" type="code">
+		<symbol>SQR</symbol>
+	</entry>
+	<entry addr="1439" type="code">
+		<symbol>EXP</symbol>
+	</entry>
+	<entry addr="14c9" type="code">
+		<symbol>RND</symbol>
+	</entry>
+	<entry addr="1541" type="code">
+		<symbol>COS</symbol>
+	</entry>
+	<entry addr="1547" type="code">
+		<symbol>SIN</symbol>
+	</entry>
+	<entry addr="15a8" type="code">
+		<symbol>TAN</symbol>
+	</entry>
+	<entry addr="15bd" type="code">
+		<symbol>ATN</symbol>
+	</entry>
+	<entry addr="1608" type="defw" arg0="addr" maxelem="1">
+		<symbol>BASFUNC</symbol>
+	</entry>
+	<entry addr="1650" type="token" param="1822">
+		<symbol>TOKSTMT</symbol>
+	</entry>
+	<entry addr="1752" type="token">
+	</entry>
+	<entry addr="17a5" type="token" param="1608">
+		<symbol>TOKFUNC</symbol>
+	</entry>
+	<entry addr="1822" type="defw" arg0="addr">
+		<symbol>BASSTMT</symbol>
+	</entry>
+	<entry addr="189a" type="defb">
+		<symbol>PRECED</symbol>
+	</entry>
+	<entry addr="18a1" type="defw">
+		<symbol>ARIANY</symbol>
+	</entry>
+	<entry addr="18ab" type="defw">
+		<symbol>ARIDBL</symbol>
+	</entry>
+	<entry addr="18b5" type="defw">
+		<symbol>ARISNG</symbol>
+	</entry>
+	<entry addr="18bf" type="defw">
+		<symbol>ARIINT</symbol>
+	</entry>
+	<entry addr="18c9">
+		<symbol>ERR2CH</symbol>
+	</entry>
+	<entry addr="18ca" type="text">
+	</entry>
+	<entry addr="18f7">
+		<symbol>INITRAM2</symbol>
+	</entry>
+	<entry addr="191c" type="text">
+	</entry>
+	<entry addr="191e" type="text">
+		<symbol>aError</symbol>
+	</entry>
+	<entry addr="1924" type="text">
+		<symbol>a_in</symbol>
+	</entry>
+	<entry addr="1929" type="text">
+		<symbol>aREADY</symbol>
+	</entry>
+	<entry addr="1930" type="text">
+		<symbol>aBreak</symbol>
+	</entry>
+	<entry addr="1936">
+	</entry>
+	<entry addr="1997" type="code">
+		<symbol>CPOINT</symbol>
+	</entry>
+	<entry addr="1999" type="defb">
+	</entry>
+	<entry addr="199a" type="code">
+		<symbol>DZERR</symbol>
+	</entry>
+	<entry addr="199c" type="defb">
+	</entry>
+	<entry addr="199d" type="code">
+		<symbol>NFERR</symbol>
+	</entry>
+	<entry addr="199f" type="defb">
+	</entry>
+	<entry addr="19a0" type="code">
+		<symbol>UEERR</symbol>
+	</entry>
+	<entry addr="19a2">
+		<symbol>XXERR</symbol>
+	</entry>
+	<entry addr="1b49" type="code">
+		<symbol>NEW</symbol>
+	</entry>
+	<entry addr="1c90">
+		<symbol>CPHLDE</symbol>
+	</entry>
+	<entry addr="1c96">
+		<symbol>SYNTAX</symbol>
+	</entry>
+	<entry addr="1ca1" type="code">
+		<symbol>FOR</symbol>
+	</entry>
+	<entry addr="1d78">
+		<symbol>SKIPSPC</symbol>
+	</entry>
+	<entry addr="1d91" type="code">
+		<symbol>RESTORE</symbol>
+	</entry>
+	<entry addr="1da9" type="code">
+		<symbol>STOP</symbol>
+	</entry>
+	<entry addr="1dae" type="code">
+		<symbol>END</symbol>
+	</entry>
+	<entry addr="1de4" type="code">
+		<symbol>CONT</symbol>
+	</entry>
+	<entry addr="1df7" type="code">
+		<symbol>TRON</symbol>
+	</entry>
+	<entry addr="1df8" type="code">
+		<symbol>TROFF</symbol>
+	</entry>
+	<entry addr="1e00" type="code">
+		<symbol>DEFSTR</symbol>
+	</entry>
+	<entry addr="1e03" type="code">
+		<symbol>DEFINT</symbol>
+	</entry>
+	<entry addr="1e06" type="code">
+		<symbol>DEFSNG</symbol>
+	</entry>
+	<entry addr="1e09" type="code">
+		<symbol>DEFDBL</symbol>
+	</entry>
+	<entry addr="1e7a" type="code">
+		<symbol>CLEAR</symbol>
+	</entry>
+	<entry addr="1ea3" type="code">
+		<symbol>RUN</symbol>
+	</entry>
+	<entry addr="1eb1" type="code">
+		<symbol>GOSUB</symbol>
+	</entry>
+	<entry addr="1ec2" type="code">
+		<symbol>GOTO</symbol>
+	</entry>
+	<entry addr="1ede" type="code">
+		<symbol>RETURN</symbol>
+	</entry>
+	<entry addr="1f05" type="code">
+		<symbol>DATA</symbol>
+	</entry>
+	<entry addr="1f07" type="code">
+		<symbol>ELSE</symbol>
+	</entry>
+	<entry addr="1f21" type="code">
+		<symbol>LET</symbol>
+	</entry>
+	<entry addr="1f6c" type="code">
+		<symbol>ON</symbol>
+	</entry>
+	<entry addr="1faf" type="code">
+		<symbol>RESUME</symbol>
+	</entry>
+	<entry addr="1ff4" type="code">
+		<symbol>ERROR</symbol>
+	</entry>
+	<entry addr="2008" type="code">
+		<symbol>AUTO</symbol>
+	</entry>
+	<entry addr="2039" type="code">
+		<symbol>IF</symbol>
+	</entry>
+	<entry addr="2067" type="code">
+		<symbol>LPRINT</symbol>
+	</entry>
+	<entry addr="206f" type="code">
+		<symbol>PRINT</symbol>
+	</entry>
+	<entry addr="219a" type="code">
+		<symbol>INPUT</symbol>
+	</entry>
+	<entry addr="21ef" type="code">
+		<symbol>READ</symbol>
+	</entry>
+	<entry addr="22b6" type="code">
+		<symbol>NEXT</symbol>
+	</entry>
+	<entry addr="25d9">
+		<symbol>TYPECK</symbol>
+	</entry>
+	<entry addr="2608" type="code">
+		<symbol>DIM</symbol>
+	</entry>
+	<entry addr="27d4" type="code">
+		<symbol>FRE</symbol>
+	</entry>
+	<entry addr="27f5" type="code">
+		<symbol>POS</symbol>
+	</entry>
+	<entry addr="2836" type="code">
+		<symbol>STR$</symbol>
+	</entry>
+	<entry addr="2a03" type="code">
+		<symbol>LEN</symbol>
+	</entry>
+	<entry addr="2a0f" type="code">
+		<symbol>ASC</symbol>
+	</entry>
+	<entry addr="2a1f" type="code">
+		<symbol>CHR$</symbol>
+	</entry>
+	<entry addr="2a61" type="code">
+		<symbol>LEFT$</symbol>
+	</entry>
+	<entry addr="2a91" type="code">
+		<symbol>RIGHT$</symbol>
+	</entry>
+	<entry addr="2a9a" type="code">
+		<symbol>MID$</symbol>
+	</entry>
+	<entry addr="2ac5" type="code">
+		<symbol>VAL</symbol>
+	</entry>
+	<entry addr="2aef" type="code">
+		<symbol>INP</symbol>
+	</entry>
+	<entry addr="2afb" type="code">
+		<symbol>OUT</symbol>
+	</entry>
+	<entry addr="2b29" type="code">
+		<symbol>LLIST</symbol>
+	</entry>
+	<entry addr="2b2e" type="code">
+		<symbol>LIST</symbol>
+	</entry>
+	<entry addr="2bc6" type="code">
+		<symbol>DELETE</symbol>
+	</entry>
+	<entry addr="2bf5" type="code">
+		<symbol>CSAVE</symbol>
+	</entry>
+	<entry addr="2c1f" type="code">
+		<symbol>CLOAD</symbol>
+	</entry>
+	<entry addr="2caa" type="code">
+		<symbol>PEEK</symbol>
+	</entry>
+	<entry addr="2cb1" type="code">
+		<symbol>POKE</symbol>
+	</entry>
+	<entry addr="2e60" type="code">
+		<symbol>EDIT</symbol>
+	</entry>
+	<entry addr="31b6" type="code">
+		<symbol>RENUM</symbol>
+	</entry>
+	<entry addr="3466" type="code">
+		<symbol>FKEY</symbol>
+	</entry>
+	<entry addr="3549" type="code">
+		<symbol>VERIFY</symbol>
+	</entry>
+	<entry addr="355a" type="code">
+		<symbol>CALL</symbol>
+	</entry>
+	<entry addr="3652" type="code">
+		<symbol>JOY</symbol>
+	</entry>
+	<entry addr="36d3" type="code">
+		<symbol>SWAP</symbol>
+	</entry>
+	<entry addr="3741" type="defs">
+	</entry>
+	<entry addr="37cb" type="code">
+	</entry>
+	<entry addr="38a9" type="code">
+		<symbol>FGR</symbol>
+	</entry>
+	<entry addr="38b0" type="code">
+		<symbol>LGR</symbol>
+	</entry>
+	<entry addr="38bb" type="code">
+		<symbol>NBGRD</symbol>
+	</entry>
+	<entry addr="38c9" type="code">
+		<symbol>COLOUR</symbol>
+	</entry>
+	<entry addr="38d5" type="code">
+		<symbol>FCOLOU</symbol>
+	</entry>
+	<entry addr="3930" type="token" param="39db">
+	</entry>
+	<entry addr="39ad">
+	</entry>
+	<entry addr="39db" type="defw" arg0="addr">
+	</entry>
+	<entry addr="3a0f">
+	</entry>
+	<entry addr="3af1" type="code">
+		<symbol>SCALE</symbol>
+	</entry>
+	<entry addr="3af8" type="code">
+		<symbol>CIRCLE</symbol>
+	</entry>
+	<entry addr="3bbe" type="code">
+		<symbol>NPLOT</symbol>
+	</entry>
+	<entry addr="3bc1" type="code">
+		<symbol>PLOT</symbol>
+	</entry>
+	<entry addr="3c83" type="code">
+		<symbol>FCLS</symbol>
+	</entry>
+	<entry addr="3cd3" type="code">
+		<symbol>XSHAPE</symbol>
+	</entry>
+	<entry addr="3cd8" type="code">
+		<symbol>NSHAPE</symbol>
+	</entry>
+	<entry addr="3cdd" type="code">
+		<symbol>SHAPE</symbol>
+	</entry>
+	<entry addr="3d61" type="code">
+		<symbol>PLAY</symbol>
+	</entry>
+	<entry addr="3e38" type="code">
+		<symbol>PAINT</symbol>
+	</entry>
+	<entry addr="3f95" type="code">
+		<symbol>SOUND</symbol>
+	</entry>
+	<entry addr="3fa8" type="code">
+		<symbol>CHAR</symbol>
+	</entry>
+	<entry addr="3fe4" type="code">
+		<symbol>BGRD</symbol>
+	</entry>
+	<entry addr="4000">
+		<symbol>VRST08</symbol>
+	</entry>
+	<entry addr="4003">
+		<symbol>VRST10</symbol>
+	</entry>
+	<entry addr="4006">
+		<symbol>VRST18</symbol>
+	</entry>
+	<entry addr="4009">
+		<symbol>VRST20</symbol>
+	</entry>
+	<entry addr="400c">
+		<symbol>VRST28</symbol>
+	</entry>
+	<entry addr="400f">
+		<symbol>VRST30</symbol>
+	</entry>
+	<entry addr="4023">
+		<symbol>COLOUR</symbol>
+	</entry>
+	<entry addr="40ab">
+		<symbol>RNDRREG</symbol>
+	</entry>
+	<entry addr="4152" type="code">
+		<symbol>CVI</symbol>
+	</entry>
+	<entry addr="4158" type="code">
+		<symbol>CVS</symbol>
+	</entry>
+	<entry addr="415b" type="code">
+		<symbol>DEF</symbol>
+	</entry>
+	<entry addr="415e" type="code">
+		<symbol>CVD</symbol>
+	</entry>
+	<entry addr="4161" type="code">
+		<symbol>EOF</symbol>
+	</entry>
+	<entry addr="4164" type="code">
+		<symbol>LOC</symbol>
+	</entry>
+	<entry addr="4167" type="code">
+		<symbol>LOF</symbol>
+	</entry>
+	<entry addr="416a" type="code">
+		<symbol>MKI$</symbol>
+	</entry>
+	<entry addr="416d" type="code">
+		<symbol>MKS$</symbol>
+	</entry>
+	<entry addr="4170" type="code">
+		<symbol>MKD$</symbol>
+	</entry>
+	<entry addr="4173" type="code">
+		<symbol>CMD</symbol>
+	</entry>
+	<entry addr="4179" type="code">
+		<symbol>OPEN</symbol>
+	</entry>
+	<entry addr="417c" type="code">
+		<symbol>FIELD</symbol>
+	</entry>
+	<entry addr="417f" type="code">
+		<symbol>GET</symbol>
+	</entry>
+	<entry addr="4182" type="code">
+		<symbol>PUT</symbol>
+	</entry>
+	<entry addr="4185" type="code">
+		<symbol>CLOSE</symbol>
+	</entry>
+	<entry addr="4188" type="code">
+		<symbol>LOAD</symbol>
+	</entry>
+	<entry addr="418b" type="code">
+		<symbol>MERGE</symbol>
+	</entry>
+	<entry addr="418e" type="code">
+		<symbol>NAME</symbol>
+	</entry>
+	<entry addr="4191" type="code">
+		<symbol>KILL</symbol>
+	</entry>
+	<entry addr="4197" type="code">
+		<symbol>LSET</symbol>
+	</entry>
+	<entry addr="419a" type="code">
+		<symbol>RSET</symbol>
+	</entry>
+	<entry addr="41a0" type="code">
+		<symbol>SAVE</symbol>
+	</entry>
+	<entry addr="41a3" type="code">
+		<symbol>LINE</symbol>
+	</entry>
+	<entry addr="4312">
+		<symbol>BITDELAY</symbol>
+	</entry>
+	<entry addr="f801" type="defb" maxelem="1">
+		<symbol>KEYROW0</symbol>
+	</entry>
+	<entry addr="f802" type="defb" maxelem="1">
+		<symbol>KEYROW1</symbol>
+	</entry>
+</def>

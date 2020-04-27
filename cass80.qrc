@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cgenie1.fnt</file>
+        <file>cgenie1.ttf</file>
+        <file>cgenie-dasm.xml</file>
+        <file>cgenie.rom</file>
+    </qresource>
+</RCC>
