@@ -58,4 +58,8 @@ RESOURCES += \
     cass80.qrc
 
 DISTFILES += \
-    cgenie.rom
+    cgenie.rom \
+    image/application-exit.png \
+    image/document-open.png \
+    image/document-save-as.png \
+    image/document-save.png

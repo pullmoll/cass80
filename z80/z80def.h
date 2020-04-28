@@ -53,6 +53,9 @@ public:
     z80Def(const z80Def& other);
 
     bool isValid() const;
+    bool isAt(quint32 addr) const;
+    bool hasSymbol() const;
+    bool hasComment() const;
 
     QString symbol() const;
     QString comment() const;
@@ -77,6 +80,7 @@ public:
 private:
     QString	m_symbol;
     QString	m_comment;
+    quint32	m_addr0;
     quint32	m_addr;
     EntryType	m_type;
     QString	m_arg0;

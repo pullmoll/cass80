@@ -57,6 +57,11 @@ public:
 	zDAA,
 	zDB,
 	zDEC,
+	zDEFB,
+	zDEFW,
+	zDEFD,
+	zDEFM,
+	zDEFS,
 	zDI,
 	zDJNZ,
 	zEI,
@@ -119,8 +124,8 @@ public:
     Mnemonics mnemonic() const;
     const char* parameters() const;
 
-    static quint32 flags(Mnemonics m);
     static QLatin1String string(Mnemonics m);
+    static quint32 flags(Mnemonics m);
     static z80Token mnemonic_xx_cb(uchar op);
     static z80Token mnemonic_cb(uchar op);
     static z80Token mnemonic_ed(uchar op);

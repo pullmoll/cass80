@@ -37,18 +37,20 @@
 #include "z80token.h"
 
 z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
-    : m_upper(upper)
+    : m_uppercase(upper)
+    , m_comment_glyphs(false)
+    , m_bytes_per_line(8)
     , m_defs(defs)
     , m_bdf(bdf)
 {
 }
 
-static inline QChar sign(qint8 offset)
+QChar z80Dasm::sign(qint8 offset)
 {
     return (offset < 0) ? QChar('-') : QChar('+');
 }
 
-static inline QString hexb(quint32 val)
+QString z80Dasm::hexb(quint32 val)
 {
     if (val >= 0xa0U) {
 	return QString("%1H").arg(val, 3, 16, QChar('0'));
@@ -59,7 +61,7 @@ static inline QString hexb(quint32 val)
     return QString::number(val);
 }
 
-static inline QString hexw(quint32 val)
+QString z80Dasm::hexw(quint32 val)
 {
     if (val >= 0xa000U) {
 	return QString("%1H").arg(val, 5, 16, QChar('0'));
@@ -70,7 +72,7 @@ static inline QString hexw(quint32 val)
     return QString::number(val);
 }
 
-static QString hexd(quint32 val)
+QString z80Dasm::hexd(quint32 val)
 {
     if (val >= 0xa0000000LU) {
 	return QString("%1H").arg(val, 9, 16, QChar('0'));
@@ -81,11 +83,52 @@ static QString hexd(quint32 val)
     return QString::number(val);
 }
 
-static inline int offs(qint8 offset)
+int z80Dasm::offs(qint8 offset)
 {
     if (offset < 0)
 	return -offset;
     return offset;
+}
+
+quint32 z80Dasm::rd08(const quint8* mem)
+{
+    return
+	static_cast<quint32>(mem[0]);
+}
+
+quint32 z80Dasm::rd16(const quint8* mem)
+{
+    return
+	(static_cast<quint32>(mem[0]) <<  0) |
+	(static_cast<quint32>(mem[1]) <<  8);
+}
+
+quint32 z80Dasm::rd32(const quint8* mem)
+{
+    return
+	(static_cast<quint32>(mem[0]) <<  0) |
+	(static_cast<quint32>(mem[1]) <<  8) |
+	(static_cast<quint32>(mem[2]) << 16) |
+	(static_cast<quint32>(mem[3]) << 24);
+}
+
+void z80Dasm::wr08(quint8* mem, quint32 val)
+{
+    mem[0] = static_cast<quint8>(val);
+}
+
+void z80Dasm::wr16(quint8* mem, quint32 val)
+{
+    mem[0] = static_cast<quint8>(val >> 0);
+    mem[1] = static_cast<quint8>(val >> 8);
+}
+
+void z80Dasm::wr32(quint8* mem, quint32 val)
+{
+    mem[0] = static_cast<quint8>(val >>  0);
+    mem[1] = static_cast<quint8>(val >>  8);
+    mem[2] = static_cast<quint8>(val >> 16);
+    mem[3] = static_cast<quint8>(val >> 24);
 }
 
 /**
@@ -99,12 +142,13 @@ QString z80Dasm::dasm_defb(quint32 pc, quint32& pos, const quint8* opram)
 {
     Q_UNUSED(pc)
     QString dasm;
-    QString str = QStringLiteral("DEFB");
+    QString str = z80Token::string(z80Token::zDEFB);
     quint32 ea;
     str.resize(7, QChar::Space);
     dasm += str;
-    ea = opram[pos++];
+    ea = rd08(opram + pos);
     dasm += hexb(ea);
+    pos++;
     return dasm;
 }
 
@@ -119,12 +163,11 @@ QString z80Dasm::dasm_defw(quint32 pc, quint32& pos, const quint8* opram)
 {
     Q_UNUSED(pc)
     QString dasm;
-    QString str = QStringLiteral("DEFW");
+    QString str = z80Token::string(z80Token::zDEFW);
     quint32 ea;
     str.resize(7, QChar::Space);
     dasm += str;
-    ea = static_cast<quint32>(opram[pos+0]) |
-	    (static_cast<quint32>(opram[pos+1]) << 8);
+    ea = rd16(opram + pos);
     dasm += hexw(ea);
     pos += 2;
     return dasm;
@@ -141,14 +184,11 @@ QString z80Dasm::dasm_defd(quint32 pc, quint32& pos, const quint8* opram)
 {
     Q_UNUSED(pc)
     QString dasm;
-    QString str = QStringLiteral("DEFW");
+    QString str = z80Token::string(z80Token::zDEFD);
     quint32 ea;
     str.resize(7, QChar::Space);
     dasm += str;
-    ea = static_cast<quint32>(opram[pos+0]) |
-	    (static_cast<quint32>(opram[pos+1]) << 8) |
-	    (static_cast<quint32>(opram[pos+2]) << 16) |
-	    (static_cast<quint32>(opram[pos+3]) << 24);
+    ea = rd32(opram + pos);
     dasm += hexd(ea);
     pos += 4;
     return dasm;
@@ -164,7 +204,7 @@ QString z80Dasm::dasm_defd(quint32 pc, quint32& pos, const quint8* opram)
 QString z80Dasm::dasm_defs(quint32 pc, quint32& pos, const quint8* opram)
 {
     QString dasm;
-    QString str = QStringLiteral("DEFS");
+    QString str = z80Token::string(z80Token::zDEFS);
     str.resize(7, QChar::Space);
     uint8_t byte = opram[pos];
     int n = 0;
@@ -188,7 +228,7 @@ QString z80Dasm::dasm_defs(quint32 pc, quint32& pos, const quint8* opram)
 QString z80Dasm::dasm_defm(quint32 pc, quint32& pos, const quint8* opram)
 {
     QString dasm;
-    QString str = QStringLiteral("DEFM");
+    QString str = z80Token::string(z80Token::zDEFM);
     bool first = true;
     bool instr = false;
     uchar prev = 0xff;
@@ -200,6 +240,7 @@ QString z80Dasm::dasm_defm(quint32 pc, quint32& pos, const quint8* opram)
 	} else if (!instr) {
 	    str += QChar(',');
 	}
+
 	if (opram[pos] < 0x20 || opram[pos] == 0x7f) {
 	    if (instr) {
 		str += QChar('"');
@@ -216,10 +257,84 @@ QString z80Dasm::dasm_defm(quint32 pc, quint32& pos, const quint8* opram)
 	    str += QChar(uc);
 	}
 	prev = opram[pos++];
+
 	if (m_defs && m_defs->def(pc + pos).type() != z80Def::TEXT)
 	    break;
     }
+
+    if (instr) {
+	str += QChar('"');
+	instr = false;
+    }
+
     dasm += str;
+    return dasm;
+}
+
+/**
+ * @brief Disassemble an array of tokens
+ *
+ * Each token starts with a byte with bit 7 set, and
+ * it ends when the next byte with bit 7 set is found.
+ *
+ * The list scheme is:
+ *  DEFM "A"+80h,"BC"
+ *  DEFM "D"+80h,"EFGH"
+ *  DEFM "I"+80h,"JKL"
+ *
+ * which would define the 3 tokens "ABC", "DEFGH", and "IJKL"
+ *
+ * @param pc program counter
+ * @param pos position in opram
+ * @param opram pointer to opcode RAM
+ * @return string with words defined
+ */
+QString z80Dasm::dasm_token(quint32 pc, quint32& pos, const quint8* opram)
+{
+    QString dasm;
+    QString str = z80Token::string(z80Token::zDEFM);
+    bool first = true;
+    bool instr = false;
+    str.resize(7, QChar::Space);
+
+    while (first || 0x00 == (opram[pos] & 0x80)) {
+	if (first) {
+	    first = false;
+	} else if (!instr) {
+	    str += QChar(',');
+	}
+	if (opram[pos] < 0x20 || opram[pos] == 0x7f) {
+	    if (instr) {
+		str += QChar('"');
+		str += QChar(',');
+		instr = false;
+	    }
+	    str += hexb(opram[pos]);
+	} else {
+	    if (0x80 & opram[pos]) {
+		// First byte of a new token
+		uint uc = unicode(opram[pos] & 0x7f);
+		str += QString("\"%1\"+80h")
+		       .arg(QChar(uc));
+	    } else {
+		if (!instr) {
+		    str += QChar('"');
+		    instr = true;
+		}
+		uint uc = unicode(opram[pos]);
+		str += QChar(uc);
+	    }
+	}
+	if (m_defs && m_defs->def(pc + pos).type() != z80Def::TOKEN)
+	    break;
+	pos++;
+    }
+    if (instr) {
+	str += QChar('"');
+	instr = false;
+    }
+    dasm += str;
+
     return dasm;
 }
 
@@ -242,49 +357,53 @@ QString z80Dasm::dasm_code(quint32 pc, quint32& pos, const quint8* oprom, const 
     z80Token d;
 
     switch (op) {
-    case 0xcb:
+    case 0xcb:	// CB prefixed instructions (shift, rotate, bit manipulation, ...)
 	op = oprom[pos++];
 	d = z80Token::mnemonic_cb(op);
 	break;
-    case 0xed:
+
+    case 0xed:	// ED prefixed instructions (block move, in, out, 16bit arith, ...)
 	op1 = oprom[pos++];
 	d = z80Token::mnemonic_ed(op1);
 	break;
-    case 0xdd:
+
+    case 0xdd:	// DD prefixed instructions (IX register)
 	ixy = QLatin1String("ix");
 	op1 = oprom[pos++];
 	if(op1 == 0xcb) {
-	    offset = (qint8) opram[pos++];
+	    offset = static_cast<qint8>(opram[pos++]);
 	    op1 = opram[pos++]; /* fourth byte from opbase.ram! */
 	    d = z80Token::mnemonic_xx_cb(op1);
 	} else {
 	    d = z80Token::mnemonic_xx(op1);
 	}
 	break;
-    case 0xfd:
+
+    case 0xfd:	// DD prefixed instructions (IY register)
 	ixy = QLatin1String("iy");
 	op1 = oprom[pos++];
 	if (op1 == 0xcb) {
-	    offset = (qint8) opram[pos++];
+	    offset = static_cast<qint8>(opram[pos++]);
 	    op1 = opram[pos++]; /* fourth byte from opbase.ram! */
 	    d = z80Token::mnemonic_xx_cb(op1);
 	} else {
 	    d = z80Token::mnemonic_xx(op1);
 	}
 	break;
+
     default:
 	d = z80Token::mnemonic_main(op);
 	break;
     }
 
     if (nullptr == d.parameters()) {
-	QString str = z80Token::string(d.mnemonic());
-	dasm += str;
+	dasm += z80Token::string(d.mnemonic());
     } else {
 	const char* params = d.parameters();
 	QString str = z80Token::string(d.mnemonic());
 	str.resize(7, QChar::Space);
 	dasm += str;
+
 	for (int i = 0; params[i]; i++) {
 	    switch (params[i]) {
 	    case '?':	// illegal opcode
@@ -349,6 +468,10 @@ QString z80Dasm::dasm_code(quint32 pc, quint32& pos, const quint8* oprom, const 
 
 /**
  * @brief disassemble opcode at @p pc and return number of bytes it takes
+ * @param pc current program counter
+ * @param pos reference to a counter for the number of bytes of this instruction
+ * @param oprom pointer to the ROM at address of @p pc
+ * @param opram pointer to the RAM at address of @p pc
  */
 QString z80Dasm::dasm(quint32 pc, quint32& pos, const quint8 *oprom, const quint8 *opram)
 {
@@ -357,14 +480,12 @@ QString z80Dasm::dasm(quint32 pc, quint32& pos, const quint8 *oprom, const quint
     QString ixy;
     z80Def def;
 
+    def.setAddr(pc);
+    def.setType(z80Def::CODE);
     pos = 0;
 
-    if (m_defs) {
+    if (m_defs)
 	def = m_defs->def(pc);
-    } else {
-	def.setAddr(pc);
-	def.setType(z80Def::CODE);
-    }
 
     switch (def.type()) {
     case z80Def::DEFB:
@@ -387,6 +508,10 @@ QString z80Dasm::dasm(quint32 pc, quint32& pos, const quint8 *oprom, const quint
 	dasm += dasm_defm(pc, pos, opram);
 	break;
 
+    case z80Def::TOKEN:
+	dasm += dasm_token(pc, pos, opram);
+	break;
+
     case z80Def::CODE:
 	dasm += dasm_code(pc, pos, oprom, opram);
 	break;
@@ -396,7 +521,7 @@ QString z80Dasm::dasm(quint32 pc, quint32& pos, const quint8 *oprom, const quint
 	pos++;
     }
 
-    if (m_upper)
+    if (m_uppercase)
 	buffer += dasm.toUpper();
     else
 	buffer += dasm.toLower();
@@ -412,18 +537,45 @@ QStringList z80Dasm::list(const QByteArray& memory, quint32 pc_min, quint32 pc_m
     const quint8* opram = reinterpret_cast<const quint8 *>(memory.constData());
 
     for (quint32 pc = pc_min; pc < pc_max; /* */) {
+	z80Def def;
+
+	if (m_defs) {
+	    def = m_defs->def(pc);
+	    if (def.isAt(pc)) {
+		QString buffer;
+		if (def.hasSymbol()) {
+		    buffer = QString("\n%1:")
+			     .arg(def.symbol());
+		    if (def.hasComment()) {
+			QString comment = def.comment();
+			if (comment.contains(QChar::LineFeed)) {
+			    foreach(const QString& line, def.comment().split(QChar::LineFeed)) {
+				buffer += QString("; %1")
+					  .arg(line);
+				listing += buffer;
+				buffer.clear();
+			    }
+			} else {
+			    buffer += QString("; %1")
+				      .arg(comment);
+			}
+		    }
+		    listing += buffer;
+		}
+	    }
+	}
 
 	quint32 bytes;
 	QString line = dasm(pc, bytes, oprom + pc, opram + pc);
 	QString buffer = QString("%1: ")
 			 .arg(pc, 4, 16, QChar('0'));
-	if (m_upper)
+	if (m_uppercase)
 	    buffer = buffer.toUpper();
 
-	for (quint32 i = 0; i < 4; i++) {
+	for (quint32 i = 0; i < m_bytes_per_line; i++) {
 	    if (i < bytes) {
 		QString byte = QString("%1 ").arg(oprom[pc+i], 2, 16, QChar('0'));
-		if (m_upper)
+		if (m_uppercase)
 		    buffer += byte.toUpper();
 		else
 		    buffer += byte.toLower();
@@ -433,32 +585,37 @@ QStringList z80Dasm::list(const QByteArray& memory, quint32 pc_min, quint32 pc_m
 	}
 	buffer += line;
 
-	if (buffer.length() < 40)
-	    buffer.resize(40, QChar::Space);
-	buffer += QLatin1String("; ");
-
-	QString cmnt;
-	for (quint32 i = 0; i < bytes; i++) {
-	    uint uc = unicode(oprom[pc+i]);
-	    if (uc < 0x20) {
-		buffer += QChar('.');
-	    } else {
-		buffer += QChar(uc);
+	if (def.isAt(pc) && def.hasComment()) {
+	    if (buffer.length() < 56)
+		buffer.resize(56, QChar::Space);
+	    buffer += QString("; %1")
+		      .arg(def.comment());
+	} else if (m_comment_glyphs) {
+	    if (buffer.length() < 56)
+		buffer.resize(56, QChar::Space);
+	    buffer += QLatin1String("; ");
+	    for (quint32 i = 0; i < bytes; i++) {
+		uint uc = unicode(oprom[pc+i]);
+		if (uc < 0x20) {
+		    buffer += QChar('.');
+		} else {
+		    buffer += QChar(uc);
+		}
 	    }
 	}
 
 	listing += buffer;
 
 	// more hex dump
-	if (bytes >= 4) {
-	    for (quint32 offs = 4; offs < bytes; offs += 4) {
+	if (bytes >= m_bytes_per_line) {
+	    for (quint32 offs = m_bytes_per_line; offs < bytes; offs += m_bytes_per_line) {
 		buffer = QString("%1: ")
 			 .arg(pc + offs, 4, 16, QChar('0'));
-		if (m_upper)
+		if (m_uppercase)
 		    buffer = buffer.toUpper();
-		for (quint32 i = offs; i < offs+4 && i < bytes; i++) {
+		for (quint32 i = offs; i < offs+m_bytes_per_line && i < bytes; i++) {
 		    QString byte = QString("%1 ").arg(oprom[pc+i], 2, 16, QChar('0'));
-		    if (m_upper)
+		    if (m_uppercase)
 			buffer += byte.toUpper();
 		    else
 			buffer += byte.toLower();

@@ -53,6 +53,7 @@ static const QLatin1String xml_val_token("token");
 z80Def::z80Def(const QDomElement& elm)
     : m_symbol()
     , m_comment()
+    , m_addr0(0)
     , m_addr(0)
     , m_type(INVALID)
     , m_arg0()
@@ -67,6 +68,7 @@ z80Def::z80Def(const z80Def& other)
 {
     m_symbol = other.m_symbol;
     m_comment = other.m_comment;
+    m_addr0 = other.m_addr0;
     m_addr = other.m_addr;
     m_type = other.m_type;
     m_arg0 = other.m_arg0;
@@ -77,6 +79,21 @@ z80Def::z80Def(const z80Def& other)
 bool z80Def::isValid() const
 {
     return m_type != INVALID;
+}
+
+bool z80Def::isAt(quint32 addr) const
+{
+    return addr == m_addr0;
+}
+
+bool z80Def::hasSymbol() const
+{
+    return !(m_symbol.isNull() || m_symbol.isEmpty());
+}
+
+bool z80Def::hasComment() const
+{
+    return !(m_comment.isNull() || m_comment.isEmpty());
 }
 
 QString z80Def::symbol() const
@@ -118,6 +135,7 @@ z80Def z80Def::operator=(const z80Def& other)
 {
     m_symbol = other.m_symbol;
     m_comment = other.m_comment;
+    m_addr0 = other.m_addr0;
     m_addr = other.m_addr;
     m_type = other.m_type;
     m_arg0 = other.m_arg0;
@@ -175,24 +193,30 @@ z80Def z80Def::fromDomElement(const QDomElement& elm)
     }
 
     att = xml_att_addr;
-    if (!elm.attribute(att).isEmpty()) {
+    if (elm.attribute(att).isEmpty()) {
+	def.m_addr0 = def.m_addr = ~0u;
+    } else {
 	QString val = elm.attribute(att);
 	bool ok;
-	def.m_addr = val.toUInt(&ok, 16);
+	def.m_addr0 = def.m_addr = val.toUInt(&ok, 16);
 	if (!ok) {
 	    qDebug("%s: unknown attribute %s value '%s'", __func__, qPrintable(att), qPrintable(val));
-	    def.m_addr = ~0u;
+	    def.m_addr0 = def.m_addr = ~0u;
 	}
     }
 
     att = xml_att_arg0;
-    if (!elm.attribute(att).isEmpty()) {
+    if (elm.attribute(att).isEmpty()) {
+	def.m_arg0 = nullptr;
+    } else {
 	def.m_arg0 = elm.attribute(att);
 	// TODO: check value?
     }
 
     att = xml_att_param;
-    if (!elm.attribute(att).isEmpty()) {
+    if (elm.attribute(att).isEmpty()) {
+	def.m_param = ~0u;
+    } else {
 	QString val = elm.attribute(att);
 	bool ok;
 	def.m_param = val.toUInt(&ok, 16);
@@ -203,18 +227,23 @@ z80Def z80Def::fromDomElement(const QDomElement& elm)
     }
 
     att = xml_att_maxelem;
-    if (!elm.attribute(att).isEmpty()) {
+    if (elm.attribute(att).isEmpty()) {
+	def.m_maxelem = 0;
+    } else {
 	QString val = elm.attribute(att);
 	bool ok;
 	def.m_maxelem = val.toUInt(&ok, 16);;
 	if (!ok) {
 	    qDebug("%s: unknown attribute %s value '%s'", __func__, qPrintable(att), qPrintable(val));
-	    def.m_param = ~0u;
+	    def.m_maxelem = 0;
 	}
     }
 
-    if (!elm.attribute(xml_att_type).isEmpty()) {
-	QString type = elm.attribute(xml_att_type).toLower();
+    att = xml_att_type;
+    if (elm.attribute(att).isEmpty()) {
+	def.m_type = CODE;
+    } else {
+	QString type = elm.attribute(att).toLower();
 	do {
 	    if (type == xml_val_code) {
 		def.m_type = CODE;
@@ -247,13 +276,12 @@ z80Def z80Def::fromDomElement(const QDomElement& elm)
 	    qDebug("%s: unknown type value '%s'", __func__, qPrintable(type));
 	    def.m_type = CODE;
 	} while (0);
-    } else {
-	def.m_type = CODE;
     }
 
     QDomNode child = elm.firstChild();
     for (QDomNode child = elm.firstChild(); !child.isNull(); child = child.nextSibling()) {
 	QDomElement e = child.toElement();
+
 	tag_name = e.tagName().toLower();
 	if (tag_name == xml_tag_symbol) {
 	    QDomText txt = e.firstChild().toText();
@@ -263,6 +291,7 @@ z80Def z80Def::fromDomElement(const QDomElement& elm)
 	    }
 	    qDebug("%s: tag '%s' is not a text node", __func__, qPrintable(tag_name));
 	}
+
 	if (tag_name == xml_tag_comment) {
 	    QDomText txt = e.firstChild().toText();
 	    if (!txt.isNull()) {

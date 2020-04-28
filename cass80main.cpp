@@ -58,10 +58,13 @@ Cass80Main::Cass80Main(QWidget *parent)
 {
     ui->setupUi(this);
 
+    setup_toolbar();
+
     int id = QFontDatabase::addApplicationFont(QStringLiteral(":/cgenie1.ttf"));
     QStringList families = QFontDatabase::applicationFontFamilies(id);
     Q_ASSERT(families.contains(font_family));
     QFont font(font_family);
+    font.setStretch(150);
     ui->te_listing->setFont(font);
 
     setWindowTitle(tr("Cassette Manager for TRS80 and EG2000 - Version %1").arg(qApp->applicationVersion()));
@@ -149,7 +152,7 @@ bool Cass80Main::load()
     }
 
     if (m_cas->basic()) {
-	append_listing(m_cas->source());
+	set_listing(m_cas->source());
     } else {
 	QByteArray memory(64*1024, 0x00);
 	QFile rom(QLatin1String(":/cgenie.rom"));
@@ -172,7 +175,7 @@ bool Cass80Main::load()
 	z80Defs z80defs(QLatin1String(":/cgenie-dasm.xml"));
 	z80Dasm z80dasm(true, &z80defs, m_bdf);
 	QStringList listing = z80dasm.list(memory, 0x0000, 0xfff0);
-	append_listing(listing);
+	set_listing(listing);
     }
 
 #if DEBUG_XML
@@ -181,6 +184,8 @@ bool Cass80Main::load()
     QString xml = cas_xml.toXml();
     xml = xml.toHtmlEscaped();
 #endif
+
+    update_actions();
 
     cass80InfoDlg info(this);
     info.setModal(false);
@@ -195,20 +200,44 @@ bool Cass80Main::save()
     if (m_cas->basic())
 	return false;
 
-    if (!m_cas->undo_lmoffset())
-	return false;
-
     m_cas->save(m_filepath);
     return true;
 
 }
 
-void Cass80Main::append_listing(const QString& text)
+bool Cass80Main::undo_lmoffset()
 {
-    ui->te_listing->append(text);
+    if (!m_cas->undo_lmoffset())
+	return false;
+
+    return true;
 }
 
-void Cass80Main::append_listing(const QStringList& list)
+void Cass80Main::setup_toolbar()
 {
-    ui->te_listing->append(list.join(QChar::LineFeed));
+    ui->toolBar->addAction(ui->action_Load);
+    ui->action_Load->setIcon(QIcon(":/image/document-open.png"));
+
+    ui->toolBar->addAction(ui->action_Save);
+    ui->action_Save->setIcon(QIcon(":/image/document-save.png"));
+
+    ui->toolBar->addAction(ui->action_Quit);
+    ui->action_Quit->setIcon(QIcon(":/image/application-exit.png"));
+
+    update_actions();
+}
+
+void Cass80Main::update_actions()
+{
+    ui->action_Undo_lmoffset->setEnabled(m_cas->has_lmoffset());
+}
+
+void Cass80Main::set_listing(const QString& text)
+{
+    ui->te_listing->setText(text);
+}
+
+void Cass80Main::set_listing(const QStringList& list)
+{
+    ui->te_listing->setText(list.join(QChar::LineFeed));
 }

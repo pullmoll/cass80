@@ -54,10 +54,14 @@ private slots:
     void Error(QString message);
     bool load();
     bool save();
+    bool undo_lmoffset();
 
 private:
-    void append_listing(const QStringList& list);
-    void append_listing(const QString& str);
+    void setup_toolbar();
+    void update_actions();
+
+    void set_listing(const QStringList& list);
+    void set_listing(const QString& str);
     void update_cursor();
     void reset();
     Ui::Cass80Main *ui;

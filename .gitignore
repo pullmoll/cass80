@@ -6,7 +6,7 @@ ui_*
 
 # cgenie1.fnt Fontforge files
 cgenie1.cfg
-cgenie1.fnt
+cgenie1.ofm
 cgenie1.sfd
 
 # BDF font generator
