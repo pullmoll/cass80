@@ -41,7 +41,7 @@ class z80Dasm
 {
 public:
     z80Dasm(bool upper = false, const z80Defs* defs = nullptr, const bdfData* bdf = nullptr);
-    QString dasm(quint32 pc, quint32 &bytes, const quint8* oprom, const quint8* opram);
+    QString dasm(quint32 pc, quint32 &bytes, quint32& flags, const quint8* oprom, const quint8* opram);
     QStringList list(const QByteArray& memory, quint32 pc_min, quint32 pc_max);
 private:
     quint32 unicode(uchar ch) const;
@@ -51,7 +51,7 @@ private:
     QString dasm_defs(quint32 pc, quint32& pos, const quint8* opram);
     QString dasm_defm(quint32 pc, quint32& pos, const quint8* opram);
     QString dasm_token(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_code(quint32 pc, quint32& pos, const quint8* oprom, const quint8* opram);
+    QString dasm_code(quint32 pc, quint32& pos, quint32& flags, const quint8* oprom, const quint8* opram);
     bool m_uppercase;
     bool m_comment_glyphs;
     quint32 m_bytes_per_line;

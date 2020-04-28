@@ -54,6 +54,7 @@ private slots:
     void Error(QString message);
     bool load();
     bool save();
+    bool information();
     bool undo_lmoffset();
 
 private:

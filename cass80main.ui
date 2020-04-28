@@ -117,6 +117,7 @@
     </property>
     <addaction name="action_Load"/>
     <addaction name="action_Save"/>
+    <addaction name="action_Information"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
@@ -141,6 +142,10 @@
    </attribute>
   </widget>
   <action name="action_Load">
+   <property name="icon">
+    <iconset resource="cass80.qrc">
+     <normaloff>:/image/document-open.png</normaloff>:/image/document-open.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Load …</string>
    </property>
@@ -152,6 +157,10 @@
    </property>
   </action>
   <action name="action_Quit">
+   <property name="icon">
+    <iconset resource="cass80.qrc">
+     <normaloff>:/image/application-exit.png</normaloff>:/image/application-exit.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -160,6 +169,10 @@
    </property>
   </action>
   <action name="action_Save">
+   <property name="icon">
+    <iconset resource="cass80.qrc">
+     <normaloff>:/image/document-save.png</normaloff>:/image/document-save.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Save …</string>
    </property>
@@ -168,6 +181,10 @@
    </property>
   </action>
   <action name="action_Undo_lmoffset">
+   <property name="icon">
+    <iconset resource="cass80.qrc">
+     <normaloff>:/image/lmoffset-undo.png</normaloff>:/image/lmoffset-undo.png</iconset>
+   </property>
    <property name="text">
     <string>Undo &amp;lmoffset</string>
    </property>
@@ -175,7 +192,18 @@
     <string>Ctrl+U</string>
    </property>
   </action>
+  <action name="action_Information">
+   <property name="icon">
+    <iconset resource="cass80.qrc">
+     <normaloff>:/image/dialog-information.png</normaloff>:/image/dialog-information.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Information …</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="cass80.qrc"/>
+ </resources>
  <connections/>
 </ui>

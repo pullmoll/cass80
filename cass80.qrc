@@ -8,5 +8,7 @@
         <file>image/document-open.png</file>
         <file>image/document-save.png</file>
         <file>image/document-save-as.png</file>
+        <file>image/dialog-information.png</file>
+        <file>image/lmoffset-undo.png</file>
     </qresource>
 </RCC>

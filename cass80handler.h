@@ -59,6 +59,7 @@ public:
     quint8 prefix() const;
     QString filename() const;
     quint16 blen() const;
+    QByteArray digest() const;
 
     bool load(const QString& filename);
     bool load(QIODevice* device);

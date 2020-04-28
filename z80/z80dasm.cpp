@@ -45,11 +45,26 @@ z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
 {
 }
 
+/**
+ * @brief Return the sign character for an IX/IY offset value
+ * @param offset -128 to +127
+ * @return sign character
+ */
 QChar z80Dasm::sign(qint8 offset)
 {
     return (offset < 0) ? QChar('-') : QChar('+');
 }
 
+/**
+ * @brief Return Z80 (TRS-80, Video Genie 3003, Colour Genie EG2000) byte value string
+ *
+ * This returns a string in the format used by Z80 compilers.
+ * It's a hexadecimal encoded number with suffix 'h' appended.
+ * If the hex representation does not start with a digit, prepend '0'.
+ *
+ * @param val byte value
+ * @return string for the value
+ */
 QString z80Dasm::hexb(quint32 val)
 {
     if (val >= 0xa0U) {
@@ -61,6 +76,16 @@ QString z80Dasm::hexb(quint32 val)
     return QString::number(val);
 }
 
+/**
+ * @brief Return Z80 (TRS-80, Video Genie 3003, Colour Genie EG2000) word value string
+ *
+ * This returns a string in the format used by Z80 compilers.
+ * It's a hexadecimal encoded number with suffix 'h' appended.
+ * If the hex representation does not start with a digit, prepend '0'.
+ *
+ * @param val word value
+ * @return string for the value
+ */
 QString z80Dasm::hexw(quint32 val)
 {
     if (val >= 0xa000U) {
@@ -72,6 +97,16 @@ QString z80Dasm::hexw(quint32 val)
     return QString::number(val);
 }
 
+/**
+ * @brief Return Z80 (TRS-80, Video Genie 3003, Colour Genie EG2000) dword value string
+ *
+ * This returns a string in the format used by Z80 compilers.
+ * It's a hexadecimal encoded number with suffix 'h' appended.
+ * If the hex representation does not start with a digit, prepend '0'.
+ *
+ * @param val dword value
+ * @return string for the value
+ */
 QString z80Dasm::hexd(quint32 val)
 {
     if (val >= 0xa0000000LU) {
@@ -83,6 +118,11 @@ QString z80Dasm::hexd(quint32 val)
     return QString::number(val);
 }
 
+/**
+ * @brief Return the absolute offset
+ * @param offset signed 7 bit value
+ * @return absolute value of the offset as int
+ */
 int z80Dasm::offs(qint8 offset)
 {
     if (offset < 0)
@@ -90,12 +130,22 @@ int z80Dasm::offs(qint8 offset)
     return offset;
 }
 
+/**
+ * @brief Read a byte from memory at @p mem
+ * @param mem pointer to memory
+ * @return byte value from memory
+ */
 quint32 z80Dasm::rd08(const quint8* mem)
 {
     return
 	static_cast<quint32>(mem[0]);
 }
 
+/**
+ * @brief Read a word from memory at @p mem
+ * @param mem pointer to memory
+ * @return word value from memory
+ */
 quint32 z80Dasm::rd16(const quint8* mem)
 {
     return
@@ -103,6 +153,11 @@ quint32 z80Dasm::rd16(const quint8* mem)
 	(static_cast<quint32>(mem[1]) <<  8);
 }
 
+/**
+ * @brief Read a dword from memory at @p mem
+ * @param mem pointer to memory
+ * @return dword value from memory
+ */
 quint32 z80Dasm::rd32(const quint8* mem)
 {
     return
@@ -112,17 +167,32 @@ quint32 z80Dasm::rd32(const quint8* mem)
 	(static_cast<quint32>(mem[3]) << 24);
 }
 
+/**
+ * @brief Write a byte to memory at @p mem
+ * @param mem pointer to memory
+ * @param val byte value
+ */
 void z80Dasm::wr08(quint8* mem, quint32 val)
 {
     mem[0] = static_cast<quint8>(val);
 }
 
+/**
+ * @brief Write a word to memory at @p mem
+ * @param mem pointer to memory
+ * @param val word value
+ */
 void z80Dasm::wr16(quint8* mem, quint32 val)
 {
     mem[0] = static_cast<quint8>(val >> 0);
     mem[1] = static_cast<quint8>(val >> 8);
 }
 
+/**
+ * @brief Write a dword to memory at @p mem
+ * @param mem pointer to memory
+ * @param val dword value
+ */
 void z80Dasm::wr32(quint8* mem, quint32 val)
 {
     mem[0] = static_cast<quint8>(val >>  0);
@@ -133,6 +203,11 @@ void z80Dasm::wr32(quint8* mem, quint32 val)
 
 /**
  * @brief Disassemble a DEFB byte or multiple bytes
+ *
+ * TODO: respect z80Def::maxelem() and return a string
+ * for possibly multiple bytes, either maxelem or up to
+ * the next z80Def entry.
+ *
  * @param pc program counter
  * @param pos position in opram
  * @param opram pointer to opcode RAM
@@ -154,6 +229,11 @@ QString z80Dasm::dasm_defb(quint32 pc, quint32& pos, const quint8* opram)
 
 /**
  * @brief Disassemble a DEFW word or multiple words
+ *
+ * TODO: respect z80Def::maxelem() and return a string
+ * for possibly multiple words, either maxelem or up to
+ * the next z80Def entry.
+ *
  * @param pc program counter
  * @param pos position in opram
  * @param opram pointer to opcode RAM
@@ -175,6 +255,11 @@ QString z80Dasm::dasm_defw(quint32 pc, quint32& pos, const quint8* opram)
 
 /**
  * @brief Disassemble a DEFD dword or multiple dwords
+ *
+ * TODO: respect z80Def::maxelem() and return a string
+ * for possibly multiple dwords, either maxelem or up to
+ * the next z80Def entry.
+ *
  * @param pc program counter
  * @param pos position in opram
  * @param opram pointer to opcode RAM
@@ -199,7 +284,7 @@ QString z80Dasm::dasm_defd(quint32 pc, quint32& pos, const quint8* opram)
  * @param pc program counter
  * @param pos position in opram
  * @param opram pointer to opcode RAM
- * @return string with words defined
+ * @return string with the number of bytes in this space
  */
 QString z80Dasm::dasm_defs(quint32 pc, quint32& pos, const quint8* opram)
 {
@@ -274,14 +359,15 @@ QString z80Dasm::dasm_defm(quint32 pc, quint32& pos, const quint8* opram)
 /**
  * @brief Disassemble an array of tokens
  *
- * Each token starts with a byte with bit 7 set, and
+ * Each token starts with a byte where bit 7 set, and
  * it ends when the next byte with bit 7 set is found.
  *
- * The list scheme is:
+ * So the scheme for a list of tokens is:
+ * <pre>
  *  DEFM "A"+80h,"BC"
  *  DEFM "D"+80h,"EFGH"
  *  DEFM "I"+80h,"JKL"
- *
+ *</pre>
  * which would define the 3 tokens "ABC", "DEFGH", and "IJKL"
  *
  * @param pc program counter
@@ -340,13 +426,24 @@ QString z80Dasm::dasm_token(quint32 pc, quint32& pos, const quint8* opram)
 
 /**
  * @brief Disassemble a Z80 opcode
+ *
+ * Disassemble a single opcode. The distinction between @p oprom and @p opram
+ * is here because MAME uses it to provide support for encrypted memory.
+ *
+ * This means opram could be different from oprom and point to a decrypted
+ * memory range for the same program counter.
+ *
+ * Generally the @p oprom is used for the M1 cycle (the fetch opcode cycle) of
+ * the Z80 while @p opram is used for data following that opcode.
+ *
  * @param pc program counter
  * @param pos position in opram
+ * @param flags flags for the opcode
  * @param oprom pointer to opcode ROM
  * @param opram pointer to opcode RAM
  * @return string with words defined
  */
-QString z80Dasm::dasm_code(quint32 pc, quint32& pos, const quint8* oprom, const quint8* opram)
+QString z80Dasm::dasm_code(quint32 pc, quint32& pos, quint32& flags, const quint8* oprom, const quint8* opram)
 {
     QString dasm;
     QString ixy = QLatin1String("oops!!");
@@ -463,6 +560,9 @@ QString z80Dasm::dasm_code(quint32 pc, quint32& pos, const quint8* oprom, const 
 	    }
 	}
     }
+
+    flags = d.flags(d.mnemonic());
+
     return dasm;
 }
 
@@ -470,16 +570,18 @@ QString z80Dasm::dasm_code(quint32 pc, quint32& pos, const quint8* oprom, const 
  * @brief disassemble opcode at @p pc and return number of bytes it takes
  * @param pc current program counter
  * @param pos reference to a counter for the number of bytes of this instruction
+ * @param flags reference to a flags value possibly set by the opcode
  * @param oprom pointer to the ROM at address of @p pc
  * @param opram pointer to the RAM at address of @p pc
  */
-QString z80Dasm::dasm(quint32 pc, quint32& pos, const quint8 *oprom, const quint8 *opram)
+QString z80Dasm::dasm(quint32 pc, quint32& pos, quint32& flags, const quint8 *oprom, const quint8 *opram)
 {
     QString buffer;
     QString dasm;
     QString ixy;
     z80Def def;
 
+    flags = 0;
     def.setAddr(pc);
     def.setType(z80Def::CODE);
     pos = 0;
@@ -513,7 +615,7 @@ QString z80Dasm::dasm(quint32 pc, quint32& pos, const quint8 *oprom, const quint
 	break;
 
     case z80Def::CODE:
-	dasm += dasm_code(pc, pos, oprom, opram);
+	dasm += dasm_code(pc, pos, flags, oprom, opram);
 	break;
 
     default:
@@ -565,8 +667,9 @@ QStringList z80Dasm::list(const QByteArray& memory, quint32 pc_min, quint32 pc_m
 	    }
 	}
 
-	quint32 bytes;
-	QString line = dasm(pc, bytes, oprom + pc, opram + pc);
+	quint32 bytes = 0;
+	quint32 flags = 0;
+	QString line = dasm(pc, bytes, flags, oprom + pc, opram + pc);
 	QString buffer = QString("%1: ")
 			 .arg(pc, 4, 16, QChar('0'));
 	if (m_uppercase)

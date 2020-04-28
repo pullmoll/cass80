@@ -40,7 +40,7 @@ class z80Def
 public:
     enum EntryType {
 	INVALID=-1,
-	CODE,	    //!< z80 code
+	CODE,	    //!< Z80 code
 	DEFB,	    //!< define byte(s) (8 bit)
 	DEFW,	    //!< define word(s) (16 bit)
 	DEFD,	    //!< define dword(s) (32 bit)
@@ -59,6 +59,7 @@ public:
 
     QString symbol() const;
     QString comment() const;
+    quint32 addr0() const;
     quint32 addr() const;
     EntryType type() const;
     QString arg0() const;
@@ -76,7 +77,7 @@ public:
     void setMaxelem(const quint32 maxelem = 0);
 
     static z80Def fromDomElement(const QDomElement& elm);
-    static QDomElement toDomElement(const QDomDocument& doc, const z80Def& def);
+    static QDomElement toDomElement(QDomDocument& doc, const z80Def& def);
 private:
     QString	m_symbol;
     QString	m_comment;

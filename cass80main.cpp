@@ -33,6 +33,7 @@
  ****************************************************************************/
 #include <QFontDatabase>
 #include <QFileDialog>
+#include <QSpacerItem>
 #include <QTextCursor>
 #include <QSettings>
 #include "cass80main.h"
@@ -50,6 +51,8 @@ static const QLatin1String key_splitter_state("splitter_state");
 
 static const QLatin1String font_family("ColourGenie");
 
+static const QLatin1String style_line_height("line-height: 200%;");
+
 Cass80Main::Cass80Main(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Cass80Main)
@@ -64,8 +67,9 @@ Cass80Main::Cass80Main(QWidget *parent)
     QStringList families = QFontDatabase::applicationFontFamilies(id);
     Q_ASSERT(families.contains(font_family));
     QFont font(font_family);
-    font.setStretch(150);
     ui->te_listing->setFont(font);
+    // FIXME: does not work
+    ui->te_listing->setStyleSheet(style_line_height);
 
     setWindowTitle(tr("Cassette Manager for TRS80 and EG2000 - Version %1").arg(qApp->applicationVersion()));
 
@@ -80,6 +84,7 @@ Cass80Main::Cass80Main(QWidget *parent)
 
     connect(ui->action_Load, SIGNAL(triggered()), SLOT(load()));
     connect(ui->action_Save, SIGNAL(triggered()), SLOT(save()));
+    connect(ui->action_Information, SIGNAL(triggered()), SLOT(information()));
     connect(ui->action_Quit, SIGNAL(triggered()), SLOT(close()));
 
     m_bdf->generate(QLatin1String(":/cgenie1.fnt"),
@@ -187,11 +192,6 @@ bool Cass80Main::load()
 
     update_actions();
 
-    cass80InfoDlg info(this);
-    info.setModal(false);
-    info.setup(m_cas);
-    info.exec();
-
     return true;
 }
 
@@ -205,6 +205,14 @@ bool Cass80Main::save()
 
 }
 
+bool Cass80Main::information()
+{
+    cass80InfoDlg info(this);
+    info.setModal(false);
+    info.setup(m_cas);
+    info.exec();
+}
+
 bool Cass80Main::undo_lmoffset()
 {
     if (!m_cas->undo_lmoffset())
@@ -216,19 +224,18 @@ bool Cass80Main::undo_lmoffset()
 void Cass80Main::setup_toolbar()
 {
     ui->toolBar->addAction(ui->action_Load);
-    ui->action_Load->setIcon(QIcon(":/image/document-open.png"));
-
     ui->toolBar->addAction(ui->action_Save);
-    ui->action_Save->setIcon(QIcon(":/image/document-save.png"));
-
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(ui->action_Information);
+    ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->action_Quit);
-    ui->action_Quit->setIcon(QIcon(":/image/application-exit.png"));
 
     update_actions();
 }
 
 void Cass80Main::update_actions()
 {
+    ui->action_Information->setEnabled(!m_cas->isEmpty());
     ui->action_Undo_lmoffset->setEnabled(m_cas->has_lmoffset());
 }
 

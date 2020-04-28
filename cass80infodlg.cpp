@@ -31,19 +31,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
+#include <QSettings>
 #include "cass80handler.h"
 #include "cass80infodlg.h"
 #include "ui_cass80infodlg.h"
+
+static const QLatin1String key_geometry("geometry");
 
 cass80InfoDlg::cass80InfoDlg(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::cass80InfoDlg)
 {
     ui->setupUi(this);
+    QSettings s;
+    s.beginGroup(objectName());
+    restoreGeometry(s.value(key_geometry).toByteArray());
+    s.endGroup();
 }
 
 cass80InfoDlg::~cass80InfoDlg()
 {
+    QSettings s;
+    s.beginGroup(objectName());
+    s.setValue(key_geometry, saveGeometry());
+    s.endGroup();
     delete ui;
 }
 
@@ -69,4 +80,5 @@ void cass80InfoDlg::setup(Cass80Handler* cas)
     ui->le_blen->setText(QString::number(cas->blen()));
     ui->le_nblocks->setText(QString::number(cas->count()));
     ui->le_format->setText(cas->basic() ? QLatin1String("BASIC") : QLatin1String("SYSTEM"));
+    ui->le_digest->setText(QString::fromLatin1(cas->digest().toHex()));
 }

@@ -220,6 +220,11 @@ quint16 Cass80Handler::blen() const
     return m_blen;
 }
 
+QByteArray Cass80Handler::digest() const
+{
+    return m_digest;
+}
+
 bool Cass80Handler::basic() const
 {
     return m_basic;

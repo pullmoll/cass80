@@ -427,7 +427,8 @@
 	<entry addr="38d5" type="code">
 		<symbol>FCOLOU</symbol>
 	</entry>
-	<entry addr="3930" type="token" param="39db">
+        <entry addr="38d6" type="defm"/>
+        <entry addr="3930" type="token" param="39db">
 	</entry>
 	<entry addr="39ad">
 	</entry>
