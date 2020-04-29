@@ -63,7 +63,7 @@ Cass80Main::Cass80Main(QWidget *parent)
 
     setup_toolbar();
 
-    int id = QFontDatabase::addApplicationFont(QStringLiteral(":/cgenie1.ttf"));
+    int id = QFontDatabase::addApplicationFont(QStringLiteral(":/resources/cgenie1.ttf"));
     QStringList families = QFontDatabase::applicationFontFamilies(id);
     Q_ASSERT(families.contains(font_family));
     QFont font(font_family);
@@ -87,7 +87,7 @@ Cass80Main::Cass80Main(QWidget *parent)
     connect(ui->action_Information, SIGNAL(triggered()), SLOT(information()));
     connect(ui->action_Quit, SIGNAL(triggered()), SLOT(close()));
 
-    m_bdf->generate(QLatin1String(":/cgenie1.fnt"),
+    m_bdf->generate(QLatin1String(":/resources/cgenie1.fnt"),
 		    QLatin1String("cgenie1.bdf"));
 }
 
@@ -160,7 +160,7 @@ bool Cass80Main::load()
 	set_listing(m_cas->source());
     } else {
 	QByteArray memory(64*1024, 0x00);
-	QFile rom(QLatin1String(":/cgenie.rom"));
+	QFile rom(QLatin1String(":/resources/cgenie.rom"));
 	if (rom.open(QIODevice::ReadOnly)) {
 	    QByteArray data = rom.readAll();
 	    memory.replace(0, data.size(), data);
@@ -177,7 +177,7 @@ bool Cass80Main::load()
 	    }
 	}
 
-	z80Defs z80defs(QLatin1String(":/cgenie-dasm.xml"));
+	z80Defs z80defs(QLatin1String(":/resources/cgenie-dasm.xml"));
 	z80Dasm z80dasm(true, &z80defs, m_bdf);
 	QStringList listing = z80dasm.list(memory, 0x0000, 0xfff0);
 	set_listing(listing);
@@ -211,6 +211,7 @@ bool Cass80Main::information()
     info.setModal(false);
     info.setup(m_cas);
     info.exec();
+    return true;
 }
 
 bool Cass80Main::undo_lmoffset()

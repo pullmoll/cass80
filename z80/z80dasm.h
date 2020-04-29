@@ -41,22 +41,28 @@ class z80Dasm
 {
 public:
     z80Dasm(bool upper = false, const z80Defs* defs = nullptr, const bdfData* bdf = nullptr);
-    QString dasm(quint32 pc, quint32 &bytes, quint32& flags, const quint8* oprom, const quint8* opram);
+    QString dasm(quint32 pc, off_t& bytes, quint32& flags, const quint8* oprom, const quint8* opram);
     QStringList list(const QByteArray& memory, quint32 pc_min, quint32 pc_max);
+
 private:
     quint32 unicode(uchar ch) const;
-    QString dasm_defb(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_defw(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_defd(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_defs(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_defm(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_token(quint32 pc, quint32& pos, const quint8* opram);
-    QString dasm_code(quint32 pc, quint32& pos, quint32& flags, const quint8* oprom, const quint8* opram);
+    QString symbol_w(quint32 ea);
+    QString dasm_defb(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_defw(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_defd(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_defs(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_defm(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_token(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_code(quint32 pc, off_t& pos, quint32& flags, const quint8* oprom, const quint8* opram);
     bool m_uppercase;
     bool m_comment_glyphs;
-    quint32 m_bytes_per_line;
+    int m_bytes_per_line;
+    int m_mnemonic_column;
+    int m_comment_column;
     const z80Defs* m_defs;
     const bdfData* m_bdf;
+    QHash<quint32,bool> m_comment_done;
+
     static inline QChar sign(qint8 offset);
     static inline QString hexb(quint32 val);
     static inline QString hexw(quint32 val);
