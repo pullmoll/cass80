@@ -42,10 +42,16 @@ class z80Dasm
 public:
     z80Dasm(bool upper = false, const z80Defs* defs = nullptr, const bdfData* bdf = nullptr);
     QString dasm(quint32 pc, off_t& bytes, quint32& flags, const quint8* oprom, const quint8* opram);
-    QStringList list(const QByteArray& memory, quint32 pc_min, quint32 pc_max);
+    QStringList listing(const QByteArray& memory, quint32 pc_min, quint32 pc_max);
 
 private:
     quint32 unicode(uchar ch) const;
+    inline QString hexb(quint32 val);
+    inline QString hexw(quint32 val);
+    inline QString hexd(quint32 val);
+    inline QString x08(quint32 val);
+    inline QString x16(quint32 val);
+    inline QString x32(quint32 val);
     QString symbol_w(quint32 ea);
     QString dasm_defb(quint32 pc, off_t& pos, const quint8* opram);
     QString dasm_defw(quint32 pc, off_t& pos, const quint8* opram);
@@ -61,12 +67,8 @@ private:
     int m_comment_column;
     const z80Defs* m_defs;
     const bdfData* m_bdf;
-    QHash<quint32,bool> m_comment_done;
 
     static inline QChar sign(qint8 offset);
-    static inline QString hexb(quint32 val);
-    static inline QString hexw(quint32 val);
-    static inline QString hexd(quint32 val);
     static inline int offs(qint8 offset);
     static inline quint32 rd08(const quint8* mem);
     static inline quint32 rd16(const quint8* mem);

@@ -4,11 +4,14 @@
         <file>resources/cgenie1.ttf</file>
         <file>resources/cgenie-dasm.xml</file>
         <file>resources/cgenie.rom</file>
+        <file>resources/cgenie-2008-08-10.txt</file>
         <file>image/application-exit.png</file>
         <file>image/document-open.png</file>
         <file>image/document-save.png</file>
         <file>image/document-save-as.png</file>
         <file>image/dialog-information.png</file>
         <file>image/lmoffset-undo.png</file>
+        <file>image/preferences.png</file>
+        <file>image/cass80.png</file>
     </qresource>
 </RCC>

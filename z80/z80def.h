@@ -34,8 +34,13 @@
 #pragma once
 #include <QDomDocument>
 #include <QDomElement>
+#include <QStringList>
+#include <QSharedPointer>
 
-class z80Def
+class z80DefObj;
+typedef QSharedPointer<z80DefObj> z80Def;
+
+class z80DefObj
 {
 public:
     enum EntryType {
@@ -49,16 +54,18 @@ public:
 	TOKEN,	    //!< array of tokens
     };
 
-    explicit z80Def(const QDomElement& elm = QDomElement());
-    z80Def(const z80Def& other);
+    explicit z80DefObj(const QDomElement& elm = QDomElement());
+    z80DefObj(const z80DefObj& other);
 
     bool isValid() const;
-    bool isAt(quint32 addr) const;
-    bool hasSymbol() const;
-    bool hasComment() const;
+    bool is_at_addr(quint32 addr) const;
+    bool has_symbol() const;
+    bool has_block_comment() const;
+    bool has_line_comment() const;
 
     QString symbol() const;
-    QString comment() const;
+    QStringList block_comment() const;
+    QString line_comment() const;
     quint32 addr0() const;
     quint32 addr() const;
     EntryType type() const;
@@ -66,21 +73,24 @@ public:
     quint32 param() const;
     quint32 maxelem() const;
 
-    z80Def operator= (const z80Def& other);
+    z80DefObj operator= (const z80DefObj& other);
 
-    void setSymbol(const QString& symbol = QString());
-    void setComment(const QString& comment = QString());
-    void setAddr(const quint32 addr = 0);
-    void setType(const EntryType type = CODE);
-    void setArg0(const QString& arg0 = QString());
-    void setParam(const quint32 param = 0);
-    void setMaxelem(const quint32 maxelem = 0);
+    void set_symbol(const QString& symbol = QString());
+    void set_block_comment(const QStringList& lines = QStringList());
+    void set_line_comment(const QString& line_comment = QString());
+    void set_addr0(const quint32 addr = 0);
+    void set_addr(const quint32 addr = 0);
+    void set_type(const EntryType type = CODE);
+    void set_arg0(const QString& arg0 = QString());
+    void set_param(const quint32 param = 0);
+    void set_maxelem(const quint32 maxelem = 0);
 
-    static z80Def fromDomElement(const QDomElement& elm);
+    static z80DefObj fromDomElement(const QDomElement& elm);
     static QDomElement toDomElement(QDomDocument& doc, const z80Def& def);
 private:
     QString	m_symbol;
-    QString	m_comment;
+    QStringList	m_block_comment;
+    QString	m_line_comment;
     quint32	m_addr0;
     quint32	m_addr;
     EntryType	m_type;

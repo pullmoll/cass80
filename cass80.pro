@@ -24,7 +24,10 @@ SOURCES += \
     $$PWD/z80/z80def.cpp \
     $$PWD/z80/z80defs.cpp \
     $$PWD/z80/z80token.cpp \
-    bdfglyph.cpp
+    aboutdlg.cpp \
+    bdfglyph.cpp \
+    listing2xml.cpp \
+    preferencesdlg.cpp
 
 HEADERS += \
     $$PWD/basictoken.h \
@@ -38,11 +41,16 @@ HEADERS += \
     $$PWD/z80/z80def.h \
     $$PWD/z80/z80defs.h \
     $$PWD/z80/z80token.h \
-    bdfglyph.h
+    aboutdlg.h \
+    bdfglyph.h \
+    listing2xml.h \
+    preferencesdlg.h
 
 FORMS += \
+    aboutdlg.ui \
     cass80infodlg.ui \
-    cass80main.ui
+    cass80main.ui \
+    preferencesdlg.ui
 
 TRANSLATIONS += \
     cas_de_DE.ts
@@ -58,8 +66,11 @@ RESOURCES += \
     cass80.qrc
 
 DISTFILES += \
-    cgenie.rom \
     image/application-exit.png \
     image/document-open.png \
     image/document-save-as.png \
-    image/document-save.png
+    image/document-save.png \
+    image/preferences.png \
+    resources/cgenie.rom \
+    resources/cgenie1.fnt \
+    resources/cgenie-2008-08-10.txt

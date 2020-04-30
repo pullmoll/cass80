@@ -40,38 +40,46 @@
 #include "ui_cass80main.h"
 #include "cass80handler.h"
 #include "cass80xml.h"
+
+#include "aboutdlg.h"
 #include "cass80infodlg.h"
+#include "preferencesdlg.h"
 #include "z80defs.h"
 #include "z80dasm.h"
 
 #include "bdfdata.h"
+#include "listing2xml.h"
+
+#define	GENERATE_BDF	    0
+#define	GENERATE_DEFS	    1
+#define	USE_GENERATED_DEFS  1
+
+static const QLatin1String g_mysrcdir("/home/jbu/src/emulators/cass80");
+static const QLatin1String g_resources(":/resources");
 
 static const QLatin1String key_window_geometry("window_geometry");
 static const QLatin1String key_splitter_state("splitter_state");
+static const QLatin1String grp_preferences("preferences");
+static const QLatin1String key_internal_ttf("internal_ttf");
+static const QLatin1String key_uppercase("uppercase");
 
 static const QLatin1String font_family("ColourGenie");
-
-static const QLatin1String style_line_height("line-height: 200%;");
 
 Cass80Main::Cass80Main(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Cass80Main)
     , m_cas(new Cass80Handler(this))
     , m_bdf(new bdfData(16))
+    , m_internal_ttf(false)
+    , m_uppercase(true)
 {
     ui->setupUi(this);
 
     setup_toolbar();
+    setup_preferences();
 
-    int id = QFontDatabase::addApplicationFont(QStringLiteral(":/resources/cgenie1.ttf"));
-    QStringList families = QFontDatabase::applicationFontFamilies(id);
-    Q_ASSERT(families.contains(font_family));
-    QFont font(font_family);
-    ui->te_listing->setFont(font);
-    // FIXME: does not work
-    ui->te_listing->setStyleSheet(style_line_height);
-
-    setWindowTitle(tr("Cassette Manager for TRS80 and EG2000 - Version %1").arg(qApp->applicationVersion()));
+    setWindowTitle(tr("Cassette Manager for TRS80 and EG2000 - Version %1")
+		   .arg(qApp->applicationVersion()));
 
     QSettings s;
     QByteArray splitter_state = s.value(key_splitter_state).toByteArray();
@@ -82,13 +90,25 @@ Cass80Main::Cass80Main(QWidget *parent)
     connect(m_cas, SIGNAL(Info(QString)), SLOT(Info(QString)));
     connect(m_cas, SIGNAL(Error(QString)), SLOT(Error(QString)));
 
+    connect(ui->action_About, SIGNAL(triggered()), SLOT(about()));
+    connect(ui->action_AboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(ui->action_Load, SIGNAL(triggered()), SLOT(load()));
     connect(ui->action_Save, SIGNAL(triggered()), SLOT(save()));
     connect(ui->action_Information, SIGNAL(triggered()), SLOT(information()));
     connect(ui->action_Quit, SIGNAL(triggered()), SLOT(close()));
+    connect(ui->action_Undo_lmoffset, SIGNAL(triggered()), SLOT(undo_lmoffset()));
+    connect(ui->action_Preferences, SIGNAL(triggered()), SLOT(preferences()));
 
+#if GENERATE_BDF
     m_bdf->generate(QLatin1String(":/resources/cgenie1.fnt"),
 		    QLatin1String("cgenie1.bdf"));
+#endif
+
+#if GENERATE_DEFS
+    listing2xml l2x;
+    l2x.parse(QStringLiteral(":/resources/cgenie-2008-08-10.txt"),
+	      QString("%1/%2").arg(g_mysrcdir).arg("cgenie-new.xml"));
+#endif
 }
 
 Cass80Main::~Cass80Main()
@@ -120,12 +140,17 @@ void Cass80Main::Error(QString message)
     update_cursor();
 }
 
+bool Cass80Main::about()
+{
+    AboutDlg dlg(this);
+    return QDialog::Accepted == dlg.exec();
+}
+
 bool Cass80Main::load()
 {
     QSettings s;
     QFileDialog dlg;
-    QString directory = QStringLiteral("/home/jbu/src/emulators/z80/cgenie/cas/");
-    directory = s.value(QLatin1String("directory"), directory).toString();
+    QString directory = s.value(QLatin1String("directory")).toString();
     dlg.setFileMode(QFileDialog::ExistingFile);
     dlg.setDirectory(directory);
     dlg.setNameFilter(tr("Cassette (*.cas)"));
@@ -177,9 +202,20 @@ bool Cass80Main::load()
 	    }
 	}
 
-	z80Defs z80defs(QLatin1String(":/resources/cgenie-dasm.xml"));
-	z80Dasm z80dasm(true, &z80defs, m_bdf);
-	QStringList listing = z80dasm.list(memory, 0x0000, 0xfff0);
+#if USE_GENERATED_DEFS
+	z80Defs z80defs(QString("%1/%2")
+			.arg(g_mysrcdir)
+			.arg("cgenie-new.xml"));
+#else
+	z80Defs z80defs(QString("%1/%2")
+			.arg(resources)
+			.arg("cgenie-dasm.xml"));
+#endif
+	z80Dasm z80dasm(m_uppercase, &z80defs, m_bdf);
+
+	pc_min = 0; // Always disassemble ROM as well
+
+	QStringList listing = z80dasm.listing(memory, pc_min, pc_max);
 	set_listing(listing);
     }
 
@@ -222,6 +258,27 @@ bool Cass80Main::undo_lmoffset()
     return true;
 }
 
+bool Cass80Main::preferences()
+{
+    preferencesDlg dlg(this);
+    dlg.set_prefer_uppercase(m_uppercase);
+    dlg.set_use_internal_ttf(m_internal_ttf);
+    if (QDialog::Accepted != dlg.exec())
+	return false;
+    m_uppercase = dlg.prefer_uppercase();
+    m_internal_ttf = dlg.use_internal_ttf();
+
+    QSettings s;
+    s.beginGroup(grp_preferences);
+    s.setValue(key_uppercase, m_uppercase);
+    s.setValue(key_internal_ttf, m_internal_ttf);
+    s.endGroup();
+
+    setup_preferences();
+
+    return true;
+}
+
 void Cass80Main::setup_toolbar()
 {
     ui->toolBar->addAction(ui->action_Load);
@@ -232,6 +289,29 @@ void Cass80Main::setup_toolbar()
     ui->toolBar->addAction(ui->action_Quit);
 
     update_actions();
+}
+
+void Cass80Main::setup_preferences()
+{
+    QSettings s;
+    s.beginGroup(grp_preferences);
+    m_internal_ttf = s.value(key_internal_ttf, false).toBool();
+
+    if (m_internal_ttf) {
+	QString ttf = QString("%1/%2")
+		      .arg(g_resources)
+		      .arg("/cgenie1.ttf");
+	int id = QFontDatabase::addApplicationFont(ttf);
+	QStringList families = QFontDatabase::applicationFontFamilies(id);
+	Q_ASSERT(families.contains(font_family));
+	QFont font(font_family);
+	ui->te_listing->setFont(font);
+    } else {
+	QFont font(QLatin1String("Source Code Pro"), -10, QFont::Normal, false);
+	ui->te_listing->setFont(font);
+    }
+
+    m_uppercase = s.value(key_uppercase).toBool();
 }
 
 void Cass80Main::update_actions()

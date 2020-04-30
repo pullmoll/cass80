@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * Cass80 tool - Z80 memory definitions
+ * Cass80 tool - ROM listing to z80Def XML extractor
  *
  * Copyright (C) 2020 Jürgen Buchmüller <pullmoll@t-online.de>
  *
@@ -32,29 +32,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 #pragma once
-#include <QMap>
-#include "z80def.h"
+#include <QString>
 
-class z80Defs
+class z80Defs;
+
+class listing2xml
 {
 public:
-    z80Defs(const QString& filename = nullptr);
+    listing2xml();
 
-    bool load(const QString& filename = nullptr);
-    bool save(const QString& filename = nullptr);
-
-    QString filename() const;
-    QString system() const;
-    QMap<quint32,z80Def> defs() const;
-    z80Def entry(quint32 addr) const;
-    z80DefObj::EntryType type(quint32 addr) const;
-
-    void insert(quint32 addr, z80DefObj* entry);
-
-private:
-    QString m_filename;
-    QString m_system;
-    QDomDocument m_doc;
-    mutable QMap<quint32,z80Def> m_defs;
-    mutable z80Def m_dummy;
+    bool parse(const QString& input, const QString& output);
 };

@@ -32,6 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 #include <QFile>
+#include <QTextStream>
 #include "z80def.h"
 #include "z80defs.h"
 
@@ -43,9 +44,11 @@ z80Defs::z80Defs(const QString& filename)
     , m_system()
     , m_doc()
     , m_defs()
+    , m_dummy(new z80DefObj())
 {
     if (nullptr != m_filename)
 	load();
+    m_dummy->set_type(z80DefObj::CODE);
 }
 
 bool z80Defs::load(const QString& filename)
@@ -71,21 +74,41 @@ bool z80Defs::load(const QString& filename)
     QString tag_name = root.tagName().toUpper();
     if (tag_name == xml_tag_def) {
 	for (QDomElement child = root.firstChildElement(); !child.isNull(); child = child.nextSiblingElement()) {
-	    z80Def def = z80Def(child);
-	    if (z80Def::INVALID == def.type()) {
-		def.setType(m_last_type);
-	    } else {
-		m_last_type = def.type();
-		if (z80Def::DEFS == m_last_type)
-		    m_last_type = z80Def::CODE;
-	    }
-	    m_defs.insert(def.addr(), def);
+	    z80DefObj* def = new z80DefObj(child);
+	    m_defs.insert(def->addr0(), z80Def(def));
 	}
     } else {
 	res = false;
     }
 
     return res;
+}
+
+bool z80Defs::save(const QString& filename)
+{
+    if (filename != nullptr)
+	m_filename = filename;
+
+    QDomDocument doc(xml_tag_def);
+    QDomNode root = doc.createElement(xml_tag_def);
+    foreach(const quint32 addr, m_defs.keys()) {
+	const z80Def& def = m_defs[addr];
+	QDomElement elm = def->toDomElement(doc, def);
+	root.appendChild(elm);
+    }
+    doc.appendChild(root);
+    QString xml = doc.toString(4);
+    QFile file(m_filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+	qCritical("Saving failed to create '%s'\n%s",
+		  qPrintable(m_filename),
+		  qPrintable(file.errorString()));
+	return false;
+    }
+    QTextStream stream(&file);
+    stream << xml;
+
+    return QTextStream::Ok == stream.status();
 }
 
 QString z80Defs::filename() const
@@ -103,27 +126,47 @@ QMap<quint32, z80Def> z80Defs::defs() const
     return m_defs;
 }
 
-z80Def z80Defs::def(quint32 addr) const
+z80Def z80Defs::entry(quint32 addr) const
 {
     if (m_defs.contains(addr))
 	return m_defs.value(addr);
 
-    // search entry with highest key < addr
-    quint32 last = 0;
-    foreach(const quint32 key, m_defs.keys()) {
-	if (key < addr)
-	    last = key;
+    quint32 last = ~0u;
+    // Scan backwards down to -8 bytes for an original entry
+    for (quint32 pc = addr - 1; addr - pc < 8; --pc) {
+	if (m_defs.contains(pc) && m_defs[pc]->has_symbol()) {
+	    last = m_defs[pc]->addr0();
+	    break;
+	}
     }
-    z80Def def = m_defs.value(last);
-    quint32 addr0 = def.addr();
-    def.setAddr(addr);
-    def.setSymbol(QString("%1+%2")
-		  .arg(def.symbol())
+
+    // No definitions at all: return an empty dummy
+    if (last == ~0u) {
+	m_dummy->set_addr(addr);
+	return m_dummy;
+    }
+
+    // Create a new z80Def object
+    z80DefObj* def = new z80DefObj(*m_defs[last]);
+    quint32 addr0 = def->addr0();
+    def->set_addr(addr);
+    def->set_symbol(QString("%1+%2")
+		  .arg(def->symbol())
 		  .arg(addr - addr0));
-    return def;
+    // And insert into table
+    m_defs.insert(addr, z80Def(def));
+    return m_defs[addr];
 }
 
-z80Def::EntryType z80Defs::type(quint32 addr) const
+z80DefObj::EntryType z80Defs::type(quint32 addr) const
 {
-    return def(addr).type();
+    z80Def d = entry(addr);
+    if (d.isNull())
+	return z80DefObj::INVALID;
+    return d->type();
+}
+
+void z80Defs::insert(quint32 addr, z80DefObj* def)
+{
+    m_defs.insert(addr, z80Def(def));
 }

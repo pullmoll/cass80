@@ -52,13 +52,17 @@ public:
 private slots:
     void Info(QString message);
     void Error(QString message);
+
+    bool about();
     bool load();
     bool save();
     bool information();
     bool undo_lmoffset();
+    bool preferences();
 
 private:
     void setup_toolbar();
+    void setup_preferences();
     void update_actions();
 
     void set_listing(const QStringList& list);
@@ -68,5 +72,7 @@ private:
     Ui::Cass80Main *ui;
     Cass80Handler *m_cas;
     bdfData *m_bdf;
+    bool m_internal_ttf;
+    bool m_uppercase;
     QString m_filepath;
 };
