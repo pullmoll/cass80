@@ -132,8 +132,8 @@ z80Def z80Defs::entry(quint32 addr) const
 	return m_defs.value(addr);
 
     quint32 last = ~0u;
-    // Scan backwards down to -8 bytes for an original entry
-    for (quint32 pc = addr - 1; addr - pc < 8; --pc) {
+    // Scan backwards down to -32 bytes for an original entry
+    for (quint32 pc = addr - 1; addr - pc < 32; --pc) {
 	if (m_defs.contains(pc) && m_defs[pc]->has_symbol()) {
 	    last = m_defs[pc]->addr0();
 	    break;

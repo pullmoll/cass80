@@ -57,7 +57,7 @@ private:
     QString dasm_defw(quint32 pc, off_t& pos, const quint8* opram);
     QString dasm_defd(quint32 pc, off_t& pos, const quint8* opram);
     QString dasm_defs(quint32 pc, off_t& pos, const quint8* opram);
-    QString dasm_defm(quint32 pc, off_t& pos, const quint8* opram);
+    QString dasm_text(quint32 pc, off_t& pos, const quint8* opram);
     QString dasm_token(quint32 pc, off_t& pos, const quint8* opram);
     QString dasm_code(quint32 pc, off_t& pos, quint32& flags, const quint8* oprom, const quint8* opram);
     bool m_uppercase;

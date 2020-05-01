@@ -332,14 +332,14 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 
     att = xml_att_addr;
     if (elm.attribute(att).isEmpty()) {
-	def.m_addr0 = def.m_addr = ~0u;
+	def.m_addr0 = def.m_addr = 0;
     } else {
 	QString val = elm.attribute(att);
 	bool ok;
 	def.m_addr0 = def.m_addr = val.toUInt(&ok, 16);
 	if (!ok) {
 	    qDebug("%s: unknown attribute %s value '%s'", __func__, qPrintable(att), qPrintable(val));
-	    def.m_addr0 = def.m_addr = ~0u;
+	    def.m_addr0 = def.m_addr = 0;
 	}
     }
 
@@ -360,7 +360,7 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 	def.m_param = val.toUInt(&ok, 16);
 	if (!ok) {
 	    qDebug("%s: unknown attribute %s value '%s'", __func__, qPrintable(att), qPrintable(val));
-	    def.m_param = ~0u;
+	    def.m_param = 0;
 	}
     }
 

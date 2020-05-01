@@ -304,7 +304,7 @@ QString z80Dasm::dasm_defw(quint32 pc, off_t& pos, const quint8* opram)
     str.resize(7, QChar::Space);
     dasm += str;
     ea = rd16(opram + pos);
-    dasm += hexw(ea);
+    dasm += symbol_w(ea);
     pos += 2;
     return dasm;
 }
@@ -367,7 +367,7 @@ QString z80Dasm::dasm_defs(quint32 pc, off_t& pos, const quint8* opram)
  * @param opram pointer to opcode RAM
  * @return string with words defined
  */
-QString z80Dasm::dasm_defm(quint32 pc, off_t& pos, const quint8* opram)
+QString z80Dasm::dasm_text(quint32 pc, off_t& pos, const quint8* opram)
 {
     QString dasm;
     QString str = z80Token::string(z80Token::z80DEFM);
@@ -401,7 +401,7 @@ QString z80Dasm::dasm_defm(quint32 pc, off_t& pos, const quint8* opram)
 	prev = opram[pos++];
 
 	z80Def ent = m_defs->entry(pc + pos);
-	if (ent->type() != z80DefObj::TEXT)
+	if (ent->is_at_addr(pc + pos) && ent->type() != z80DefObj::TEXT)
 	    break;
     }
 
@@ -470,7 +470,7 @@ QString z80Dasm::dasm_token(quint32 pc, off_t& pos, const quint8* opram)
 	    }
 	}
 	z80Def ent = m_defs->entry(pc + pos);
-	if (ent->type() != z80DefObj::TOKEN)
+	if (ent->is_at_addr(pc + pos) && ent->type() != z80DefObj::TOKEN)
 	    break;
 	pos++;
     }
@@ -659,7 +659,7 @@ QString z80Dasm::dasm(quint32 pc, off_t& pos, quint32& flags, const quint8 *opro
 	break;
 
     case z80DefObj::TEXT:
-	dasm += dasm_defm(pc, pos, opram);
+	dasm += dasm_text(pc, pos, opram);
 	break;
 
     case z80DefObj::TOKEN:

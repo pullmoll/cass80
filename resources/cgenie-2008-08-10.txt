@@ -21,7 +21,7 @@
 ; I: DE = DCB Address
 ; O: A = Input byte
 
-  00013 C5              DEFB    0C5H            ; Save BC
+  00013 C5              PUSH    BC              ; Save BC
   00014 0601            LD      B,1             ; DCB type: input
   00016 182E            JR      0046H           ; Call DCB
   00018 C30640          JP      4006H           ; RST 18H: jump to 4006H

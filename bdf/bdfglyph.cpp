@@ -31,20 +31,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-#pragma once
-#include <QString>
-
-class bdfGlyph
+#include "bdfglyph.h"
+bdfGlyphObj::bdfGlyphObj(const uchar ch, const quint32 uc, const QString& name)
+    : m_char(ch)
+    , m_unicode(uc)
+    , m_name(name)
 {
-public:
-    bdfGlyph(const uchar ch, const quint32 uc, const QString& name);
+}
 
-    uchar ch() const;
-    quint32 uc() const;
-    QString name() const;
+uchar bdfGlyphObj::ch() const
+{
+    return m_char;
+}
 
-private:
-    uchar m_char;
-    uchar m_unicode;
-    QString m_name;
-};
+quint32 bdfGlyphObj::uc() const
+{
+    return m_unicode;
+}
+
+QString bdfGlyphObj::name() const
+{
+    return m_name;
+}

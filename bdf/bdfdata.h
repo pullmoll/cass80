@@ -38,10 +38,9 @@
 #include <QVariantList>
 #include <QFile>
 #include <QTextStream>
+#include "bdfglyph.h"
 
 #define	DEFAULT_BDF_PIXEL_SIZE	16
-
-class bdfGlyph;
 
 class bdfData
 {
@@ -92,10 +91,11 @@ private:
     int BDF_BBOX_X = 0;
     int BDF_BBOX_Y = 0;
 
-    QHash<uchar,bdfGlyph*> m_glyphs;
+    QHash<uchar,bdfGlyph> m_glyphs;
     QStringList m_properties;
 
     void setup_properties();
+    void insert(bdfGlyphObj* glyph);
     int bit_chk(const QByteArray& buff, int x, int y);
     void bit_set(QByteArray& bitmap, int x);
     void emit_bitmap(QTextStream& bdf, const QByteArray& buff);

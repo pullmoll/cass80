@@ -13,49 +13,53 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    $$PWD/basictoken.cpp \
-    $$PWD/bdfdata.cpp \
-    $$PWD/cass80handler.cpp \
-    $$PWD/cass80infodlg.cpp \
-    $$PWD/cass80main.cpp \
-    $$PWD/cass80xml.cpp \
-    $$PWD/main.cpp \
+    $$PWD/src/basictoken.cpp \
+    $$PWD/bdf/bdfdata.cpp \
+    $$PWD/bdf/bdfglyph.cpp \
+    $$PWD/dialogs/aboutdlg.cpp \
+    $$PWD/dialogs/casinfodlg.cpp \
+    $$PWD/dialogs/preferencesdlg.cpp \
+    $$PWD/src/cass80handler.cpp \
+    $$PWD/src/cass80main.cpp \
+    $$PWD/src/cass80xml.cpp \
+    $$PWD/src/listing2xml.cpp \
+    $$PWD/src/main.cpp \
     $$PWD/z80/z80dasm.cpp \
     $$PWD/z80/z80def.cpp \
     $$PWD/z80/z80defs.cpp \
-    $$PWD/z80/z80token.cpp \
-    aboutdlg.cpp \
-    bdfglyph.cpp \
-    listing2xml.cpp \
-    preferencesdlg.cpp
+    $$PWD/z80/z80token.cpp
 
 HEADERS += \
-    $$PWD/basictoken.h \
-    $$PWD/bdfdata.h \
-    $$PWD/cass80handler.h \
-    $$PWD/cass80infodlg.h \
-    $$PWD/cass80main.h \
-    $$PWD/cass80xml.h \
-    $$PWD/constants.h \
+    $$PWD/include/basictoken.h \
+    $$PWD/bdf/bdfdata.h \
+    $$PWD/bdf/bdfglyph.h \
+    $$PWD/dialogs/aboutdlg.h \
+    $$PWD/dialogs/casinfodlg.h \
+    $$PWD/dialogs/preferencesdlg.h \
+    $$PWD/include/cass80handler.h \
+    $$PWD/include/cass80main.h \
+    $$PWD/include/cass80xml.h \
+    $$PWD/include/constants.h \
+    $$PWD/include/listing2xml.h \
     $$PWD/z80/z80dasm.h \
     $$PWD/z80/z80def.h \
     $$PWD/z80/z80defs.h \
-    $$PWD/z80/z80token.h \
-    aboutdlg.h \
-    bdfglyph.h \
-    listing2xml.h \
-    preferencesdlg.h
+    $$PWD/z80/z80token.h
 
 FORMS += \
-    aboutdlg.ui \
-    cass80infodlg.ui \
+    $$PWD/dialogs/aboutdlg.ui \
+    $$PWD/dialogs/casinfodlg.ui \
+    $$PWD/dialogs/preferencesdlg.ui \
+    cass80main.ui
     cass80main.ui \
-    preferencesdlg.ui
 
 TRANSLATIONS += \
     cas_de_DE.ts
 
+INCLUDEPATH += $$PWD/bdf
+INCLUDEPATH += $$PWD/dialogs
 INCLUDEPATH += $$PWD/z80
+INCLUDEPATH += $$PWD/include
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

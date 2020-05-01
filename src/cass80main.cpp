@@ -42,7 +42,7 @@
 #include "cass80xml.h"
 
 #include "aboutdlg.h"
-#include "cass80infodlg.h"
+#include "casinfodlg.h"
 #include "preferencesdlg.h"
 #include "z80defs.h"
 #include "z80dasm.h"

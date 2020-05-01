@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * Cass80 tool - cassette image information dialog
+ * Cass80 tool - BDF glyph class (char, unicode, name)
  *
  * Copyright (C) 2020 Jürgen Buchmüller <pullmoll@t-online.de>
  *
@@ -31,54 +31,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-#include <QSettings>
-#include "cass80handler.h"
-#include "cass80infodlg.h"
-#include "ui_cass80infodlg.h"
+#pragma once
+#include <QString>
+#include <QSharedPointer>
 
-static const QLatin1String key_geometry("geometry");
-
-cass80InfoDlg::cass80InfoDlg(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::cass80InfoDlg)
+class bdfGlyphObj
 {
-    ui->setupUi(this);
-    QSettings s;
-    s.beginGroup(objectName());
-    restoreGeometry(s.value(key_geometry).toByteArray());
-    s.endGroup();
-}
+public:
+    bdfGlyphObj(const uchar ch, const quint32 uc, const QString& name);
 
-cass80InfoDlg::~cass80InfoDlg()
-{
-    QSettings s;
-    s.beginGroup(objectName());
-    s.setValue(key_geometry, saveGeometry());
-    s.endGroup();
-    delete ui;
-}
+    uchar ch() const;
+    quint32 uc() const;
+    QString name() const;
 
-void cass80InfoDlg::setup(Cass80Handler* cas)
-{
-    switch (cas->machine()) {
-    case MACH_EG2000:
-	ui->le_machine->setText(tr("EG2000"));
-	break;
-    case MACH_TRS80:
-	ui->le_machine->setText(tr("TRS80"));
-	break;
-    default:
-	ui->le_machine->setText(QString());
-	break;
-    }
-    ui->le_hdr_name->setText(cas->hdr_name());
-    ui->le_hdr_author->setText(cas->hdr_author());
-    ui->le_hdr_copyright->setText(cas->hdr_copyright());
-    ui->tb_hdr_description->setText(cas->hdr_description());
+private:
+    uchar m_char;
+    uchar m_unicode;
+    QString m_name;
+};
 
-    ui->le_filename->setText(cas->filename());
-    ui->le_blen->setText(QString::number(cas->blen()));
-    ui->le_nblocks->setText(QString::number(cas->count()));
-    ui->le_format->setText(cas->basic() ? QLatin1String("BASIC") : QLatin1String("SYSTEM"));
-    ui->le_digest->setText(QString::fromLatin1(cas->digest().toHex()));
-}
+typedef QSharedPointer<bdfGlyphObj> bdfGlyph;
