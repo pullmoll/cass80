@@ -60,6 +60,7 @@ public:
     QString filename() const;
     quint16 blen() const;
     QByteArray digest() const;
+    quint32 crc32() const;
 
     bool load(const QString& filename);
     bool load(QIODevice* device);
@@ -104,6 +105,7 @@ private:
     bool m_basic;
 
     QCryptographicHash m_sha1;
+    quint32 m_crc32;
     QByteArray m_digest;
     QStringList m_source;
     CasBlockList  m_blocks;

@@ -201,17 +201,19 @@ bool listing2xml::parse(const QString& input, const QString& output)
 
     QTextStream stream(&listfile);
     QStringList comments;
+    QString comment;
     int lno = 0;
 
     z80Defs* defs = new z80Defs(output);
 
+    quint32 prev_pc = ~0u;
     while (!stream.atEnd()) {
-	quint32 prev_addr = ~0u;
 	const QString line = stream.readLine();
 
 	++lno;
-	if (line.isEmpty())
+	if (line.isEmpty()) {
 	    continue;
+	}
 
 	if (line.startsWith(QChar(';'))) {
 	    comments += line.mid(1);
@@ -219,59 +221,67 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	}
 
 	bool ok;
-	QString dasm = line.mid(24, 24);
-	quint32 addr = line.mid(2, 5).toUInt(&ok, 16);
-	bool continuation = dasm.trimmed().isEmpty();
-	if (!ok && ~0u == prev_addr) {
-	    // No first address yet
-	    continue;
-	} else {
-	    addr = prev_addr;
+	QString addr = line.mid(2, 4).trimmed();
+	QString dasm = line.mid(24, 24).trimmed();
+	QString cmnt = line.mid(49).trimmed();
+	bool continuation = addr.isEmpty() && dasm.isEmpty();
+
+	quint32 pc = addr.toUInt(&ok, 16);
+	if (!ok) {
+	    pc = prev_pc;
 	}
 
+	if (!cmnt.isEmpty() && continuation) {
+	    // line comment spanning multiple lines
+	    z80Def def = defs->entry(pc);
+	    QString prev = !def.isNull() && def->has_line_comment() ? def->line_comment() : QString();
+	    comment += QString("%1\n%2").arg(prev).arg(cmnt);
+	} else {
+	    comment = cmnt;
+	}
 
 	z80DefObj* def = new z80DefObj();
-	def->set_addr0(addr);
+	def->set_addr0(pc);
 	if (!comments.isEmpty()) {
 	    // comment line(s) before an address
 	    def->set_block_comment(comments);
 	}
 
-	QString comment;
-	int pos = line.indexOf(QChar(';'), 48);
-	if (pos >= 0) {
-	    if (continuation) {
-		// line comment spanning multiple lines
-		comment = QString("%1\n%2")
-			  .arg(def->line_comment())
-			  .arg(line.mid(pos + 1).trimmed());
-	    } else {
-		comment = line.mid(pos + 1);
-	    }
-	}
 	if (!comment.isEmpty()) {
 	    def->set_line_comment(comment);
+	    comment.clear();
 	}
 
 	z80DefObj::EntryType type = z80DefObj::CODE;
-	if (line.indexOf(QLatin1String("DEFB")) > 0) {
+	if (dasm.indexOf(QLatin1String("DEFB")) > 0) {
 	    type = z80DefObj::DEFB;
-	    if (line.indexOf(QChar('"')) > 0) {
+	    if (dasm.indexOf(QChar('"')) > 0) {
 		// Text string in double quotes
 		type = z80DefObj::TEXT;
-		if (line.indexOf(QLatin1String("128+")) > 0) {
+		if (dasm.indexOf(QLatin1String("128+")) > 0) {
 		    // Probably a token list
 		    type = z80DefObj::TOKEN;
 		}
 	    }
 	}
-
-	if (line.indexOf(QLatin1String("DEFW")) > 0) {
+	if (dasm.indexOf(QLatin1String("DEFW")) > 0) {
 	    type = z80DefObj::DEFW;
+	}
+	if (dasm.indexOf(QLatin1String("DEFM")) > 0) {
+	    type = z80DefObj::TEXT;
 	}
 	def->set_type(type);
 
-	if (comments.count() > 0) {
+	// Scan for known symbol for pc
+	for (size_t i = 0; cgenie_symbols[i].name; i++) {
+	    if (pc == cgenie_symbols[i].addr) {
+		def->set_symbol(QString::fromLatin1(cgenie_symbols[i].name));
+		break;
+	    }
+	}
+
+	// If no symbol, try to extract from first block comment line
+	if (!def->has_symbol() && comments.count() > 0) {
 	    QString first = comments.first();
 	    if (first.endsWith(QLatin1String(" statement"))) {
 		QStringList words = first.split(QChar::Space, Qt::SkipEmptyParts);
@@ -279,20 +289,11 @@ bool listing2xml::parse(const QString& input, const QString& output)
 		def->set_symbol(symbol);
 	    }
 	}
+
 	comments.clear();
+	defs->insert(pc, def);
 
-	if (!def->has_symbol()) {
-	    for (size_t i = 0; cgenie_symbols[i].name; i++) {
-		if (addr == cgenie_symbols[i].addr) {
-		    def->set_symbol(QString::fromLatin1(cgenie_symbols[i].name));
-		    break;
-		}
-	    }
-	}
-
-	defs->insert(addr, def);
-
-	prev_addr = addr;
+	prev_pc = pc;
     }
 
     defs->save();

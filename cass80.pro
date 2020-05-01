@@ -53,8 +53,11 @@ FORMS += \
     cass80main.ui
     cass80main.ui \
 
+win32: LIBS += -lzlib
+unix: LIBS += -lz
+
 TRANSLATIONS += \
-    cas_de_DE.ts
+    cass80_de_DE.ts
 
 INCLUDEPATH += $$PWD/bdf
 INCLUDEPATH += $$PWD/dialogs

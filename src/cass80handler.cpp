@@ -31,6 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
+#include <zlib.h>	// for crc32()
 #include "basictoken.h"
 #include "constants.h"
 #include "cass80handler.h"
@@ -130,6 +131,7 @@ Cass80Handler::Cass80Handler(QObject *parent)
     , m_csum(0)
     , m_basic(false)
     , m_sha1(QCryptographicHash::Sha1)
+    , m_crc32(~0u)
     , m_digest()
     , m_source()
     , m_blocks()
@@ -156,6 +158,7 @@ void Cass80Handler::reset()
     m_basic = false;
 
     m_sha1.reset();
+    m_crc32 = ~0u;
     m_digest.clear();
     m_source.clear();
     m_blocks.clear();
@@ -225,6 +228,11 @@ QByteArray Cass80Handler::digest() const
     return m_digest;
 }
 
+quint32 Cass80Handler::crc32() const
+{
+    return m_crc32;
+}
+
 bool Cass80Handler::basic() const
 {
     return m_basic;
@@ -253,6 +261,10 @@ bool Cass80Handler::load(QIODevice* device)
     uchar *bp;
 
     reset();
+    // Use zlib's crc32
+    m_crc32 = ::crc32(static_cast<uLong>(0),
+		      reinterpret_cast<const Bytef *>(data.constData()),
+		      static_cast<uLong>(data.size()));
 
     int start = data.indexOf(CAS_TRS80_SYNC);
     if (data.indexOf(CAS_CGENIE_SYNC) < start)

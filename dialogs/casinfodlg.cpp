@@ -81,4 +81,5 @@ void cass80InfoDlg::setup(Cass80Handler* cas)
     ui->le_nblocks->setText(QString::number(cas->count()));
     ui->le_format->setText(cas->basic() ? QLatin1String("BASIC") : QLatin1String("SYSTEM"));
     ui->le_digest->setText(QString::fromLatin1(cas->digest().toHex()));
+    ui->le_crc32->setText(QString("%1").arg(cas->crc32(), 8, 16, QChar('0')));
 }
