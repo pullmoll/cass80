@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>525</width>
-    <height>278</height>
+    <width>467</width>
+    <height>327</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>FreeSans</family>
+    <pointsize>12</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>About …</string>
@@ -16,6 +22,12 @@
   <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
    <item row="0" column="1">
     <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>FreeSans</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -67,7 +79,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="cass80.qrc">:/image/cass80.png</pixmap>
+      <pixmap resource="../cass80.qrc">:/image/cass80.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -89,6 +101,12 @@
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>FreeSans</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -112,7 +130,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="cass80.qrc"/>
+  <include location="../cass80.qrc"/>
  </resources>
  <connections>
   <connection>

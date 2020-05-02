@@ -698,10 +698,10 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
 	def = m_defs->entry(pc);
 	Q_ASSERT(!def.isNull());
 
-	if (def->is_at_addr(pc) && def->has_block_comment()) {
-	    QStringList comment = def->block_comment();
-	    foreach(const QString& line, comment) {
-		result += QString("; %1").arg(line);
+	if (def->is_at_addr(pc) && def->has_block_comments()) {
+	    QStringList comments = def->block_comments();
+	    foreach(const QString& comment, comments) {
+		result += QString("; %1").arg(comment);
 	    }
 	}
 
@@ -731,21 +731,18 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
 			 .arg(line);
 
 	if (def->is_at_addr(pc) && def->has_line_comment()) {
-	    QString comment = def->line_comment();
+	    QStringList comments = def->line_comments();
 	    if (buffer.length() < m_comment_column)
 		buffer.resize(m_comment_column, QChar::Space);
-	    if (comment.contains(QChar::LineFeed)) {
-		QStringList comments = comment.split(QChar::LineFeed);
-		buffer += QString("; %1").arg(comments.first());
-		result += buffer;
-		for (int i = 1; i < comments.count(); i++) {
-		    buffer.fill(QChar::Space, m_comment_column);
-		    buffer += QString("; %1").arg(comments.at(i));
-		    if (i + 1 < comments.count())
-			result += buffer;
-		}
-	    } else {
-		buffer += QString("; %1").arg(comment);
+	    buffer += QString("; %1").arg(comments.first());
+	    result += buffer;
+
+	    // any additional lines indented to m_comment_column
+	    for (int i = 1; i < comments.count(); i++) {
+		buffer.fill(QChar::Space, m_comment_column);
+		buffer += QString("; %1").arg(comments.at(i));
+		if (i + 1 < comments.count())
+		    result += buffer;
 	    }
 	} else if (m_comment_glyphs) {
 	    if (buffer.length() < m_comment_column)

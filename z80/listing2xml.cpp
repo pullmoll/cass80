@@ -200,8 +200,8 @@ bool listing2xml::parse(const QString& input, const QString& output)
     }
 
     QTextStream stream(&listfile);
-    QStringList comments;
-    QString comment;
+    QStringList block_comments;
+    QStringList line_comment;
     int lno = 0;
 
     z80Defs* defs = new z80Defs(output);
@@ -216,40 +216,40 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	}
 
 	if (line.startsWith(QChar(';'))) {
-	    comments += line.mid(1);
+	    block_comments += line.mid(1);
 	    continue;
 	}
 
-	bool ok;
-	QString addr = line.mid(2, 4).trimmed();
-	QString dasm = line.mid(24, 24).trimmed();
-	QString cmnt = line.mid(49).trimmed();
+	QString addr = line.mid(2, 4).trimmed();	// columns 2-6 are the address
+	QString dasm = line.mid(24, 24).trimmed();	// columns 24-48 are the disassembly
+	QString cmnt = line.mid(49).trimmed();		// columns 48- are a comment (starts with ';')
 	bool continuation = addr.isEmpty() && dasm.isEmpty();
 
+	bool ok;
 	quint32 pc = addr.toUInt(&ok, 16);
 	if (!ok) {
+	    // no valid pc so use the previous one
 	    pc = prev_pc;
 	}
 
-	if (!cmnt.isEmpty() && continuation) {
-	    // line comment spanning multiple lines
-	    z80Def def = defs->entry(pc);
-	    QString prev = !def.isNull() && def->has_line_comment() ? def->line_comment() : QString();
-	    comment += QString("%1\n%2").arg(prev).arg(cmnt);
-	} else {
-	    comment = cmnt;
+	if (!cmnt.isEmpty()) {
+	    line_comment += cmnt;
+	}
+
+	if (continuation) {
+	    continue;
 	}
 
 	z80DefObj* def = new z80DefObj();
 	def->set_addr0(pc);
-	if (!comments.isEmpty()) {
+	if (!block_comments.isEmpty()) {
 	    // comment line(s) before an address
-	    def->set_block_comment(comments);
+	    def->set_block_comment(block_comments);
 	}
 
-	if (!comment.isEmpty()) {
-	    def->set_line_comment(comment);
-	    comment.clear();
+	if (!line_comment.isEmpty()) {
+	    def->set_line_comment(line_comment);
+	    line_comment.clear();
 	}
 
 	z80DefObj::EntryType type = z80DefObj::CODE;
@@ -281,8 +281,8 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	}
 
 	// If no symbol, try to extract from first block comment line
-	if (!def->has_symbol() && comments.count() > 0) {
-	    QString first = comments.first();
+	if (!def->has_symbol() && block_comments.count() > 0) {
+	    QString first = block_comments.first();
 	    if (first.endsWith(QLatin1String(" statement"))) {
 		QStringList words = first.split(QChar::Space, Qt::SkipEmptyParts);
 		QString symbol = words.first();
@@ -290,7 +290,7 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	    }
 	}
 
-	comments.clear();
+	block_comments.clear();
 	defs->insert(pc, def);
 
 	prev_pc = pc;

@@ -60,12 +60,12 @@ public:
     bool isValid() const;
     bool is_at_addr(quint32 addr) const;
     bool has_symbol() const;
-    bool has_block_comment() const;
+    bool has_block_comments() const;
     bool has_line_comment() const;
 
     QString symbol() const;
-    QStringList block_comment() const;
-    QString line_comment() const;
+    QStringList block_comments() const;
+    QStringList line_comments() const;
     quint32 addr0() const;
     quint32 addr() const;
     EntryType type() const;
@@ -77,7 +77,7 @@ public:
 
     void set_symbol(const QString& symbol = QString());
     void set_block_comment(const QStringList& lines = QStringList());
-    void set_line_comment(const QString& line_comment = QString());
+    void set_line_comment(const QStringList& lines = QStringList());
     void set_addr0(const quint32 addr = 0);
     void set_addr(const quint32 addr = 0);
     void set_type(const EntryType type = CODE);
@@ -90,7 +90,7 @@ public:
 private:
     QString	m_symbol;
     QStringList	m_block_comment;
-    QString	m_line_comment;
+    QStringList	m_line_comment;
     quint32	m_addr0;
     quint32	m_addr;
     EntryType	m_type;

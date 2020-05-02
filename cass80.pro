@@ -22,8 +22,8 @@ SOURCES += \
     $$PWD/src/cass80handler.cpp \
     $$PWD/src/cass80main.cpp \
     $$PWD/src/cass80xml.cpp \
-    $$PWD/src/listing2xml.cpp \
     $$PWD/src/main.cpp \
+    $$PWD/z80/listing2xml.cpp \
     $$PWD/z80/z80dasm.cpp \
     $$PWD/z80/z80def.cpp \
     $$PWD/z80/z80defs.cpp \
@@ -40,7 +40,7 @@ HEADERS += \
     $$PWD/include/cass80main.h \
     $$PWD/include/cass80xml.h \
     $$PWD/include/constants.h \
-    $$PWD/include/listing2xml.h \
+    $$PWD/z80/listing2xml.h \
     $$PWD/z80/z80dasm.h \
     $$PWD/z80/z80def.h \
     $$PWD/z80/z80defs.h \
@@ -73,6 +73,7 @@ RESOURCES += \
     cass80.qrc
 
 DISTFILES += \
+    cass80_de_DE.qm \
     image/application-exit.png \
     image/document-open.png \
     image/document-save-as.png \

@@ -7,6 +7,7 @@ AboutDlg::AboutDlg(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle(tr("About %1").arg(qApp->applicationName()));
+    adjustSize();
 }
 
 AboutDlg::~AboutDlg()

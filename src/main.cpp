@@ -34,6 +34,7 @@
 #include "cass80main.h"
 
 #include <QApplication>
+#include <QTranslator>
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +43,11 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(QLatin1String("0.2.0"));
     a.setOrganizationName(QLatin1String("pullmoll"));
     a.setOrganizationDomain(QLatin1String("mamedev.myds.me"));
+
+    QTranslator translator;
+    // look up e.g. :/translations/cass80_de.qm
+    if (translator.load(QLocale(), QLatin1String("cass80"), QLatin1String("_"), QLatin1String(":/translations")))
+	QCoreApplication::installTranslator(&translator);
 
     Cass80Main w;
     w.show();

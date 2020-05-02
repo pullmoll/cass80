@@ -9,3 +9,6 @@ bdfgen
 
 # Generated file
 cgenie-new.xml
+
+# Temporary files (QtCreator)
+*.autosave

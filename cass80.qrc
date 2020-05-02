@@ -13,5 +13,6 @@
         <file>image/lmoffset-undo.png</file>
         <file>image/preferences.png</file>
         <file>image/cass80.png</file>
+        <file>translations/cass80_de_DE.qm</file>
     </qresource>
 </RCC>

@@ -117,7 +117,7 @@ bool z80DefObj::has_symbol() const
  * @brief Return true, if the defintion has a block comment
  * @return true if a block comment is available, or false otherwise
  */
-bool z80DefObj::has_block_comment() const
+bool z80DefObj::has_block_comments() const
 {
     return !m_block_comment.isEmpty();
 }
@@ -128,7 +128,7 @@ bool z80DefObj::has_block_comment() const
  */
 bool z80DefObj::has_line_comment() const
 {
-    return !(m_line_comment.isNull() || m_line_comment.isEmpty());
+    return !m_line_comment.isEmpty();
 }
 
 /**
@@ -144,7 +144,7 @@ QString z80DefObj::symbol() const
  * @brief Return the block comment string list
  * @return comment string
  */
-QStringList z80DefObj::block_comment() const
+QStringList z80DefObj::block_comments() const
 {
     return m_block_comment;
 }
@@ -153,7 +153,7 @@ QStringList z80DefObj::block_comment() const
  * @brief Return the comment string
  * @return comment string
  */
-QString z80DefObj::line_comment() const
+QStringList z80DefObj::line_comments() const
 {
     return m_line_comment;
 }
@@ -251,11 +251,11 @@ void z80DefObj::set_block_comment(const QStringList& lines)
 
 /**
  * @brief Set a new comment string
- * @param comment string
+ * @param lines QList of lines
  */
-void z80DefObj::set_line_comment(const QString& comment)
+void z80DefObj::set_line_comment(const QStringList& lines)
 {
-    m_line_comment = comment;
+    m_line_comment = lines;
 }
 
 /**
@@ -420,7 +420,8 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 	}
 
 	if (tag_name == xml_tag_comment) {
-	    QString scope = xml_val_scope_line;
+
+	    QString scope = xml_val_scope_line;	// default scope is line
 	    if (e.hasAttribute(xml_att_symbol_scope)) {
 		scope = e.attribute(xml_att_symbol_scope).toLower();
 	    }
@@ -430,11 +431,21 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 	    if (txt.isNull()) {
 		txt = e.firstChild().toText();
 	    }
-	    if (!txt.isNull())
+	    if (!txt.isNull()) {
+		// We have a text node...
 		str = txt.data();
+	    }
 
 	    if (xml_val_scope_line == scope) {
-		def.m_line_comment = str;
+		int line = 0;
+		if (e.hasAttribute(xml_att_comment_id)) {
+		    line = e.attribute(xml_att_comment_id).toInt();
+		}
+		if (line > def.m_line_comment.count()) {
+		    def.m_line_comment += str;
+		} else if (line > 0) {
+		    def.m_line_comment.insert(line - 1, str);
+		}
 		continue;
 	    }
 	    if (xml_val_scope_block == scope) {
@@ -445,7 +456,7 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 		if (line > def.m_block_comment.count()) {
 		    def.m_block_comment += str;
 		} else if (line > 0) {
-		    def.m_block_comment.insert(line - 1, txt.data());
+		    def.m_block_comment.insert(line - 1, str);
 		}
 		continue;
 	    }
@@ -506,25 +517,30 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
     }
 
     if (def->has_line_comment()) {
-	QDomElement cmt = doc.createElement(xml_tag_comment);
-	// cmt.setAttribute(xml_att_symbol_scope, xml_val_scope_line);
-	QDomText txt = doc.createTextNode(def->line_comment());
-	cmt.appendChild(txt);
-	elm.appendChild(cmt);
+	int line = 0;
+	if (1 == def->line_comments().count()) {
+	    // Simple case: just one line
+	    QString comment = def->line_comments().first();
+	    QDomElement cmt = doc.createElement(xml_tag_comment);
+	    QDomText txt = doc.createTextNode(comment);
+	    cmt.appendChild(txt);
+	    elm.appendChild(cmt);
+	} else {
+	    // Multiple lines, will be indented to the comment column
+	    foreach(const QString& comment, def->line_comments()) {
+		QDomElement cmt = doc.createElement(xml_tag_comment);
+		cmt.setAttribute(xml_att_symbol_scope, xml_val_scope_line);
+		cmt.setAttribute(xml_att_comment_id, ++line);
+		QDomText txt = doc.createTextNode(comment);
+		cmt.appendChild(txt);
+		elm.appendChild(cmt);
+	    }
+	}
     }
 
-    if (def->has_block_comment()) {
-#if 0
-	QDomElement cmt = doc.createElement(xml_tag_comment);
-	cmt.setAttribute(xml_att_symbol_scope, xml_val_scope_block);
-	QString comment = def->block_comment().join(QChar::LineFeed);
-	// NOTE: creating a text node with HTML entities like &#10; does not work
-	QDomText txt = doc.createTextNode(comment);
-	cmt.appendChild(txt);
-	elm.appendChild(cmt);
-#else
+    if (def->has_block_comments()) {
 	int line = 0;
-	foreach(const QString& comment, def->block_comment()) {
+	foreach(const QString& comment, def->block_comments()) {
 	    QDomElement cmt = doc.createElement(xml_tag_comment);
 	    cmt.setAttribute(xml_att_symbol_scope, xml_val_scope_block);
 	    cmt.setAttribute(xml_att_comment_id, ++line);
@@ -532,7 +548,6 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
 	    cmt.appendChild(txt);
 	    elm.appendChild(cmt);
 	}
-#endif
     }
 
     elm.setAttribute(xml_att_addr, QString::number(def->addr0(), 16));
