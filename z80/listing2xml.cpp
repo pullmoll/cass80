@@ -201,7 +201,7 @@ bool listing2xml::parse(const QString& input, const QString& output)
 
     QTextStream stream(&listfile);
     QStringList block_comments;
-    QStringList line_comment;
+    QStringList line_comments;
     int lno = 0;
 
     z80Defs* defs = new z80Defs(output);
@@ -220,20 +220,27 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	    continue;
 	}
 
-	QString addr = line.mid(2, 4).trimmed();	// columns 2-6 are the address
+	QString addr = line.mid(2, 5).trimmed();	// columns 2-6 are the address
 	QString dasm = line.mid(24, 24).trimmed();	// columns 24-48 are the disassembly
 	QString cmnt = line.mid(49).trimmed();		// columns 48- are a comment (starts with ';')
 	bool continuation = addr.isEmpty() && dasm.isEmpty();
 
 	bool ok;
 	quint32 pc = addr.toUInt(&ok, 16);
-	if (!ok) {
+	if (ok) {
+	    if (!line_comments.isEmpty()) {
+		z80Def prev = defs->entry(prev_pc);
+		if (!prev.isNull())
+		    prev->set_line_comments(line_comments);
+		line_comments.clear();
+	    }
+	} else {
 	    // no valid pc so use the previous one
 	    pc = prev_pc;
 	}
 
 	if (!cmnt.isEmpty()) {
-	    line_comment += cmnt;
+	    line_comments += cmnt;
 	}
 
 	if (continuation) {
@@ -244,16 +251,15 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	def->set_addr0(pc);
 	if (!block_comments.isEmpty()) {
 	    // comment line(s) before an address
-	    def->set_block_comment(block_comments);
+	    def->set_block_comments(block_comments);
 	}
 
-	if (!line_comment.isEmpty()) {
-	    def->set_line_comment(line_comment);
-	    line_comment.clear();
+	if (!line_comments.isEmpty()) {
+	    def->set_line_comments(line_comments);
 	}
 
 	z80DefObj::EntryType type = z80DefObj::CODE;
-	if (dasm.indexOf(QLatin1String("DEFB")) > 0) {
+	if (dasm.indexOf(QLatin1String("DEFB")) >= 0) {
 	    type = z80DefObj::DEFB;
 	    if (dasm.indexOf(QChar('"')) > 0) {
 		// Text string in double quotes
@@ -264,16 +270,16 @@ bool listing2xml::parse(const QString& input, const QString& output)
 		}
 	    }
 	}
-	if (dasm.indexOf(QLatin1String("DEFW")) > 0) {
+	if (dasm.indexOf(QLatin1String("DEFW")) >= 0) {
 	    type = z80DefObj::DEFW;
 	}
-	if (dasm.indexOf(QLatin1String("DEFM")) > 0) {
+	if (dasm.indexOf(QLatin1String("DEFM")) >= 0) {
 	    type = z80DefObj::TEXT;
 	}
 	def->set_type(type);
 
 	// Scan for known symbol for pc
-	for (size_t i = 0; cgenie_symbols[i].name; i++) {
+	for (size_t i = 0; cgenie_symbols[i].name && pc <= cgenie_symbols[i].addr; i++) {
 	    if (pc == cgenie_symbols[i].addr) {
 		def->set_symbol(QString::fromLatin1(cgenie_symbols[i].name));
 		break;
@@ -290,10 +296,15 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	    }
 	}
 
-	block_comments.clear();
-	defs->insert(pc, def);
-
 	prev_pc = pc;
+
+	if (def->has_symbol() || def->has_line_comments() || def->has_block_comments()) {
+	    defs->insert(pc, def);
+	    line_comments.clear();
+	    block_comments.clear();
+	} else {
+	    delete def;
+	}
     }
 
     defs->save();

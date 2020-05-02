@@ -61,7 +61,7 @@ public:
     bool is_at_addr(quint32 addr) const;
     bool has_symbol() const;
     bool has_block_comments() const;
-    bool has_line_comment() const;
+    bool has_line_comments() const;
 
     QString symbol() const;
     QStringList block_comments() const;
@@ -76,8 +76,8 @@ public:
     z80DefObj operator= (const z80DefObj& other);
 
     void set_symbol(const QString& symbol = QString());
-    void set_block_comment(const QStringList& lines = QStringList());
-    void set_line_comment(const QStringList& lines = QStringList());
+    void set_block_comments(const QStringList& lines = QStringList());
+    void set_line_comments(const QStringList& lines = QStringList());
     void set_addr0(const quint32 addr = 0);
     void set_addr(const quint32 addr = 0);
     void set_type(const EntryType type = CODE);

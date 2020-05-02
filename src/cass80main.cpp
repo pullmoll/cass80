@@ -194,7 +194,7 @@ bool Cass80Main::load()
 	quint16 pc_min = 0xffff;
 	quint16 pc_max = 0x0000;
 	for (int i = 0; i < m_cas->count(); i++) {
-	    CasBlock b = m_cas->block(i);
+	    Cass80Block b = m_cas->block(i);
 	    if (b.type == BT_SYSTEM) {
 		memory.replace(b.addr, b.size, b.data);
 		pc_min = qMin<quint16>(pc_min, b.addr);

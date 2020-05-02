@@ -46,12 +46,12 @@ public:
 
 private:
     quint32 unicode(uchar ch) const;
-    inline QString hexb(quint32 val);
-    inline QString hexw(quint32 val);
-    inline QString hexd(quint32 val);
-    inline QString x08(quint32 val);
-    inline QString x16(quint32 val);
-    inline QString x32(quint32 val);
+    QString hexb(quint32 val);
+    QString hexw(quint32 val);
+    QString hexd(quint32 val);
+    QString x08(quint32 val);
+    QString x16(quint32 val);
+    QString x32(quint32 val);
     QString symbol_w(quint32 ea);
     QString dasm_defb(quint32 pc, off_t& pos, const quint8* opram);
     QString dasm_defw(quint32 pc, off_t& pos, const quint8* opram);
@@ -70,10 +70,4 @@ private:
 
     static inline QChar sign(qint8 offset);
     static inline int offs(qint8 offset);
-    static inline quint32 rd08(const quint8* mem);
-    static inline quint32 rd16(const quint8* mem);
-    static inline quint32 rd32(const quint8* mem);
-    static inline void wr08(quint8* mem, quint32 val);
-    static inline void wr16(quint8* mem, quint32 val);
-    static inline void wr32(quint8* mem, quint32 val);
 };

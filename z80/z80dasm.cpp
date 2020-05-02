@@ -35,6 +35,7 @@
 #include "z80defs.h"
 #include "z80dasm.h"
 #include "z80token.h"
+#include "util.h"
 
 z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
     : m_uppercase(upper)
@@ -51,6 +52,43 @@ z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
     }
 }
 
+quint32 z80Dasm::unicode(uchar ch) const
+{
+    if (m_bdf)
+	return m_bdf->cgenie2unicode(ch);
+    return QChar::fromLatin1(ch).unicode();
+}
+
+QString z80Dasm::hexb(quint32 val)
+{
+    return util::hexb(val, m_uppercase);
+}
+
+QString z80Dasm::hexw(quint32 val)
+{
+    return util::hexw(val, m_uppercase);
+}
+
+QString z80Dasm::hexd(quint32 val)
+{
+    return util::hexd(val, m_uppercase);
+}
+
+QString z80Dasm::x08(quint32 val)
+{
+    return util::x08(val, m_uppercase);
+}
+
+QString z80Dasm::x16(quint32 val)
+{
+    return util::x16(val, m_uppercase);
+}
+
+QString z80Dasm::x32(quint32 val)
+{
+    return util::x32(val, m_uppercase);
+}
+
 /**
  * @brief Return the sign character for an IX/IY offset value
  * @param offset -128 to +127
@@ -59,81 +97,6 @@ z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
 QChar z80Dasm::sign(qint8 offset)
 {
     return (offset < 0) ? QChar('-') : QChar('+');
-}
-
-/**
- * @brief Return Z80 (TRS-80, Video Genie 3003, Colour Genie EG2000) byte value string
- *
- * This returns a string in the format used by Z80 compilers.
- * It's a hexadecimal encoded number with suffix 'h' appended.
- * If the hex representation does not start with a digit, prepend '0'.
- *
- * @param val byte value
- * @return string for the value
- */
-QString z80Dasm::hexb(quint32 val)
-{
-    QString hex;
-    if (val >= 0xa0U) {
-	hex = QString("%1h").arg(val, 3, 16, QChar('0'));
-    } else if (val >= 10) {
-	hex = QString("%1h").arg(val, 2, 16, QChar('0'));
-    } else {
-	hex = QString::number(val);
-    }
-    if (m_uppercase)
-	return hex.toUpper();
-    return hex;
-}
-
-/**
- * @brief Return Z80 (TRS-80, Video Genie 3003, Colour Genie EG2000) word value string
- *
- * This returns a string in the format used by Z80 compilers.
- * It's a hexadecimal encoded number with suffix 'h' appended.
- * If the hex representation does not start with a digit, prepend '0'.
- *
- * @param val word value
- * @return string for the value
- */
-QString z80Dasm::hexw(quint32 val)
-{
-    QString hex;
-    if (val >= 0xa000U) {
-	hex = QString("%1h").arg(val, 5, 16, QChar('0'));
-    } else if (val >= 10) {
-	hex = QString("%1h").arg(val, 4, 16, QChar('0'));
-    } else {
-	hex = QString::number(val);
-    }
-    if (m_uppercase)
-	return hex.toUpper();
-    return hex;
-}
-
-/**
- * @brief Return Z80 (TRS-80, Video Genie 3003, Colour Genie EG2000) dword value string
- *
- * This returns a string in the format used by Z80 compilers.
- * It's a hexadecimal encoded number with suffix 'h' appended.
- * If the hex representation does not start with a digit, prepend '0'.
- *
- * @param val dword value
- * @return string for the value
- */
-QString z80Dasm::hexd(quint32 val)
-{
-    QString hex;
-    if (val >= 0xa0000000UL) {
-	hex = QString("%1h").arg(val, 9, 16, QChar('0'));
-    } else if (val >= 10) {
-	hex = QString("%1h").arg(val, 8, 16, QChar('0'));
-    } else {
-	hex = QString::number(val);
-    }
-    if (m_uppercase)
-	return hex.toUpper();
-    return hex;
 }
 
 /**
@@ -146,104 +109,6 @@ int z80Dasm::offs(qint8 offset)
     if (offset < 0)
 	return -offset;
     return offset;
-}
-
-/**
- * @brief Read a byte from memory at @p mem
- * @param mem pointer to memory
- * @return byte value from memory
- */
-quint32 z80Dasm::rd08(const quint8* mem)
-{
-    return
-	static_cast<quint32>(mem[0]);
-}
-
-/**
- * @brief Read a word from memory at @p mem
- * @param mem pointer to memory
- * @return word value from memory
- */
-quint32 z80Dasm::rd16(const quint8* mem)
-{
-    return
-	(static_cast<quint32>(mem[0]) <<  0) |
-	(static_cast<quint32>(mem[1]) <<  8);
-}
-
-/**
- * @brief Read a dword from memory at @p mem
- * @param mem pointer to memory
- * @return dword value from memory
- */
-quint32 z80Dasm::rd32(const quint8* mem)
-{
-    return
-	(static_cast<quint32>(mem[0]) <<  0) |
-	(static_cast<quint32>(mem[1]) <<  8) |
-	(static_cast<quint32>(mem[2]) << 16) |
-	(static_cast<quint32>(mem[3]) << 24);
-}
-
-/**
- * @brief Write a byte to memory at @p mem
- * @param mem pointer to memory
- * @param val byte value
- */
-void z80Dasm::wr08(quint8* mem, quint32 val)
-{
-    mem[0] = static_cast<quint8>(val);
-}
-
-/**
- * @brief Write a word to memory at @p mem
- * @param mem pointer to memory
- * @param val word value
- */
-void z80Dasm::wr16(quint8* mem, quint32 val)
-{
-    mem[0] = static_cast<quint8>(val >> 0);
-    mem[1] = static_cast<quint8>(val >> 8);
-}
-
-/**
- * @brief Write a dword to memory at @p mem
- * @param mem pointer to memory
- * @param val dword value
- */
-void z80Dasm::wr32(quint8* mem, quint32 val)
-{
-    mem[0] = static_cast<quint8>(val >>  0);
-    mem[1] = static_cast<quint8>(val >>  8);
-    mem[2] = static_cast<quint8>(val >> 16);
-    mem[3] = static_cast<quint8>(val >> 24);
-}
-
-QString z80Dasm::x08(quint32 val)
-{
-    QString hex = QString("%1")
-		  .arg(val & 0x000000ffu, 2, 16, QChar('0'));
-    if (m_uppercase)
-	return hex.toUpper();
-    return hex;
-}
-
-QString z80Dasm::x32(quint32 val)
-{
-    QString hex = QString("%1")
-		  .arg(val, 8, 16, QChar('0'));
-    if (m_uppercase)
-	return hex.toUpper();
-    return hex;
-}
-
-QString z80Dasm::x16(quint32 val)
-{
-    QString hex = QString("%1")
-		  .arg(val & 0x0000ffffu, 4, 16, QChar('0'));
-    if (m_uppercase)
-	return hex.toUpper();
-    return hex;
 }
 
 QString z80Dasm::symbol_w(quint32 ea)
@@ -277,7 +142,7 @@ QString z80Dasm::dasm_defb(quint32 pc, off_t& pos, const quint8* opram)
     quint32 ea;
     str.resize(7, QChar::Space);
     dasm += str;
-    ea = rd08(opram + pos);
+    ea = util::rd08(opram + pos);
     dasm += hexb(ea);
     pos++;
     return dasm;
@@ -303,7 +168,7 @@ QString z80Dasm::dasm_defw(quint32 pc, off_t& pos, const quint8* opram)
     quint32 ea;
     str.resize(7, QChar::Space);
     dasm += str;
-    ea = rd16(opram + pos);
+    ea = util::rd16(opram + pos);
     dasm += symbol_w(ea);
     pos += 2;
     return dasm;
@@ -329,7 +194,7 @@ QString z80Dasm::dasm_defd(quint32 pc, off_t& pos, const quint8* opram)
     quint32 ea;
     str.resize(7, QChar::Space);
     dasm += str;
-    ea = rd32(opram + pos);
+    ea = util::rd32(opram + pos);
     dasm += hexd(ea);
     pos += 4;
     return dasm;
@@ -568,7 +433,7 @@ QString z80Dasm::dasm_code(quint32 pc, off_t& pos, quint32& flags, const quint8*
 			.arg(hexb(op1));
 		break;
 	    case 'A':	// address op arg
-		ea = rd16(opram + pos);
+		ea = util::rd16(opram + pos);
 		pos += 2;
 		dasm += symbol_w(ea);
 		break;
@@ -577,7 +442,7 @@ QString z80Dasm::dasm_code(quint32 pc, off_t& pos, quint32& flags, const quint8*
 		dasm += hexb(ea);
 		break;
 	    case 'N':   // 16 bit immediate
-		ea = rd16(opram + pos);
+		ea = util::rd16(opram + pos);
 		pos += 2;
 		dasm += hexw(ea);
 		break;
@@ -697,15 +562,16 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
 
 	def = m_defs->entry(pc);
 	Q_ASSERT(!def.isNull());
+	bool at_addr = def->is_at_addr(pc);
 
-	if (def->is_at_addr(pc) && def->has_block_comments()) {
+	if (at_addr && def->has_block_comments()) {
 	    QStringList comments = def->block_comments();
 	    foreach(const QString& comment, comments) {
 		result += QString("; %1").arg(comment);
 	    }
 	}
 
-	if (def->is_at_addr(pc) && def->has_symbol()) {
+	if (at_addr && def->has_symbol()) {
 	    QString symbol;
 	    if (m_uppercase)
 		symbol = def->symbol().toUpper();
@@ -730,10 +596,10 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
 			 .arg(bdump)
 			 .arg(line);
 
-	if (def->is_at_addr(pc) && def->has_line_comment()) {
-	    QStringList comments = def->line_comments();
+	if (at_addr && def->has_line_comments()) {
 	    if (buffer.length() < m_comment_column)
 		buffer.resize(m_comment_column, QChar::Space);
+	    QStringList comments = def->line_comments();
 	    buffer += QString("; %1").arg(comments.first());
 	    result += buffer;
 
@@ -787,11 +653,4 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
     }
 
     return result;
-}
-
-quint32 z80Dasm::unicode(uchar ch) const
-{
-    if (m_bdf)
-	return m_bdf->cgenie2unicode(ch);
-    return QChar::fromLatin1(ch).unicode();
 }

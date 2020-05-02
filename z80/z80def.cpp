@@ -126,7 +126,7 @@ bool z80DefObj::has_block_comments() const
  * @brief Return true, if the defintion has a line comment
  * @return true if a line comment is available, or false otherwise
  */
-bool z80DefObj::has_line_comment() const
+bool z80DefObj::has_line_comments() const
 {
     return !m_line_comment.isEmpty();
 }
@@ -244,7 +244,7 @@ void z80DefObj::set_symbol(const QString& symbol)
  * @brief Set a new block comment string list
  * @param lines QList of lines
  */
-void z80DefObj::set_block_comment(const QStringList& lines)
+void z80DefObj::set_block_comments(const QStringList& lines)
 {
     m_block_comment = lines;
 }
@@ -253,7 +253,7 @@ void z80DefObj::set_block_comment(const QStringList& lines)
  * @brief Set a new comment string
  * @param lines QList of lines
  */
-void z80DefObj::set_line_comment(const QStringList& lines)
+void z80DefObj::set_line_comments(const QStringList& lines)
 {
     m_line_comment = lines;
 }
@@ -412,7 +412,7 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 	    if (txt.isNull())
 		txt = e.firstChild().toText();
 	    if (txt.isNull()) {
-		qDebug("%s: tag '%s' is not a text node", __func__, qPrintable(tag_name));
+		qDebug("%s: tag '%s' is not a QDomText node", __func__, qPrintable(tag_name));
 		continue;
 	    }
 	    def.m_symbol = txt.data();
@@ -432,7 +432,7 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 		txt = e.firstChild().toText();
 	    }
 	    if (!txt.isNull()) {
-		// We have a text node...
+		// We have a QDomText node...
 		str = txt.data();
 	    }
 
@@ -516,7 +516,7 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
 	elm.appendChild(sym);
     }
 
-    if (def->has_line_comment()) {
+    if (def->has_line_comments()) {
 	int line = 0;
 	if (1 == def->line_comments().count()) {
 	    // Simple case: just one line
@@ -550,7 +550,7 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
 	}
     }
 
-    elm.setAttribute(xml_att_addr, QString::number(def->addr0(), 16));
+    elm.setAttribute(xml_att_addr, QString("%1").arg(def->addr0(), 4, 16, QChar('0')));
     elm.setAttribute(xml_att_type, type);
     if (!def->arg0().isEmpty())
 	elm.setAttribute(xml_att_arg0, def->arg0());

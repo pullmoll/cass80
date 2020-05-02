@@ -23,6 +23,7 @@ SOURCES += \
     $$PWD/src/cass80main.cpp \
     $$PWD/src/cass80xml.cpp \
     $$PWD/src/main.cpp \
+    $$PWD/src/util.cpp \
     $$PWD/z80/listing2xml.cpp \
     $$PWD/z80/z80dasm.cpp \
     $$PWD/z80/z80def.cpp \
@@ -40,6 +41,7 @@ HEADERS += \
     $$PWD/include/cass80main.h \
     $$PWD/include/cass80xml.h \
     $$PWD/include/constants.h \
+    $$PWD/include/util.h \
     $$PWD/z80/listing2xml.h \
     $$PWD/z80/z80dasm.h \
     $$PWD/z80/z80def.h \

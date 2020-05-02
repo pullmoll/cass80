@@ -6,8 +6,8 @@ typedef enum {
     MACH_INVALID = -1,
     MACH_TRS80,
     MACH_EG2000
-}   machine_e;
-Q_ENUMS(machine_e);
+}   Cass80Machine;
+Q_ENUMS(Cass80Machine);
 
 /** @brief block type */
 typedef enum {
@@ -16,10 +16,10 @@ typedef enum {
     BT_SYSTEM,
     BT_ENTRY,
     BT_RAW
-}   block_type_e;
-Q_ENUMS(block_type_e);
+}   Cass80BlockType;
+Q_ENUMS(Cass80BlockType);
 
-/** @brief decoder status */
+/** @brief States of the decoder status machine */
 typedef enum {
     ST_INVALID = -1,
     ST_COMMENT,
@@ -45,31 +45,33 @@ typedef enum {
 }   decoder_status_e;
 Q_ENUMS(decoder_status_e);
 
+/** @brief Special byte values in cassette data stream */
 typedef enum {
-    CAS_SILENCE		    = 0x00,
-    CAS_TRS80_SYNC          = 0xa5,
-    CAS_TRS80_BASIC_HEADER  = 0xd3,
-    CAS_CGENIE_SYNC         = 0x66,
-    CAS_SYSTEM_HEADER       = 0x55,
-    CAS_SYSTEM_DATA         = 0x3c,
-    CAS_SYSTEM_ENTRY        = 0x78
+    CAS_SILENCE		    = 0x00,	//!< TRS-80 tapes start with silence
+    CAS_TRS80_SYNC          = 0xa5,	//!< TRS-80 synchronization pattern (binary 10100101)
+    CAS_TRS80_BASIC_HEADER  = 0xd3,	//!< TRS-80 BASIC first byte
+    CAS_CGENIE_PRELUDE	    = 0xaa,	//!< Colour-Genie tapes start with 1/0 patterns (binary 10101010)
+    CAS_CGENIE_SYNC         = 0x66,	//!< Colour-Genie synchronization pattern (binary 01100110)
+    CAS_SYSTEM_HEADER       = 0x55,	//!< Both machine's SYSTEM formats first byte
+    CAS_SYSTEM_DATA         = 0x3c,	//!< Both machine's SYSTEM data block byte
+    CAS_SYSTEM_ENTRY        = 0x78	//!< Both machine's SYSTEM entry block byte
 }   cas_control_e;
 Q_ENUMS(cas_control_e);
 
-class CasBlock
+class Cass80Block
 {
 public:
-    CasBlock()
+    Cass80Block()
 	: type(BT_INVALID), csum(0), addr(0), size(0), line(0), data()
     {}
 
-    block_type_e  type;
+    Cass80BlockType  type;
     uchar  csum;
     quint16 addr;
     quint16 size;
     quint16 line;
     QByteArray data;
-    bool operator== (const CasBlock& other)
+    bool operator== (const Cass80Block& other)
     {
 	return type == other.type &&
 		csum == other.csum &&
@@ -80,5 +82,5 @@ public:
     }
 };
 
-typedef QList<CasBlock> CasBlockList;
+typedef QList<Cass80Block> CasBlockList;
 Q_DECLARE_METATYPE(CasBlockList);

@@ -45,7 +45,7 @@ class CasXml : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QByteArray sha1_digest MEMBER m_sha1_digest READ sha1_digest WRITE set_sha1_digest NOTIFY sha1_digest_changed)
-    Q_PROPERTY(machine_e machine MEMBER m_machine READ machine WRITE set_machine NOTIFY machine_changed)
+    Q_PROPERTY(Cass80Machine machine MEMBER m_machine READ machine WRITE set_machine NOTIFY machine_changed)
     Q_PROPERTY(bool basic MEMBER m_basic READ basic WRITE set_basic NOTIFY basic_changed)
     Q_PROPERTY(QString hdr_name MEMBER m_hdr_name READ hdr_name WRITE set_hdr_name NOTIFY hdr_name_changed)
     Q_PROPERTY(QString hdr_author MEMBER m_hdr_author READ hdr_author WRITE set_hdr_author NOTIFY hdr_author_changed)
@@ -59,7 +59,7 @@ public:
     CasXml(QObject* parent = nullptr);
 
     QByteArray sha1_digest() const;
-    machine_e machine() const;
+    Cass80Machine machine() const;
     bool basic() const;
     QString hdr_name() const;
     QString hdr_author() const;
@@ -76,7 +76,7 @@ public slots:
     void set_data(const Cass80Handler* h);
 
     void set_sha1_digest(const QByteArray& digest);
-    void set_machine(machine_e machine);
+    void set_machine(Cass80Machine machine);
     void set_basic(bool basic);
     void set_hdr_name(const QString& hdr_name);
     void set_hdr_author(const QString& hdr_author);
@@ -89,7 +89,7 @@ public slots:
 
 signals:
     void sha1_digest_changed(const QByteArray& digest);
-    void machine_changed(machine_e machine);
+    void machine_changed(Cass80Machine machine);
     void basic_changed(bool basic);
     void hdr_name_changed(const QString& hdr_name);
     void hdr_author_changed(const QString& hdr_author);
@@ -104,7 +104,7 @@ private:
     QDomDocument cas_document() const;
     QDomElement block_element(QDomDocument& doc, int index) const;
     QByteArray m_sha1_digest;
-    machine_e m_machine;
+    Cass80Machine m_machine;
     bool m_basic;
     QString m_hdr_name;
     QString m_hdr_author;

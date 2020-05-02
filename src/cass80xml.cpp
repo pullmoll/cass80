@@ -74,7 +74,7 @@ QByteArray CasXml::sha1_digest() const
     return m_sha1_digest;
 }
 
-machine_e CasXml::machine() const
+Cass80Machine CasXml::machine() const
 {
     return m_machine;
 }
@@ -154,7 +154,7 @@ void CasXml::set_sha1_digest(const QByteArray& digest)
     emit sha1_digest_changed(m_sha1_digest);
 }
 
-void CasXml::set_machine(machine_e machine)
+void CasXml::set_machine(Cass80Machine machine)
 {
     if (machine == m_machine)
 	return;
@@ -236,7 +236,7 @@ void CasXml::set_blocks(const CasBlockList& blocks)
 
 QDomElement CasXml::block_element(QDomDocument& doc, int index) const
 {
-    const CasBlock& b = m_blocks[index];
+    const Cass80Block& b = m_blocks[index];
     QDomElement block = doc.createElement(QLatin1String("block"));
     block.setAttribute(QLatin1String("number"), index);
 

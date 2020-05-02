@@ -113,7 +113,7 @@ static const uchar g_mover[] = {
 
 Cass80Handler::Cass80Handler(QObject *parent)
     : QObject(parent)
-    , bas(new BasicToken())
+    , m_bas(new BasicToken())
     , m_verbose(1)
     , m_machine(MACH_INVALID)
     , m_sync(CAS_TRS80_SYNC)
@@ -178,7 +178,11 @@ bool Cass80Handler::isValid() const
     return true;
 }
 
-machine_e Cass80Handler::machine() const
+/**
+ * @brief Return the machine type detected after loading an image
+ * @return
+ */
+Cass80Machine Cass80Handler::machine() const
 {
     return m_machine;
 }
@@ -252,7 +256,7 @@ bool Cass80Handler::load(const QString& filename)
 
 bool Cass80Handler::load(QIODevice* device)
 {
-    CasBlock block;
+    Cass80Block block;
     decoder_status_e status;
     QByteArray data = device->peek(device->size());
     QByteArray buff;
@@ -377,6 +381,9 @@ bool Cass80Handler::load(QIODevice* device)
 
         case ST_NUL:
             switch (ch) {
+	    case CAS_CGENIE_PRELUDE:
+		// Ignore the prelude until the sync
+		break;
             case CAS_TRS80_SYNC:
 		m_sync = ch;
 		m_sha1.addData(reinterpret_cast<const char *>(&ch), 1);
@@ -625,7 +632,7 @@ bool Cass80Handler::load(QIODevice* device)
 		block.data.resize(m_size);
 		m_source += QString("%1 %2")
 			  .arg(m_line)
-			  .arg(bas->detokenize(block.data, block.size));
+			  .arg(m_bas->detokenize(block.data, block.size));
 		m_total_size += block.size;
 		m_blocks += block;
                 status = ST_BASIC_ADDR_LSB;
@@ -634,13 +641,13 @@ bool Cass80Handler::load(QIODevice* device)
 
         case ST_AFTER_ENTRY:
             if (ch == CAS_SYSTEM_DATA) {
-                /* another data block after the system entry */
+		// Another data block after the system entry
 		m_sha1.addData(reinterpret_cast<const char *>(&ch), 1);
                 status = ST_SYSTEM_COUNT;
                 break;
             }
             if (ch == CAS_SYSTEM_ENTRY) {
-                /* another entry block after the system entry */
+		// Another entry block after the system entry
 		m_sha1.addData(reinterpret_cast<const char *>(&ch), 1);
                 status = ST_SYSTEM_ENTRY_LSB;
                 break;
@@ -649,7 +656,7 @@ bool Cass80Handler::load(QIODevice* device)
             /* FALLTHROUGH */
 
         case ST_IGNORE:
-            /* do not append ch to image SHA1 */
+	    // Do not append ch to image SHA1
             if (0 == (block.size % 1024)) {
                 block.data.resize(block.size + 1024);
             }
@@ -683,14 +690,17 @@ bool Cass80Handler::undo_lmoffset()
 {
     QByteArray memory(64*1024, 0x00);
     QByteArray mover(reinterpret_cast<const char *>(g_mover), sizeof(g_mover));
-    CasBlock block;
+    Cass80Block block;
+
     for (int i = 0; i < m_blocks.count(); i++) {
-	CasBlock* cb = &m_blocks[i];
+	Cass80Block* cb = &m_blocks[i];
         const uchar* bp = reinterpret_cast<const uchar *>(m_blocks[i].data.constData());
 	memory.replace(cb->addr, cb->size, cb->data);
-        if (m_blocks[i].size != 15)
+
+	if (m_blocks[i].size != 15)
             continue;
-        if (bp[0] == mover[0] || bp[1] == mover[1] || bp[4] == mover[4] ||
+
+	if (bp[0] == mover[0] || bp[1] == mover[1] || bp[4] == mover[4] ||
             bp[7] == mover[7] || bp[10] == mover[10] || bp[11] == mover[11] || bp[12] == mover[12]) {
 	    emit Info(tr("Found MOVER at address %1h").arg(cb->addr, 4, 16, QChar('0')));
 	    qDebug("Found MOVER at address %xh", cb->addr);
@@ -712,7 +722,7 @@ bool Cass80Handler::undo_lmoffset()
 
 	    // Remove blocks in source range
 	    for (int j = 0; j < m_blocks.count(); j++) {
-		CasBlock* cc = &m_blocks[j];
+		Cass80Block* cc = &m_blocks[j];
 		if (BT_SYSTEM == cc->type &&
 			cc->addr >= src &&
 			cc->addr + cc->size <= src + size) {
@@ -730,7 +740,7 @@ bool Cass80Handler::undo_lmoffset()
 	    }
 
 	    for (quint16 i = 0; i < size; i += m_blen, dst += m_blen) {
-		CasBlock block;
+		Cass80Block block;
 		quint8 bcnt = static_cast<quint8>((size - i) > m_blen ? m_blen : size - i);
 		block.data = memory.mid(dst, bcnt ? bcnt : 256);
 		quint8 csum;
@@ -745,7 +755,7 @@ bool Cass80Handler::undo_lmoffset()
                 block.size = bcnt;
                 m_blocks += block;
             }
-	    CasBlock block;
+	    Cass80Block block;
             block.type = BT_ENTRY;
             block.addr = entry;
             m_blocks += block;
@@ -773,7 +783,7 @@ bool Cass80Handler::save(const QString& filename)
 		      m_filename.toUpper().toLatin1());
 	header += fname;
 	output.write(header);
-	foreach(const CasBlock& block, m_blocks) {
+	foreach(const Cass80Block& block, m_blocks) {
 	    if (BT_SYSTEM == block.type) {
 		QByteArray data;
 		data += static_cast<char>(CAS_SYSTEM_DATA);
@@ -798,7 +808,7 @@ bool Cass80Handler::save(const QString& filename)
 	header += static_cast<char>(CAS_SYSTEM_HEADER);
 	header += m_filename.left(6).toUpper();
 	output.write(header);
-	foreach(const CasBlock& block, m_blocks) {
+	foreach(const Cass80Block& block, m_blocks) {
 	    if (BT_SYSTEM == block.type) {
 		QByteArray data;
 		data += static_cast<char>(CAS_SYSTEM_DATA);
@@ -835,7 +845,7 @@ CasBlockList Cass80Handler::blocks() const
     return m_blocks;
 }
 
-CasBlock Cass80Handler::block(int index) const
+Cass80Block Cass80Handler::block(int index) const
 {
     return m_blocks.value(index);
 }

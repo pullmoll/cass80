@@ -10,5 +10,8 @@ bdfgen
 # Generated file
 cgenie-new.xml
 
+# Local cassette files for testing
+*.cas
+
 # Temporary files (QtCreator)
 *.autosave

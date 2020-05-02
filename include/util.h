@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * Cass80 tool - reading and writing cassette image files
+ * Cass80 tool - utility functions and helpers
  *
  * Copyright (C) 2020 Jürgen Buchmüller <pullmoll@t-online.de>
  *
@@ -32,82 +32,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 #pragma once
-#include <QObject>
-#include <QIODevice>
-#include <QCryptographicHash>
-#include "constants.h"
+#include <QString>
 
-class BasicToken;
-
-class Cass80Handler : public QObject
+class util
 {
-    Q_OBJECT
 public:
+    static QString hexb(quint32 val, bool upper = false);
+    static QString hexw(quint32 val, bool upper = false);
+    static QString hexd(quint32 val, bool upper = false);
 
-    explicit Cass80Handler(QObject *parent = nullptr);
+    static QString x08(quint32 val, bool upper = false);
+    static QString x16(quint32 val, bool upper = false);
+    static QString x32(quint32 val, bool upper = false);
 
-    bool isEmpty() const;
-    bool isValid() const;
+    static quint32 rd08(const quint8* mem);
+    static quint32 rd16(const quint8* mem);
+    static quint32 rd32(const quint8* mem);
 
-    Cass80Machine machine() const;
-    bool basic() const;
-    QString hdr_name() const;
-    QString hdr_author() const;
-    QString hdr_copyright() const;
-    QString hdr_description() const;
-    quint8 sync() const;
-    quint8 prefix() const;
-    QString filename() const;
-    quint16 blen() const;
-    QByteArray digest() const;
-    quint32 crc32() const;
-
-    bool load(const QString& filename);
-    bool load(QIODevice* device);
-
-    bool has_lmoffset();
-    bool undo_lmoffset();
-
-    bool save(const QString& filename);
-
-    int count() const;
-    CasBlockList blocks() const;
-    Cass80Block block(int index) const;
-
-    QStringList source() const;
-
-public slots:
-    bool set_blen(quint16 blen);
-
-signals:
-    void Info(QString message);
-    void Error(QString message);
-
-private:
-    void reset();
-    BasicToken* m_bas;
-    int m_verbose;
-    Cass80Machine m_machine;
-    uint8_t m_sync;
-    QString m_hdr_name;
-    QString m_hdr_author;
-    QString m_hdr_copyright;
-    QString m_hdr_description;
-    QString m_filename;
-
-    quint16 m_blen;
-    quint16 m_addr;
-    quint16 m_line;
-    quint16 m_entry;
-    quint16 m_size;
-    quint8 m_prefix;
-    quint8 m_csum;
-    bool m_basic;
-
-    QCryptographicHash m_sha1;
-    quint32 m_crc32;
-    QByteArray m_digest;
-    QStringList m_source;
-    CasBlockList  m_blocks;
-    qint64 m_total_size;
+    static void wr08(quint8* mem, quint32 val);
+    static void wr16(quint8* mem, quint32 val);
+    static void wr32(quint8* mem, quint32 val);
 };
