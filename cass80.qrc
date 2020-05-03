@@ -14,5 +14,6 @@
         <file>image/preferences.png</file>
         <file>image/cass80.png</file>
         <file>translations/cass80_de_DE.qm</file>
+        <file>resources/trs80.fnt</file>
     </qresource>
 </RCC>

@@ -4,17 +4,17 @@
 <context>
     <name>AboutDlg</name>
     <message>
-        <location filename="dialogs/aboutdlg.ui" line="14"/>
+        <location filename="dialogs/aboutdlg.ui" line="20"/>
         <source>About …</source>
         <translation>Über …</translation>
     </message>
     <message>
-        <location filename="dialogs/aboutdlg.ui" line="23"/>
+        <location filename="dialogs/aboutdlg.ui" line="35"/>
         <source>Cass80 is a tool to load, analyze, disassemble or list, modify, and save EACA Colour-Genie 2000 and Video-Genie 3003 (which was a TRS-80 clone) cassette images.</source>
         <translation>Cass80 ist ein Werkzeug zum laden, analyisieren, disassemblieren oder listen, bearbeiten und laden von EACA Colour-Genie 2000 und Video-Genie 3003 (ein TRS-80 Klon) Kassettendateien.</translation>
     </message>
     <message>
-        <location filename="dialogs/aboutdlg.ui" line="96"/>
+        <location filename="dialogs/aboutdlg.ui" line="114"/>
         <source>This is a Work-In-Progress and I use it to analyze and clean up old &quot;*.cas&quot; images I had lying around in my archives for many years. The results will be added to &lt;a href=&quot;https://mamedev.org/&quot;&gt;MAME&lt;/a&gt; hash list (softlist) for the Colour Genie cassettes.</source>
         <translation>Es ist WIP (work in progress) und ich nutze es, um alte &quot;*.cas&quot; Dateien zu analysieren und aufzuräumen, die ich in meinen Archiven für viele Jahre herumliegen hatte. Die Ergebnisse werden zu den &lt;a href=&quot;https://mamedev.org/&quot;&gt;MAME&lt;/a&gt; Hash-Tabellen (Softlist) für Colour-Genie Kassetten hinzugefügt werden.</translation>
     </message>
@@ -27,92 +27,92 @@
 <context>
     <name>Cass80Handler</name>
     <message>
-        <location filename="src/cass80handler.cpp" line="319"/>
+        <location filename="src/cass80handler.cpp" line="323"/>
         <source>Header Name: %1</source>
         <translation>Info Name: %1</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="325"/>
+        <location filename="src/cass80handler.cpp" line="329"/>
         <source>Header Author: %1</source>
         <translation>Info Autor: %1</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="331"/>
+        <location filename="src/cass80handler.cpp" line="335"/>
         <source>Header Copyright: %1</source>
         <translation>Info Copyright: %1</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="350"/>
+        <location filename="src/cass80handler.cpp" line="354"/>
         <source>Header Description: %1</source>
         <translation>Info Beschreibung: %1</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="409"/>
+        <location filename="src/cass80handler.cpp" line="416"/>
         <source>HEADER: %1 %2 %3 %4 %5 %6 %7 %8</source>
         <translation>HEADER: %1 %2 %3 %4 %5 %6 %7 %8</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="425"/>
+        <location filename="src/cass80handler.cpp" line="432"/>
         <source>SYSTEM tape: &apos;%1&apos;</source>
         <translation>SYSTEM Band: &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="437"/>
+        <location filename="src/cass80handler.cpp" line="444"/>
         <source>TRS-80 BASIC tape: &apos;%1&apos;</source>
         <translation>TRS-80 BASIC Band: &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="448"/>
+        <location filename="src/cass80handler.cpp" line="455"/>
         <source>Colour Genie BASIC tape: &apos;%1&apos;</source>
         <translation>Colour-Genie BASIC Band: &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="499"/>
+        <location filename="src/cass80handler.cpp" line="506"/>
         <source>SYSTEM data block: %1 (0x%2) at %3h</source>
         <translation>SYSTEM Datenblock: %1 (0x%2) an Addresse %3h</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="556"/>
+        <location filename="src/cass80handler.cpp" line="563"/>
         <source>SYSTEM entry point: %1 (0x%2)</source>
         <translation>SYSTEM Einsprungadresse: %1 (0x%2)</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="579"/>
+        <location filename="src/cass80handler.cpp" line="586"/>
         <source>BASIC end: %1 (0x%2)</source>
         <translation>BASIC Ende: %1 (0x%2)</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="610"/>
+        <location filename="src/cass80handler.cpp" line="617"/>
         <source>BASIC line: #%1 at %2h</source>
         <translation>BASIC Zeile: Nr. %1 bei %2h</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="661"/>
+        <location filename="src/cass80handler.cpp" line="668"/>
         <source>Loaded %1 blocks (%2 bytes).</source>
         <translation>%1 Blöcke geladen (%2 Bytes).</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="662"/>
+        <location filename="src/cass80handler.cpp" line="669"/>
         <source>SHA1 of data: %1.</source>
         <translation>SHA1 der Daten: %1.</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="695"/>
+        <location filename="src/cass80handler.cpp" line="705"/>
         <source>Found MOVER at address %1h</source>
         <translation>MOVER an Adresse %1h gefunden</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="701"/>
+        <location filename="src/cass80handler.cpp" line="711"/>
         <source>MOVER src:0x%1 dst:0x%2 size:0x%3 entry:0x%4</source>
         <translation>MOVER src:0x%1 dst:0x%2 size:0x%3 entry:0x%4</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="822"/>
+        <location filename="src/cass80handler.cpp" line="832"/>
         <source>Invalid machine - none of EG2000 or TRS80 were detected.</source>
         <translation>Ungültige Maschine - weder EG2000 noch TRS80 wurden erkannt.</translation>
     </message>
     <message>
-        <location filename="src/cass80handler.cpp" line="851"/>
+        <location filename="src/cass80handler.cpp" line="861"/>
         <source>Block length is wrong: %1 (2 &lt;= blen &lt;= 256</source>
         <translation>Blocklänge ist falsch: %1 (2 &lt;= blen &lt;= 256)</translation>
     </message>
@@ -167,7 +167,7 @@
     <message>
         <location filename="cass80main.ui" line="175"/>
         <source>Ctrl+L</source>
-        <translation>Strg+L</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="184"/>
@@ -177,7 +177,7 @@
     <message>
         <location filename="cass80main.ui" line="187"/>
         <source>Ctrl+Q</source>
-        <translation>Strg+Q</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="196"/>
@@ -187,7 +187,7 @@
     <message>
         <location filename="cass80main.ui" line="199"/>
         <source>Ctrl+S</source>
-        <translation>Strg+S</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="208"/>
@@ -197,7 +197,7 @@
     <message>
         <location filename="cass80main.ui" line="211"/>
         <source>Ctrl+U</source>
-        <translation>Strg+U</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="220"/>

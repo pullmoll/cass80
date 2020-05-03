@@ -39,7 +39,8 @@ namespace Ui { class Cass80Main; }
 QT_END_NAMESPACE
 
 class Cass80Handler;
-class bdfData;
+class bdfCgenie;
+class bdfTrs80;
 
 class Cass80Main : public QMainWindow
 {
@@ -71,7 +72,8 @@ private:
     void reset();
     Ui::Cass80Main *ui;
     Cass80Handler *m_cas;
-    bdfData *m_bdf;
+    bdfCgenie *m_bdf1;
+    bdfTrs80 *m_bdf2;
     bool m_internal_ttf;
     bool m_uppercase;
     QString m_filepath;

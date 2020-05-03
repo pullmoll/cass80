@@ -14,7 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     $$PWD/src/basictoken.cpp \
-    $$PWD/bdf/bdfdata.cpp \
+    $$PWD/bdf/bdfcgenie.cpp \
     $$PWD/bdf/bdfglyph.cpp \
     $$PWD/dialogs/aboutdlg.cpp \
     $$PWD/dialogs/casinfodlg.cpp \
@@ -28,11 +28,13 @@ SOURCES += \
     $$PWD/z80/z80dasm.cpp \
     $$PWD/z80/z80def.cpp \
     $$PWD/z80/z80defs.cpp \
-    $$PWD/z80/z80token.cpp
+    $$PWD/z80/z80token.cpp \
+    bdf/bdfdata.cpp \
+    bdf/bdftrs80.cpp
 
 HEADERS += \
     $$PWD/include/basictoken.h \
-    $$PWD/bdf/bdfdata.h \
+    $$PWD/bdf/bdfcgenie.h \
     $$PWD/bdf/bdfglyph.h \
     $$PWD/dialogs/aboutdlg.h \
     $$PWD/dialogs/casinfodlg.h \
@@ -46,7 +48,9 @@ HEADERS += \
     $$PWD/z80/z80dasm.h \
     $$PWD/z80/z80def.h \
     $$PWD/z80/z80defs.h \
-    $$PWD/z80/z80token.h
+    $$PWD/z80/z80token.h \
+    bdf/bdfdata.h \
+    bdf/bdftrs80.h
 
 FORMS += \
     $$PWD/dialogs/aboutdlg.ui \

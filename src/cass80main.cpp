@@ -47,7 +47,8 @@
 #include "z80defs.h"
 #include "z80dasm.h"
 
-#include "bdfdata.h"
+#include "bdfcgenie.h"
+#include "bdftrs80.h"
 #include "listing2xml.h"
 
 #define	GENERATE_BDF	    0
@@ -69,7 +70,8 @@ Cass80Main::Cass80Main(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Cass80Main)
     , m_cas(new Cass80Handler(this))
-    , m_bdf(new bdfData(16))
+    , m_bdf1(new bdfCgenie(16))
+    , m_bdf2(new bdfTrs80(16))
     , m_internal_ttf(false)
     , m_uppercase(true)
 {
@@ -100,8 +102,10 @@ Cass80Main::Cass80Main(QWidget *parent)
     connect(ui->action_Preferences, SIGNAL(triggered()), SLOT(preferences()));
 
 #if GENERATE_BDF
-    m_bdf->generate(QLatin1String(":/resources/cgenie1.fnt"),
+    m_bdf1->generate(QLatin1String(":/resources/cgenie1.fnt"),
 		    QLatin1String("cgenie1.bdf"));
+    m_bdf2->generate(QLatin1String(":/resources/trs80.fnt"),
+		    QLatin1String("trs80.bdf"));
 #endif
 
 #if GENERATE_DEFS
@@ -211,7 +215,7 @@ bool Cass80Main::load()
 			.arg(resources)
 			.arg("cgenie-dasm.xml"));
 #endif
-	z80Dasm z80dasm(m_uppercase, &z80defs, m_bdf);
+	z80Dasm z80dasm(m_uppercase, &z80defs, m_bdf1);
 
 	pc_min = 0; // Always disassemble ROM as well
 

@@ -34,13 +34,13 @@
 #pragma once
 #include <QtCore>
 
-class bdfData;
+class bdfCgenie;
 class z80Defs;
 
 class z80Dasm
 {
 public:
-    z80Dasm(bool upper = false, const z80Defs* defs = nullptr, const bdfData* bdf = nullptr);
+    z80Dasm(bool upper = false, const z80Defs* defs = nullptr, const bdfCgenie* bdf = nullptr);
     QString dasm(quint32 pc, off_t& bytes, quint32& flags, const quint8* oprom, const quint8* opram);
     QStringList listing(const QByteArray& memory, quint32 pc_min, quint32 pc_max);
 
@@ -66,7 +66,7 @@ private:
     int m_mnemonic_column;
     int m_comment_column;
     const z80Defs* m_defs;
-    const bdfData* m_bdf;
+    const bdfCgenie* m_bdf;
 
     static inline QChar sign(qint8 offset);
     static inline int offs(qint8 offset);

@@ -63,7 +63,7 @@ public:
     bool has_block_comments() const;
     bool has_line_comments() const;
 
-    QString symbol() const;
+    QString symbol(bool upper = false) const;
     QStringList block_comments() const;
     QStringList line_comments() const;
     quint32 addr0() const;

@@ -110,7 +110,7 @@ bool z80DefObj::is_at_addr(quint32 addr) const
  */
 bool z80DefObj::has_symbol() const
 {
-    return !(m_symbol.isNull() || m_symbol.isEmpty());
+    return !m_symbol.isEmpty();
 }
 
 /**
@@ -135,9 +135,9 @@ bool z80DefObj::has_line_comments() const
  * @brief Return the symbol string
  * @return symbol name
  */
-QString z80DefObj::symbol() const
+QString z80DefObj::symbol(bool upper) const
 {
-    return m_symbol;
+    return upper ? m_symbol.toUpper() : m_symbol.toLower();
 }
 
 /**
@@ -408,14 +408,19 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 
 	const QString tag_name = e.tagName().toLower();
 	if (tag_name == xml_tag_symbol) {
+	    QString str;
 	    QDomText txt = e.toText();
-	    if (txt.isNull())
+	    if (txt.isNull()) {
 		txt = e.firstChild().toText();
+	    }
 	    if (txt.isNull()) {
 		qDebug("%s: tag '%s' is not a QDomText node", __func__, qPrintable(tag_name));
 		continue;
+	    } else {
+		// We have a QDomText node...
+		str = txt.data();
 	    }
-	    def.m_symbol = txt.data();
+	    def.m_symbol = str;
 	    continue;
 	}
 
@@ -441,7 +446,7 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 		if (e.hasAttribute(xml_att_comment_id)) {
 		    line = e.attribute(xml_att_comment_id).toInt();
 		}
-		if (line > def.m_line_comment.count()) {
+		if (0 == line || line > def.m_line_comment.count()) {
 		    def.m_line_comment += str;
 		} else if (line > 0) {
 		    def.m_line_comment.insert(line - 1, str);

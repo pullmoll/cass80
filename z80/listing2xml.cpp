@@ -228,12 +228,12 @@ bool listing2xml::parse(const QString& input, const QString& output)
 	bool ok;
 	quint32 pc = addr.toUInt(&ok, 16);
 	if (ok) {
-	    if (!line_comments.isEmpty()) {
+	    if (line_comments.count() > 1) {
 		z80Def prev = defs->entry(prev_pc);
 		if (!prev.isNull())
 		    prev->set_line_comments(line_comments);
-		line_comments.clear();
 	    }
+	    line_comments.clear();
 	} else {
 	    // no valid pc so use the previous one
 	    pc = prev_pc;

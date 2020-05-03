@@ -31,13 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-#include "bdfdata.h"
+#include "bdfcgenie.h"
 #include "z80defs.h"
 #include "z80dasm.h"
 #include "z80token.h"
 #include "util.h"
 
-z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
+z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfCgenie* bdf)
     : m_uppercase(upper)
     , m_comment_glyphs(false)
     , m_bytes_per_line(8)
@@ -55,7 +55,7 @@ z80Dasm::z80Dasm(bool upper, const z80Defs* defs, const bdfData* bdf)
 quint32 z80Dasm::unicode(uchar ch) const
 {
     if (m_bdf)
-	return m_bdf->cgenie2unicode(ch);
+	return m_bdf->toUnicode(ch);
     return QChar::fromLatin1(ch).unicode();
 }
 
@@ -572,11 +572,7 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
 	}
 
 	if (at_addr && def->has_symbol()) {
-	    QString symbol;
-	    if (m_uppercase)
-		symbol = def->symbol().toUpper();
-	    else
-		symbol = def->symbol().toLower();
+	    QString symbol = def->symbol(m_uppercase);
 	    result += QString("\n%1:").arg(symbol);
 	}
 
@@ -601,14 +597,16 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
 		buffer.resize(m_comment_column, QChar::Space);
 	    QStringList comments = def->line_comments();
 	    buffer += QString("; %1").arg(comments.first());
-	    result += buffer;
 
-	    // any additional lines indented to m_comment_column
-	    for (int i = 1; i < comments.count(); i++) {
-		buffer.fill(QChar::Space, m_comment_column);
-		buffer += QString("; %1").arg(comments.at(i));
-		if (i + 1 < comments.count())
-		    result += buffer;
+	    if (comments.count() > 1) {
+		result += buffer;
+		// any additional lines indented to m_comment_column
+		for (int i = 1; i < comments.count(); i++) {
+		    buffer.fill(QChar::Space, m_comment_column);
+		    buffer += QString("; %1").arg(comments.at(i));
+		    if (i + 1 < comments.count())
+			result += buffer;
+		}
 	    }
 	} else if (m_comment_glyphs) {
 	    if (buffer.length() < m_comment_column)
