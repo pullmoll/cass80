@@ -33,6 +33,7 @@
  ****************************************************************************/
 #pragma once
 #include <QMainWindow>
+#include <QWheelEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Cass80Main; }
@@ -57,11 +58,14 @@ private slots:
     bool about();
     bool load();
     bool save();
-    bool information();
-    bool undo_lmoffset();
-    bool preferences();
+    void information();
+    void undo_lmoffset();
+    void preferences();
+    void increase_font_size();
+    void decrease_font_size();
 
 private:
+    void setup_actions();
     void setup_toolbar();
     void setup_preferences();
     void update_actions();
@@ -74,6 +78,7 @@ private:
     Cass80Handler *m_cas;
     bdfCgenie *m_bdf1;
     bdfTrs80 *m_bdf2;
+    qreal m_fontsize;
     bool m_internal_ttf;
     bool m_uppercase;
     QString m_filepath;

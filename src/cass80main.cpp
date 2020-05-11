@@ -49,9 +49,9 @@
 
 #include "bdfcgenie.h"
 #include "bdftrs80.h"
-#include "listing2xml.h"
+#include "def2xml.h"
 
-#define	GENERATE_BDF	    0
+#define	GENERATE_BDF	    1
 #define	GENERATE_DEFS	    1
 #define	USE_GENERATED_DEFS  1
 
@@ -61,6 +61,7 @@ static const QLatin1String g_resources(":/resources");
 static const QLatin1String key_window_geometry("window_geometry");
 static const QLatin1String key_splitter_state("splitter_state");
 static const QLatin1String grp_preferences("preferences");
+static const QLatin1String key_fontsize("fontsize");
 static const QLatin1String key_internal_ttf("internal_ttf");
 static const QLatin1String key_uppercase("uppercase");
 
@@ -71,12 +72,14 @@ Cass80Main::Cass80Main(QWidget *parent)
     , ui(new Ui::Cass80Main)
     , m_cas(new Cass80Handler(this))
     , m_bdf1(new bdfCgenie(16))
-    , m_bdf2(new bdfTrs80(16))
+    , m_bdf2(new bdfTrs80(12))
+    , m_fontsize(1.0)
     , m_internal_ttf(false)
     , m_uppercase(true)
 {
     ui->setupUi(this);
 
+    setup_actions();
     setup_toolbar();
     setup_preferences();
 
@@ -92,15 +95,6 @@ Cass80Main::Cass80Main(QWidget *parent)
     connect(m_cas, SIGNAL(Info(QString)), SLOT(Info(QString)));
     connect(m_cas, SIGNAL(Error(QString)), SLOT(Error(QString)));
 
-    connect(ui->action_About, SIGNAL(triggered()), SLOT(about()));
-    connect(ui->action_AboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-    connect(ui->action_Load, SIGNAL(triggered()), SLOT(load()));
-    connect(ui->action_Save, SIGNAL(triggered()), SLOT(save()));
-    connect(ui->action_Information, SIGNAL(triggered()), SLOT(information()));
-    connect(ui->action_Quit, SIGNAL(triggered()), SLOT(close()));
-    connect(ui->action_Undo_lmoffset, SIGNAL(triggered()), SLOT(undo_lmoffset()));
-    connect(ui->action_Preferences, SIGNAL(triggered()), SLOT(preferences()));
-
 #if GENERATE_BDF
     m_bdf1->generate(QLatin1String(":/resources/cgenie1.fnt"),
 		    QLatin1String("cgenie1.bdf"));
@@ -109,8 +103,8 @@ Cass80Main::Cass80Main(QWidget *parent)
 #endif
 
 #if GENERATE_DEFS
-    listing2xml l2x;
-    l2x.parse(QStringLiteral(":/resources/cgenie-2008-08-10.txt"),
+    def2xml l2x;
+    l2x.parse(QStringLiteral(":/resources/cgenie.def"),
 	      QString("%1/%2").arg(g_mysrcdir).arg("cgenie-new.xml"));
 #endif
 }
@@ -126,6 +120,7 @@ Cass80Main::~Cass80Main()
 void Cass80Main::update_cursor()
 {
     QTextCursor cursor = ui->tb->textCursor();
+    cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
     cursor.movePosition(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
     ui->tb->setTextCursor(cursor);
 }
@@ -245,42 +240,76 @@ bool Cass80Main::save()
 
 }
 
-bool Cass80Main::information()
+void Cass80Main::information()
 {
     cass80InfoDlg info(this);
     info.setModal(false);
     info.setup(m_cas);
     info.exec();
-    return true;
 }
 
-bool Cass80Main::undo_lmoffset()
+void Cass80Main::undo_lmoffset()
 {
     if (!m_cas->undo_lmoffset())
-	return false;
+	return;
 
-    return true;
+    Info(tr("LMOFFSET loader removed."));
+    return;
 }
 
-bool Cass80Main::preferences()
+void Cass80Main::preferences()
 {
     preferencesDlg dlg(this);
     dlg.set_prefer_uppercase(m_uppercase);
     dlg.set_use_internal_ttf(m_internal_ttf);
     if (QDialog::Accepted != dlg.exec())
-	return false;
+	return;
     m_uppercase = dlg.prefer_uppercase();
     m_internal_ttf = dlg.use_internal_ttf();
 
     QSettings s;
     s.beginGroup(grp_preferences);
+    s.setValue(key_fontsize, m_fontsize);
     s.setValue(key_uppercase, m_uppercase);
     s.setValue(key_internal_ttf, m_internal_ttf);
     s.endGroup();
 
     setup_preferences();
+}
 
-    return true;
+void Cass80Main::increase_font_size()
+{
+    QFont font = ui->te_listing->font();
+    font.setPointSizeF(font.pointSizeF() * 1.05);
+    ui->te_listing->setFont(font);
+    font = ui->tb->font();
+    font.setPointSizeF(font.pointSizeF() * 1.05);
+    ui->tb->setFont(font);
+}
+
+void Cass80Main::decrease_font_size()
+{
+    QFont font = ui->te_listing->font();
+    font.setPointSizeF(font.pointSizeF() * 0.95);
+    ui->te_listing->setFont(font);
+    font = ui->tb->font();
+    font.setPointSizeF(font.pointSizeF() * 0.95);
+    ui->tb->setFont(font);
+}
+
+void Cass80Main::setup_actions()
+{
+    connect(ui->action_About, SIGNAL(triggered()), SLOT(about()));
+    connect(ui->action_AboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(ui->action_Load, SIGNAL(triggered()), SLOT(load()));
+    connect(ui->action_Save, SIGNAL(triggered()), SLOT(save()));
+    connect(ui->action_Information, SIGNAL(triggered()), SLOT(information()));
+    connect(ui->action_Quit, SIGNAL(triggered()), SLOT(close()));
+    connect(ui->action_Undo_lmoffset, SIGNAL(triggered()), SLOT(undo_lmoffset()));
+    connect(ui->action_Preferences, SIGNAL(triggered()), SLOT(preferences()));
+
+    connect(ui->action_Increase_font_size, SIGNAL(triggered()), SLOT(increase_font_size()));
+    connect(ui->action_Decrease_font_size, SIGNAL(triggered()), SLOT(decrease_font_size()));
 }
 
 void Cass80Main::setup_toolbar()
@@ -299,6 +328,7 @@ void Cass80Main::setup_preferences()
 {
     QSettings s;
     s.beginGroup(grp_preferences);
+    m_fontsize = s.value(key_fontsize, 1.0).toReal();
     m_internal_ttf = s.value(key_internal_ttf, false).toBool();
 
     if (m_internal_ttf) {
@@ -309,12 +339,13 @@ void Cass80Main::setup_preferences()
 	QStringList families = QFontDatabase::applicationFontFamilies(id);
 	Q_ASSERT(families.contains(font_family));
 	QFont font(font_family);
+	font.setPointSizeF(font.pointSizeF() * m_fontsize);
 	ui->te_listing->setFont(font);
     } else {
 	QFont font(QLatin1String("Source Code Pro"), -10, QFont::Normal, false);
+	font.setPointSizeF(font.pointSizeF() * m_fontsize);
 	ui->te_listing->setFont(font);
     }
-
     m_uppercase = s.value(key_uppercase).toBool();
 }
 

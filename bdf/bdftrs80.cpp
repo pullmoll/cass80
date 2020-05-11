@@ -35,26 +35,38 @@
 #include "bdfglyph.h"
 
 bdfTrs80::bdfTrs80(int pixelsize)
-    : bdfData(pixelsize)
-    , m_font_w(6)
-    , m_font_h(12)
-    , PIXEL_SIZE(pixelsize)
-    , POINT_SIZE(10*pixelsize)
-    , AVERAGE_WIDTH(10*pixelsize)
-    , CAP_HEIGHT(pixelsize)
-    , X_HEIGHT(pixelsize*3/4)
-    , SCALABLE_WIDTH(1000*RESOLUTION_X/72)
-    , SCALABLE_HEIGHT(0)
-    , DEVICE_WIDTH(pixelsize)
-    , DEVICE_HEIGHT(pixelsize)
-    , BDF_BBOX_W(pixelsize)
-    , BDF_BBOX_H(pixelsize)
-    , BDF_BBOX_X(0)
-    , BDF_BBOX_Y(0)
-    , m_glyphs()
-    , m_properties()
-
+    : bdfData(pixelsize, 6, 12)
 {
+    set_FOUNDRY("Tandy");
+    set_FONTNAME_REGISTRY("TRS80");
+    set_FAMILY_NAME("TRS80");
+    set_WEIGHT_NAME("Regular");
+    set_SLANT("Upright");
+    set_SETWIDTH_NAME("Normal");
+    set_ADD_STYLE_NAME("Ancient");
+    set_RESOLUTION_X(75);
+    set_RESOLUTION_Y(75);
+    set_SPACING("Monospaced");
+    set_CHARSET_REGISTRY("ISO8859");
+    set_CHARSET_ENCODING("1");
+    set_DEFAULT_CHAR(0);
+    set_FONT_DESCENT(0);
+    set_FONT_ASCENT(m_pixelsize);
+    set_COPYRIGHT("Tandy Radio Shack (1979)");
+    set_PIXEL_SIZE(m_pixelsize);
+    set_POINT_SIZE(10*m_pixelsize);
+    set_AVERAGE_WIDTH(10*m_font_w);
+    set_CAP_HEIGHT(m_font_h);
+    set_X_HEIGHT(m_font_h*3/4);
+    set_SCALABLE_WIDTH(1000*RESOLUTION_X/72);
+    set_SCALABLE_HEIGHT(0);
+    set_DEVICE_WIDTH(m_font_w);
+    set_DEVICE_HEIGHT(m_font_h);
+    set_BDF_BBOX_W(m_font_w);
+    set_BDF_BBOX_H(m_font_h);
+    set_BDF_BBOX_X(0);
+    set_BDF_BBOX_Y(0);
+
     /**** 0   (0x00) ****/
     /*   ············   */
     /*   ············   */
@@ -69,7 +81,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x00,0x0000,"control nul"));
+    insert(new bdfGlyphObj(0x00,0x0000,"control NULL"));
 
     /**** 1   (0x01) ****/
     /*   ············   */
@@ -85,7 +97,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x01,0x0001,"control soh"));
+    insert(new bdfGlyphObj(0x01,0x0001,"control START OF HEADING "));
 
     /**** 2   (0x02) ****/
     /*   ············   */
@@ -101,7 +113,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x02,0x0002,"control stx"));
+    insert(new bdfGlyphObj(0x02,0x0002,"control START OF TEXT "));
 
     /**** 3   (0x03) ****/
     /*   ············   */
@@ -117,7 +129,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x03,0x0003,"control etx"));
+    insert(new bdfGlyphObj(0x03,0x0003,"control END OF TEXT "));
 
     /**** 4   (0x04) ****/
     /*   ············   */
@@ -133,7 +145,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x04,0x0004,"control eot"));
+    insert(new bdfGlyphObj(0x04,0x0004,"control END OF TRANSMISSION "));
 
     /**** 5   (0x05) ****/
     /*   ············   */
@@ -149,7 +161,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x05,0x0005,"control enq"));
+    insert(new bdfGlyphObj(0x05,0x0005,"control ENQUIRY "));
 
     /**** 6   (0x06) ****/
     /*   ············   */
@@ -165,7 +177,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x06,0x0006,"control ack"));
+    insert(new bdfGlyphObj(0x06,0x0006,"control ACKNOWLEDGE "));
 
     /**** 7   (0x07) ****/
     /*   ············   */
@@ -181,7 +193,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x07,0x0007,"control bel"));
+    insert(new bdfGlyphObj(0x07,0x0007,"control BELL "));
 
     /**** 8   (0x08) ****/
     /*   ············   */
@@ -197,7 +209,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x08,0x0008,"control bs"));
+    insert(new bdfGlyphObj(0x08,0x0008,"control BACKSPACE "));
 
     /**** 9   (0x09) ****/
     /*   ············   */
@@ -213,7 +225,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x09,0x0009,"control ht"));
+    insert(new bdfGlyphObj(0x09,0x0009,"control CHARACTER TABULATION "));
 
     /**** 10  (0x0a) ****/
     /*   ············   */
@@ -229,7 +241,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x0a,0x000a,"control lf"));
+    insert(new bdfGlyphObj(0x0a,0x000a,"control LINE FEED (LF) "));
 
     /**** 11  (0x0b) ****/
     /*   ············   */
@@ -245,7 +257,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x0b,0x000b,"control vt"));
+    insert(new bdfGlyphObj(0x0b,0x000b,"control LINE TABULATION "));
 
     /**** 12  (0x0c) ****/
     /*   ············   */
@@ -261,7 +273,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x0c,0x000c,"control ff"));
+    insert(new bdfGlyphObj(0x0c,0x000c,"control FORM FEED (FF) "));
 
     /**** 13  (0x0d) ****/
     /*   ············   */
@@ -277,7 +289,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x0d,0x000d,"control cr"));
+    insert(new bdfGlyphObj(0x0d,0x000d,"control CARRIAGE RETURN (CR) "));
 
     /**** 14  (0x0e) ****/
     /*   ············   */
@@ -293,7 +305,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x0e,0x000e,"control so"));
+    insert(new bdfGlyphObj(0x0e,0x000e,"control SHIFT OUT "));
 
     /**** 15  (0x0f) ****/
     /*   ············   */
@@ -309,7 +321,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x0f,0x000f,"control si"));
+    insert(new bdfGlyphObj(0x0f,0x000f,"control SHIFT IN "));
 
     /**** 16  (0x10) ****/
     /*   ············   */
@@ -325,7 +337,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x10,0x0010,"control dle"));
+    insert(new bdfGlyphObj(0x10,0x0010,"control DATA LINK ESCAPE "));
 
     /**** 17  (0x11) ****/
     /*   ············   */
@@ -341,7 +353,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x11,0x0011,"control dc1"));
+    insert(new bdfGlyphObj(0x11,0x0011,"control DEVICE CONTROL ONE "));
 
     /**** 18  (0x12) ****/
     /*   ············   */
@@ -357,7 +369,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x12,0x0012,"control dc2"));
+    insert(new bdfGlyphObj(0x12,0x0012,"control DEVICE CONTROL TWO "));
 
     /**** 19  (0x13) ****/
     /*   ············   */
@@ -373,7 +385,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x13,0x0013,"control dc3"));
+    insert(new bdfGlyphObj(0x13,0x0013,"control DEVICE CONTROL THREE "));
 
     /**** 20  (0x14) ****/
     /*   ············   */
@@ -389,7 +401,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x14,0x0014,"control dc4"));
+    insert(new bdfGlyphObj(0x14,0x0014,"control DEVICE CONTROL FOUR "));
 
     /**** 21  (0x15) ****/
     /*   ············   */
@@ -405,7 +417,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x15,0x0015,"control nak"));
+    insert(new bdfGlyphObj(0x15,0x0015,"control NEGATIVE ACKNOWLEDGE "));
 
     /**** 22  (0x16) ****/
     /*   ············   */
@@ -421,7 +433,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x16,0x0016,"control syn"));
+    insert(new bdfGlyphObj(0x16,0x0016,"control SYNCHRONOUS IDLE "));
 
     /**** 23  (0x17) ****/
     /*   ············   */
@@ -437,7 +449,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x17,0x0017,"control etb"));
+    insert(new bdfGlyphObj(0x17,0x0017,"control END OF TRANSMISSION BLOCK "));
 
     /**** 24  (0x18) ****/
     /*   ············   */
@@ -453,7 +465,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x18,0x0018,"control can"));
+    insert(new bdfGlyphObj(0x18,0x0018,"control CANCEL "));
 
     /**** 25  (0x19) ****/
     /*   ············   */
@@ -469,7 +481,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x19,0x0019,"control em"));
+    insert(new bdfGlyphObj(0x19,0x0019,"control END OF MEDIUM "));
 
     /**** 26  (0x1a) ****/
     /*   ············   */
@@ -485,7 +497,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x1a,0x001a,"control sub"));
+    insert(new bdfGlyphObj(0x1a,0x001a,"control SUBSTITUTE "));
 
     /**** 27  (0x1b) ****/
     /*   ············   */
@@ -501,7 +513,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x1b,0x001b,"control esc"));
+    insert(new bdfGlyphObj(0x1b,0x001b,"control ESCAPE "));
 
     /**** 28  (0x1c) ****/
     /*   ············   */
@@ -517,7 +529,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x1c,0x001c,"control fs"));
+    insert(new bdfGlyphObj(0x1c,0x001c,"control INFORMATION SEPARATOR FOUR "));
 
     /**** 29  (0x1d) ****/
     /*   ············   */
@@ -533,7 +545,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x1d,0x001d,"control gs"));
+    insert(new bdfGlyphObj(0x1d,0x001d,"control INFORMATION SEPARATOR THREE "));
 
     /**** 30  (0x1e) ****/
     /*   ············   */
@@ -549,7 +561,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x1e,0x001e,"control rs"));
+    insert(new bdfGlyphObj(0x1e,0x001e,"control INFORMATION SEPARATOR TWO "));
 
     /**** 31  (0x1f) ****/
     /*   ············   */
@@ -565,7 +577,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x1f,0x001f,"control us"));
+    insert(new bdfGlyphObj(0x1f,0x001f,"control INFORMATION SEPARATOR ONE "));
 
     /**** 32  (0x20) ****/
     /*   ············   */
@@ -581,7 +593,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x20,0x0020,"space"));
+    insert(new bdfGlyphObj(0x20,0x0020,"SPACE"));
 
     /**** 33  (0x21) ****/
     /*   ············   */
@@ -597,7 +609,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x21,0x0021,"exclamation mark"));
+    insert(new bdfGlyphObj(0x21,0x0021,"EXCLAMATION MARK"));
 
     /**** 34  (0x22) ****/
     /*   ············   */
@@ -613,7 +625,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x22,0x0022,"quotation mark"));
+    insert(new bdfGlyphObj(0x22,0x0022,"QUOTATION MARK"));
 
     /**** 35  (0x23) ****/
     /*   ············   */
@@ -629,7 +641,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x23,0x0023,"number sign"));
+    insert(new bdfGlyphObj(0x23,0x0023,"NUMBER SIGN"));
 
     /**** 36  (0x24) ****/
     /*   ············   */
@@ -645,7 +657,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x24,0x0024,"dollar sign"));
+    insert(new bdfGlyphObj(0x24,0x0024,"DOLLAR SIGN"));
 
     /**** 37  (0x25) ****/
     /*   ············   */
@@ -661,7 +673,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x25,0x0025,"percent sign"));
+    insert(new bdfGlyphObj(0x25,0x0025,"PERCENT SIGN"));
 
     /**** 38  (0x26) ****/
     /*   ············   */
@@ -677,7 +689,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x26,0x0026,"ampersand"));
+    insert(new bdfGlyphObj(0x26,0x0026,"AMPERSAND"));
 
     /**** 39  (0x27) ****/
     /*   ············   */
@@ -693,7 +705,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x27,0x0027,"apostrophe"));
+    insert(new bdfGlyphObj(0x27,0x0027,"APOSTROPHE"));
 
     /**** 40  (0x28) ****/
     /*   ············   */
@@ -709,7 +721,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x28,0x0028,"left parenthesis"));
+    insert(new bdfGlyphObj(0x28,0x0028,"LEFT PARENTHESIS"));
 
     /**** 41  (0x29) ****/
     /*   ············   */
@@ -725,7 +737,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x29,0x0029,"right parenthesis"));
+    insert(new bdfGlyphObj(0x29,0x0029,"RIGHT PARENTHESIS"));
 
     /**** 42  (0x2a) ****/
     /*   ············   */
@@ -741,7 +753,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x2a,0x002a,"asterisk"));
+    insert(new bdfGlyphObj(0x2a,0x002a,"ASTERISK"));
 
     /**** 43  (0x2b) ****/
     /*   ············   */
@@ -757,7 +769,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x2b,0x002b,"plus sign"));
+    insert(new bdfGlyphObj(0x2b,0x002b,"PLUS SIGN"));
 
     /**** 44  (0x2c) ****/
     /*   ············   */
@@ -773,7 +785,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ····[]······   */
     /*   ··[]········   */
     /********************/
-    insert(new bdfGlyphObj(0x2c,0x002c,"comma"));
+    insert(new bdfGlyphObj(0x2c,0x002c,"COMMA"));
 
     /**** 45  (0x2d) ****/
     /*   ············   */
@@ -789,7 +801,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x2d,0x002d,"hypen minus"));
+    insert(new bdfGlyphObj(0x2d,0x002d,"HYPHEN-MINUS"));
 
     /**** 46  (0x2e) ****/
     /*   ············   */
@@ -805,7 +817,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x2e,0x002e,"full stop"));
+    insert(new bdfGlyphObj(0x2e,0x002e,"FULL STOP"));
 
     /**** 47  (0x2f) ****/
     /*   ············   */
@@ -821,7 +833,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x2f,0x002f,"solidus"));
+    insert(new bdfGlyphObj(0x2f,0x002f,"SOLIDUS"));
 
     /**** 48  (0x30) ****/
     /*   ············   */
@@ -837,7 +849,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x30,0x0030,"digit zero"));
+    insert(new bdfGlyphObj(0x30,0x0030,"DIGIT ZERO"));
 
     /**** 49  (0x31) ****/
     /*   ············   */
@@ -853,7 +865,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x31,0x0031,"digit one"));
+    insert(new bdfGlyphObj(0x31,0x0031,"DIGIT ONE"));
 
     /**** 50  (0x32) ****/
     /*   ············   */
@@ -869,7 +881,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x32,0x0032,"digit two"));
+    insert(new bdfGlyphObj(0x32,0x0032,"DIGIT TWO"));
 
     /**** 51  (0x33) ****/
     /*   ············   */
@@ -885,7 +897,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x33,0x0033,"digit three"));
+    insert(new bdfGlyphObj(0x33,0x0033,"DIGIT THREE"));
 
     /**** 52  (0x34) ****/
     /*   ············   */
@@ -901,7 +913,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x34,0x0034,"digit four"));
+    insert(new bdfGlyphObj(0x34,0x0034,"DIGIT FOUR"));
 
     /**** 53  (0x35) ****/
     /*   ············   */
@@ -917,7 +929,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x35,0x0035,"digit five"));
+    insert(new bdfGlyphObj(0x35,0x0035,"DIGIT FIVE"));
 
     /**** 54  (0x36) ****/
     /*   ············   */
@@ -933,7 +945,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x36,0x0036,"digit six"));
+    insert(new bdfGlyphObj(0x36,0x0036,"DIGIT SIX"));
 
     /**** 55  (0x37) ****/
     /*   ············   */
@@ -949,7 +961,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x37,0x0037,"digit seven"));
+    insert(new bdfGlyphObj(0x37,0x0037,"DIGIT SEVEN"));
 
     /**** 56  (0x38) ****/
     /*   ············   */
@@ -965,7 +977,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x38,0x0038,"digit eight"));
+    insert(new bdfGlyphObj(0x38,0x0038,"DIGIT EIGHT"));
 
     /**** 57  (0x39) ****/
     /*   ············   */
@@ -981,7 +993,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x39,0x0039,"digit nine"));
+    insert(new bdfGlyphObj(0x39,0x0039,"DIGIT NINE"));
 
     /**** 58  (0x3a) ****/
     /*   ············   */
@@ -997,7 +1009,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x3a,0x003a,"colon"));
+    insert(new bdfGlyphObj(0x3a,0x003a,"COLON"));
 
     /**** 59  (0x3b) ****/
     /*   ············   */
@@ -1013,7 +1025,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ····[]······   */
     /*   ··[]········   */
     /********************/
-    insert(new bdfGlyphObj(0x3b,0x003b,"semicolon"));
+    insert(new bdfGlyphObj(0x3b,0x003b,"SEMICOLON"));
 
     /**** 60  (0x3c) ****/
     /*   ············   */
@@ -1029,7 +1041,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x3c,0x003c,"less-than sign"));
+    insert(new bdfGlyphObj(0x3c,0x003c,"LESS-THAN SIGN"));
 
     /**** 61  (0x3d) ****/
     /*   ············   */
@@ -1045,7 +1057,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x3d,0x003d,"equals sign"));
+    insert(new bdfGlyphObj(0x3d,0x003d,"EQUALS SIGN"));
 
     /**** 62  (0x3e) ****/
     /*   ············   */
@@ -1061,7 +1073,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x3e,0x003e,"greater-than sign"));
+    insert(new bdfGlyphObj(0x3e,0x003e,"GREATER-THAN SIGN"));
 
     /**** 63  (0x3f) ****/
     /*   ············   */
@@ -1077,7 +1089,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x3f,0x003f,"question mark"));
+    insert(new bdfGlyphObj(0x3f,0x003f,"QUESTION MARK"));
 
     /**** 64  (0x40) ****/
     /*   ············   */
@@ -1093,7 +1105,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x40,0x0040,"commercial at"));
+    insert(new bdfGlyphObj(0x40,0x0040,"COMMERCIAL AT"));
 
     /**** 65  (0x41) ****/
     /*   ············   */
@@ -1109,7 +1121,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x41,0x0041,"latin capital letter a"));
+    insert(new bdfGlyphObj(0x41,0x0041,"LATIN CAPITAL LETTER A"));
 
     /**** 66  (0x42) ****/
     /*   ············   */
@@ -1125,7 +1137,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x42,0x0042,"latin capital letter b"));
+    insert(new bdfGlyphObj(0x42,0x0042,"LATIN CAPITAL LETTER B"));
 
     /**** 67  (0x43) ****/
     /*   ············   */
@@ -1141,7 +1153,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x43,0x0043,"latin capital letter c"));
+    insert(new bdfGlyphObj(0x43,0x0043,"LATIN CAPITAL LETTER C"));
 
     /**** 68  (0x44) ****/
     /*   ············   */
@@ -1157,7 +1169,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x44,0x0044,"latin capital letter d"));
+    insert(new bdfGlyphObj(0x44,0x0044,"LATIN CAPITAL LETTER D"));
 
     /**** 69  (0x45) ****/
     /*   ············   */
@@ -1173,7 +1185,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x45,0x0045,"latin capital letter e"));
+    insert(new bdfGlyphObj(0x45,0x0045,"LATIN CAPITAL LETTER E"));
 
     /**** 70  (0x46) ****/
     /*   ············   */
@@ -1189,7 +1201,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x46,0x0046,"latin capital letter f"));
+    insert(new bdfGlyphObj(0x46,0x0046,"LATIN CAPITAL LETTER F"));
 
     /**** 71  (0x47) ****/
     /*   ············   */
@@ -1205,7 +1217,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x47,0x0047,"latin capital letter g"));
+    insert(new bdfGlyphObj(0x47,0x0047,"LATIN CAPITAL LETTER G"));
 
     /**** 72  (0x48) ****/
     /*   ············   */
@@ -1221,7 +1233,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x48,0x0048,"latin capital letter h"));
+    insert(new bdfGlyphObj(0x48,0x0048,"LATIN CAPITAL LETTER H"));
 
     /**** 73  (0x49) ****/
     /*   ············   */
@@ -1237,7 +1249,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x49,0x0049,"latin capital letter i"));
+    insert(new bdfGlyphObj(0x49,0x0049,"LATIN CAPITAL LETTER I"));
 
     /**** 74  (0x4a) ****/
     /*   ············   */
@@ -1253,7 +1265,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x4a,0x004a,"latin capital letter j"));
+    insert(new bdfGlyphObj(0x4a,0x004a,"LATIN CAPITAL LETTER J"));
 
     /**** 75  (0x4b) ****/
     /*   ············   */
@@ -1269,7 +1281,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x4b,0x004b,"latin capital letter k"));
+    insert(new bdfGlyphObj(0x4b,0x004b,"LATIN CAPITAL LETTER K"));
 
     /**** 76  (0x4c) ****/
     /*   ············   */
@@ -1285,7 +1297,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x4c,0x004c,"latin capital letter l"));
+    insert(new bdfGlyphObj(0x4c,0x004c,"LATIN CAPITAL LETTER L"));
 
     /**** 77  (0x4d) ****/
     /*   ············   */
@@ -1301,7 +1313,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x4d,0x004d,"latin capital letter m"));
+    insert(new bdfGlyphObj(0x4d,0x004d,"LATIN CAPITAL LETTER M"));
 
     /**** 78  (0x4e) ****/
     /*   ············   */
@@ -1317,7 +1329,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x4e,0x004e,"latin capital letter n"));
+    insert(new bdfGlyphObj(0x4e,0x004e,"LATIN CAPITAL LETTER N"));
 
     /**** 79  (0x4f) ****/
     /*   ············   */
@@ -1333,7 +1345,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x4f,0x004f,"latin capital letter o"));
+    insert(new bdfGlyphObj(0x4f,0x004f,"LATIN CAPITAL LETTER O"));
 
     /**** 80  (0x50) ****/
     /*   ············   */
@@ -1349,7 +1361,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x50,0x0050,"latin capital letter p"));
+    insert(new bdfGlyphObj(0x50,0x0050,"LATIN CAPITAL LETTER P"));
 
     /**** 81  (0x51) ****/
     /*   ············   */
@@ -1365,7 +1377,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x51,0x0051,"latin capital letter q"));
+    insert(new bdfGlyphObj(0x51,0x0051,"LATIN CAPITAL LETTER Q"));
 
     /**** 82  (0x52) ****/
     /*   ············   */
@@ -1381,7 +1393,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x52,0x0052,"latin capital letter r"));
+    insert(new bdfGlyphObj(0x52,0x0052,"LATIN CAPITAL LETTER R"));
 
     /**** 83  (0x53) ****/
     /*   ············   */
@@ -1397,7 +1409,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x53,0x0053,"latin capital letter s"));
+    insert(new bdfGlyphObj(0x53,0x0053,"LATIN CAPITAL LETTER S"));
 
     /**** 84  (0x54) ****/
     /*   ············   */
@@ -1413,7 +1425,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x54,0x0054,"latin capital letter t"));
+    insert(new bdfGlyphObj(0x54,0x0054,"LATIN CAPITAL LETTER T"));
 
     /**** 85  (0x55) ****/
     /*   ············   */
@@ -1429,7 +1441,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x55,0x0055,"latin capital letter u"));
+    insert(new bdfGlyphObj(0x55,0x0055,"LATIN CAPITAL LETTER U"));
 
     /**** 86  (0x56) ****/
     /*   ············   */
@@ -1445,7 +1457,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x56,0x0056,"latin capital letter v"));
+    insert(new bdfGlyphObj(0x56,0x0056,"LATIN CAPITAL LETTER V"));
 
     /**** 87  (0x57) ****/
     /*   ············   */
@@ -1461,7 +1473,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x57,0x0057,"latin capital letter w"));
+    insert(new bdfGlyphObj(0x57,0x0057,"LATIN CAPITAL LETTER W"));
 
     /**** 88  (0x58) ****/
     /*   ············   */
@@ -1477,7 +1489,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x58,0x0058,"latin capital letter x"));
+    insert(new bdfGlyphObj(0x58,0x0058,"LATIN CAPITAL LETTER X"));
 
     /**** 89  (0x59) ****/
     /*   ············   */
@@ -1493,7 +1505,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x59,0x0059,"latin capital letter y"));
+    insert(new bdfGlyphObj(0x59,0x0059,"LATIN CAPITAL LETTER Y"));
 
     /**** 90  (0x5a) ****/
     /*   ············   */
@@ -1509,7 +1521,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x5a,0x005a,"latin capital letter z"));
+    insert(new bdfGlyphObj(0x5a,0x005a,"LATIN CAPITAL LETTER Z"));
 
     /**** 91  (0x5b) ****/
     /*   ············   */
@@ -1525,7 +1537,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x5b,0x005b,"left square bracket"));
+    insert(new bdfGlyphObj(0x5b,0x005b,"LEFT SQUARE BRACKET"));
 
     /**** 92  (0x5c) ****/
     /*   ············   */
@@ -1541,7 +1553,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x5c,0x005c,"reverse solidus"));
+    insert(new bdfGlyphObj(0x5c,0x005c,"REVERSE SOLIDUS"));
 
     /**** 93  (0x5d) ****/
     /*   ············   */
@@ -1557,7 +1569,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x5d,0x005d,"right square bracket"));
+    insert(new bdfGlyphObj(0x5d,0x005d,"RIGHT SQUARE BRACKET"));
 
     /**** 94  (0x5e) ****/
     /*   ············   */
@@ -1573,7 +1585,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x5e,0x005e,"circumflex accent"));
+    insert(new bdfGlyphObj(0x5e,0x005e,"CIRCUMFLEX ACCENT"));
 
     /**** 95  (0x5f) ****/
     /*   ············   */
@@ -1589,7 +1601,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x5f,0x005f,"low line"));
+    insert(new bdfGlyphObj(0x5f,0x005f,"LOW LINE"));
 
     /**** 96  (0x60) ****/
     /*   ············   */
@@ -1605,7 +1617,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x60,0x0060,"grave accent"));
+    insert(new bdfGlyphObj(0x60,0x0060,"GRAVE ACCENT"));
 
     /**** 97  (0x61) ****/
     /*   ············   */
@@ -1621,7 +1633,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x61,0x0061,"latin small letter a"));
+    insert(new bdfGlyphObj(0x61,0x0061,"LATIN SMALL LETTER A"));
 
     /**** 98  (0x62) ****/
     /*   ············   */
@@ -1637,7 +1649,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x62,0x0062,"latin small letter b"));
+    insert(new bdfGlyphObj(0x62,0x0062,"LATIN SMALL LETTER B"));
 
     /**** 99  (0x63) ****/
     /*   ············   */
@@ -1653,7 +1665,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x63,0x0063,"latin small letter c"));
+    insert(new bdfGlyphObj(0x63,0x0063,"LATIN SMALL LETTER C"));
 
     /**** 100 (0x64) ****/
     /*   ············   */
@@ -1669,7 +1681,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x64,0x0064,"latin small letter d"));
+    insert(new bdfGlyphObj(0x64,0x0064,"LATIN SMALL LETTER D"));
 
     /**** 101 (0x65) ****/
     /*   ············   */
@@ -1685,7 +1697,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x65,0x0065,"latin small letter e"));
+    insert(new bdfGlyphObj(0x65,0x0065,"LATIN SMALL LETTER E"));
 
     /**** 102 (0x66) ****/
     /*   ············   */
@@ -1701,7 +1713,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x66,0x0066,"latin small letter f"));
+    insert(new bdfGlyphObj(0x66,0x0066,"LATIN SMALL LETTER F"));
 
     /**** 103 (0x67) ****/
     /*   ············   */
@@ -1717,7 +1729,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ··[]······[]   */
     /*   ····[][][]··   */
     /********************/
-    insert(new bdfGlyphObj(0x67,0x0067,"latin small letter g"));
+    insert(new bdfGlyphObj(0x67,0x0067,"LATIN SMALL LETTER G"));
 
     /**** 104 (0x68) ****/
     /*   ············   */
@@ -1733,7 +1745,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x68,0x0068,"latin small letter h"));
+    insert(new bdfGlyphObj(0x68,0x0068,"LATIN SMALL LETTER H"));
 
     /**** 105 (0x69) ****/
     /*   ············   */
@@ -1749,7 +1761,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x69,0x0069,"latin small letter i"));
+    insert(new bdfGlyphObj(0x69,0x0069,"LATIN SMALL LETTER I"));
 
     /**** 106 (0x6a) ****/
     /*   ············   */
@@ -1765,7 +1777,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ··[]······[]   */
     /*   ····[][][]··   */
     /********************/
-    insert(new bdfGlyphObj(0x6a,0x006a,"latin small letter j"));
+    insert(new bdfGlyphObj(0x6a,0x006a,"LATIN SMALL LETTER J"));
 
     /**** 107 (0x6b) ****/
     /*   ············   */
@@ -1781,7 +1793,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x6b,0x006b,"latin small letter k"));
+    insert(new bdfGlyphObj(0x6b,0x006b,"LATIN SMALL LETTER K"));
 
     /**** 108 (0x6c) ****/
     /*   ············   */
@@ -1797,7 +1809,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x6c,0x006c,"latin small letter l"));
+    insert(new bdfGlyphObj(0x6c,0x006c,"LATIN SMALL LETTER L"));
 
     /**** 109 (0x6d) ****/
     /*   ············   */
@@ -1813,7 +1825,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x6d,0x006d,"latin small letter m"));
+    insert(new bdfGlyphObj(0x6d,0x006d,"LATIN SMALL LETTER M"));
 
     /**** 110 (0x6e) ****/
     /*   ············   */
@@ -1829,7 +1841,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x6e,0x006e,"latin small letter n"));
+    insert(new bdfGlyphObj(0x6e,0x006e,"LATIN SMALL LETTER N"));
 
     /**** 111 (0x6f) ****/
     /*   ············   */
@@ -1845,7 +1857,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x6f,0x006f,"latin small letter o"));
+    insert(new bdfGlyphObj(0x6f,0x006f,"LATIN SMALL LETTER O"));
 
     /**** 112 (0x70) ****/
     /*   ············   */
@@ -1861,7 +1873,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ··[]········   */
     /*   ··[]········   */
     /********************/
-    insert(new bdfGlyphObj(0x70,0x0070,"latin small letter p"));
+    insert(new bdfGlyphObj(0x70,0x0070,"LATIN SMALL LETTER P"));
 
     /**** 113 (0x71) ****/
     /*   ············   */
@@ -1877,7 +1889,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ··········[]   */
     /*   ··········[]   */
     /********************/
-    insert(new bdfGlyphObj(0x71,0x0071,"latin small letter q"));
+    insert(new bdfGlyphObj(0x71,0x0071,"LATIN SMALL LETTER Q"));
 
     /**** 114 (0x72) ****/
     /*   ············   */
@@ -1893,7 +1905,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x72,0x0072,"latin small letter r"));
+    insert(new bdfGlyphObj(0x72,0x0072,"LATIN SMALL LETTER R"));
 
     /**** 115 (0x73) ****/
     /*   ············   */
@@ -1909,7 +1921,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x73,0x0073,"latin small letter s"));
+    insert(new bdfGlyphObj(0x73,0x0073,"LATIN SMALL LETTER S"));
 
     /**** 116 (0x74) ****/
     /*   ············   */
@@ -1925,7 +1937,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x74,0x0074,"latin small letter t"));
+    insert(new bdfGlyphObj(0x74,0x0074,"LATIN SMALL LETTER T"));
 
     /**** 117 (0x75) ****/
     /*   ············   */
@@ -1941,7 +1953,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x75,0x0075,"latin small letter u"));
+    insert(new bdfGlyphObj(0x75,0x0075,"LATIN SMALL LETTER U"));
 
     /**** 118 (0x76) ****/
     /*   ············   */
@@ -1957,7 +1969,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x76,0x0076,"latin small letter v"));
+    insert(new bdfGlyphObj(0x76,0x0076,"LATIN SMALL LETTER V"));
 
     /**** 119 (0x77) ****/
     /*   ············   */
@@ -1973,7 +1985,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x77,0x0077,"latin small letter w"));
+    insert(new bdfGlyphObj(0x77,0x0077,"LATIN SMALL LETTER W"));
 
     /**** 120 (0x78) ****/
     /*   ············   */
@@ -1989,7 +2001,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x78,0x0078,"latin small letter x"));
+    insert(new bdfGlyphObj(0x78,0x0078,"LATIN SMALL LETTER X"));
 
     /**** 121 (0x79) ****/
     /*   ············   */
@@ -2005,7 +2017,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ··[]······[]   */
     /*   ····[][][]··   */
     /********************/
-    insert(new bdfGlyphObj(0x79,0x0079,"latin small letter y"));
+    insert(new bdfGlyphObj(0x79,0x0079,"LATIN SMALL LETTER Y"));
 
     /**** 122 (0x7a) ****/
     /*   ············   */
@@ -2021,7 +2033,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x7a,0x007a,"latin small letter z"));
+    insert(new bdfGlyphObj(0x7a,0x007a,"LATIN SMALL LETTER Z"));
 
     /**** 123 (0x7b) ****/
     /*   ············   */
@@ -2037,7 +2049,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x7b,0x007b,"left curly bracket"));
+    insert(new bdfGlyphObj(0x7b,0x007b,"LEFT CURLY BRACKET"));
 
     /**** 124 (0x7c) ****/
     /*   ············   */
@@ -2053,7 +2065,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x7c,0x007c,"vertical line"));
+    insert(new bdfGlyphObj(0x7c,0x007c,"VERTICAL LINE"));
 
     /**** 125 (0x7d) ****/
     /*   ············   */
@@ -2069,7 +2081,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x7d,0x007d,"right curly bracket"));
+    insert(new bdfGlyphObj(0x7d,0x007d,"RIGHT CURLY BRACKET"));
 
     /**** 126 (0x7e) ****/
     /*   ············   */
@@ -2085,7 +2097,7 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x7e,0x007e,"tilde"));
+    insert(new bdfGlyphObj(0x7e,0x007e,"TILDE"));
 
     /**** 127 (0x7f) ****/
     /*   ············   */
@@ -2101,7 +2113,8 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /*   ············   */
     /*   ············   */
     /********************/
-    insert(new bdfGlyphObj(0x7f,0x007f,"delete"));
+    insert(new bdfGlyphObj(0x7f,0x007f,"control DELETE"));
+
 
     /**** 128 (0x80) ****/
     /*   ············   */
@@ -4151,105 +4164,20 @@ bdfTrs80::bdfTrs80(int pixelsize)
     /********************/
     insert(new bdfGlyphObj(0xff,0x00ff,"U+e0ff"));
 
-
-    for (uint ch = 0; ch < 256; ch++) {
-	quint32 uc = m_glyphs.value(ch)->uc();
-	m_to_unicode.insert(static_cast<uchar>(ch), uc);
-	m_from_unicode.insert(uc, static_cast<uchar>(ch));
-    }
-
     setup_properties();
-}
-
-quint32 bdfTrs80::toUnicode(uchar ch) const
-{
-    return m_to_unicode.value(ch);
-}
-
-uchar bdfTrs80::fromUnicode(quint32 uc) const
-{
-    return m_from_unicode.value(uc);
-}
-
-void bdfTrs80::setup_properties()
-{
-    m_font_w = 6;
-    m_font_h = 12;
-
-    PIXEL_SIZE = m_font_h;
-    POINT_SIZE = 10 * m_font_h;
-    AVERAGE_WIDTH = 10 * m_font_w;
-
-    CAP_HEIGHT = m_font_h;
-    X_HEIGHT = m_font_h * 3 / 4;
-    SCALABLE_WIDTH = 1000 * RESOLUTION_X / 72;
-    SCALABLE_HEIGHT = 0;
-    DEVICE_WIDTH = m_font_w;
-    DEVICE_HEIGHT = m_font_h;
-
-    BDF_BBOX_W = m_font_w;
-    BDF_BBOX_H = m_font_h;
-    BDF_BBOX_X = 0;
-    BDF_BBOX_Y = 0;
-
-    m_properties.clear();
-
-    m_properties += QString("%1 \"%2\"").arg("FONTNAME_REGISTRY").arg(FONTNAME_REGISTRY);
-    m_properties += QString("%1 \"%2\"").arg("FOUNDRY").arg(FOUNDRY);
-    m_properties += QString("%1 \"%2\"").arg("FAMILY_NAME").arg(FAMILY_NAME);
-    m_properties += QString("%1 \"%2\"").arg("WEIGHT_NAME").arg(WEIGHT_NAME);
-    m_properties += QString("%1 \"%2\"").arg("SLANT").arg(SLANT);
-    m_properties += QString("%1 \"%2\"").arg("SETWIDTH_NAME").arg(SETWIDTH_NAME);
-    m_properties += QString("%1 \"%2\"").arg("ADD_STYLE_NAME").arg(ADD_STYLE_NAME);
-    m_properties += QString("%1 %2").arg("PIXEL_SIZE").arg(PIXEL_SIZE);
-    m_properties += QString("%1 %2").arg("POINT_SIZE").arg(POINT_SIZE);
-    m_properties += QString("%1 %2").arg("RESOLUTION_X").arg(RESOLUTION_X);
-    m_properties += QString("%1 %2").arg("RESOLUTION_Y").arg(RESOLUTION_Y);
-    m_properties += QString("%1 \"%2\"").arg("SPACING").arg(SPACING);
-    m_properties += QString("%1 %2").arg("AVERAGE_WIDTH").arg(AVERAGE_WIDTH);
-    m_properties += QString("%1 \"%2\"").arg("CHARSET_REGISTRY").arg(CHARSET_REGISTRY);
-    m_properties += QString("%1 \"%2\"").arg("CHARSET_ENCODING").arg(CHARSET_ENCODING);
-    m_properties += QString("%1 %2").arg("DEFAULT_CHAR").arg(DEFAULT_CHAR);
-    m_properties += QString("%1 %2").arg("FONT_DESCENT").arg(FONT_DESCENT);
-    m_properties += QString("%1 %2").arg("FONT_ASCENT").arg(FONT_ASCENT);
-    m_properties += QString("%1 \"%2\"").arg("COPYRIGHT").arg(COPYRIGHT);
-    m_properties += QString("%1 %2").arg("CAP_HEIGHT").arg(CAP_HEIGHT);
-    m_properties += QString("%1 %2").arg("X_HEIGHT").arg(X_HEIGHT);
-}
-
-void bdfTrs80::insert(bdfGlyphObj* glyph)
-{
-    m_glyphs.insert(glyph->ch(), bdfGlyph(glyph));
-}
-
-int bdfTrs80::bit_chk(const QByteArray& buff, int x, int y)
-{
-    if (y < 0 || y >= m_font_h)
-	return 0;
-    if (x < 0 || x >= m_font_w)
-	return 0;
-    const uchar bits = *reinterpret_cast<const uchar *>(buff.constData() + y);
-    return (bits >> (7 - (x % 8))) & 1;
-}
-
-void bdfTrs80::bit_set(QByteArray& bitmap, int x)
-{
-    if (x < 0 || x >= PIXEL_SIZE)
-	return;
-    uchar* bits = reinterpret_cast<uchar *>(bitmap.data() + x / 8);
-    *bits |= 0x80 >> (x % 8);
 }
 
 void bdfTrs80::emit_bitmap(QTextStream& bdf, const QByteArray& buff)
 {
-    QByteArray bitmap((PIXEL_SIZE + 7) / 8, 0x00);
+    const int scale = 1;
+    QByteArray bitmap((scale * m_font_w + 7) / 8, 0x00);
 
     bdf << QString("BITMAP\n");
-    for (int y = 0; y < PIXEL_SIZE; y++) {
-	const int py = y * 8 / PIXEL_SIZE;
+    for (int y = 0; y < scale * m_font_h; y++) {
+	const int py = y * 8 / m_font_h;
 	bitmap.fill(0x00);
-	for (int x = 0; x < PIXEL_SIZE; x++) {
-	    const int px = x * 8 / PIXEL_SIZE;
+	for (int x = 0; x < scale * m_font_w; x++) {
+	    const int px = x * 8 / m_font_w;
 	    if (bit_chk(buff, px, py))
 		bit_set(bitmap, x);
 	}
@@ -4314,13 +4242,15 @@ bool bdfTrs80::generate(const QString& fntname, const QString& bdfname)
 	    .arg(BDF_BBOX_X)
 	    .arg(BDF_BBOX_Y);
 
-    bdf << QString("STARTPROPERTIES %1\n")
-	   .arg(m_properties.count());
-    foreach(const QString& property, m_properties) {
-	bdf << QString("%1\n")
-	       .arg(property);
+    if (m_properties.count() > 0) {
+	bdf << QString("STARTPROPERTIES %1\n")
+	       .arg(m_properties.count());
+	foreach(const QString& property, m_properties) {
+	    bdf << QString("%1\n")
+		   .arg(property);
+	}
+	bdf << QString("ENDPROPERTIES\n");
     }
-    bdf << QString("ENDPROPERTIES\n");
 
     bdf << QString("CHARS 256\n");
 
@@ -4371,8 +4301,8 @@ bool bdfTrs80::generate(const QString& fntname, const QString& bdfname)
 	if (glyph.isNull()) {
 	    bmp << QString("insert(new bdfGlyphObj(0x%1,0x%2,\"%3\"));\n\n")
 		   .arg(code, 2, 16, QChar('0'))
-		   .arg(0xe000 + code, 4, 16, QChar('0'))
-		   .arg(QString("U+%1").arg(0xe000 + code, 4, 16, QChar('0')));
+		   .arg(code, 4, 16, QChar('0'))
+		   .arg(QString("U+%1").arg(code, 4, 16, QChar('0')));
 	} else {
 	    bmp << QString("insert(new bdfGlyphObj(0x%1,0x%2,\"%3\"));\n\n")
 	       .arg(glyph->ch(), 2, 16, QChar('0'))

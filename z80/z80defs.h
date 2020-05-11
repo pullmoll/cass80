@@ -50,11 +50,12 @@ public:
     z80DefObj::EntryType type(quint32 addr) const;
 
     void insert(quint32 addr, z80DefObj* entry);
+    z80Def add_entry(quint32 addr);
 
 private:
     QString m_filename;
     QString m_system;
     QDomDocument m_doc;
-    mutable QMap<quint32,z80Def> m_defs;
-    mutable z80Def m_dummy;
+    QMap<quint32,z80Def> m_defs;
+    z80Def m_dummy;
 };

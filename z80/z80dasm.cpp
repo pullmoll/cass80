@@ -503,6 +503,11 @@ QString z80Dasm::dasm(quint32 pc, off_t& pos, quint32& flags, const quint8 *opro
     QString ixy;
     z80Def def = m_defs->entry(pc);
 
+    if (def.isNull()) {
+	def = z80Def(new z80DefObj());
+	def->set_type(z80DefObj::CODE);
+    }
+
     pos = 0;
     flags = 0;
 
@@ -558,10 +563,7 @@ QStringList z80Dasm::listing(const QByteArray& memory, quint32 pc_min, quint32 p
     result.reserve(pc_max + 1 - pc_min);
 
     for (quint32 pc = pc_min; pc <= pc_max; /* */) {
-	z80Def def;
-
-	def = m_defs->entry(pc);
-	Q_ASSERT(!def.isNull());
+	z80Def def = m_defs->entry(pc);
 	bool at_addr = def->is_at_addr(pc);
 
 	if (at_addr && def->has_block_comments()) {

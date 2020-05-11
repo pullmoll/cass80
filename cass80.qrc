@@ -15,5 +15,6 @@
         <file>image/cass80.png</file>
         <file>translations/cass80_de_DE.qm</file>
         <file>resources/trs80.fnt</file>
+        <file>resources/cgenie.def</file>
     </qresource>
 </RCC>

@@ -32,6 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 #include "z80def.h"
+#include "util.h"
 
 static const QLatin1String xml_tag_entry("entry");
 
@@ -49,19 +50,21 @@ static const QLatin1String xml_att_arg0("arg0");
 static const QLatin1String xml_att_maxelem("maxelem");
 static const QLatin1String xml_att_param("param");
 
-static const QLatin1String xml_val_code("code");
-static const QLatin1String xml_val_defb("defb");
-static const QLatin1String xml_val_defw("defw");
-static const QLatin1String xml_val_defd("defd");
-static const QLatin1String xml_val_defs("defs");
-static const QLatin1String xml_val_text("text");
-static const QLatin1String xml_val_token("token");
+static QHash<z80DefObj::EntryType,QString> g_type_hash({
+    {z80DefObj::CODE, QLatin1String("code")},
+    {z80DefObj::DEFB, QLatin1String("defb")},
+    {z80DefObj::DEFW, QLatin1String("defw")},
+    {z80DefObj::DEFD, QLatin1String("defd")},
+    {z80DefObj::DEFS, QLatin1String("defs")},
+    {z80DefObj::TEXT, QLatin1String("text")},
+    {z80DefObj::TOKEN, QLatin1String("token")},
+});
 
 z80DefObj::z80DefObj(const QDomElement& elm)
     : m_symbol()
     , m_block_comment()
     , m_line_comment()
-    , m_addr0(0)
+    , m_orig(0)
     , m_addr(0)
     , m_type(INVALID)
     , m_arg0()
@@ -77,7 +80,7 @@ z80DefObj::z80DefObj(const z80DefObj& other)
     m_symbol = other.m_symbol;
     m_block_comment = other.m_block_comment;
     m_line_comment = other.m_line_comment;
-    m_addr0 = other.m_addr0;
+    m_orig = other.m_orig;
     m_addr = other.m_addr;
     m_type = other.m_type;
     m_arg0 = other.m_arg0;
@@ -101,7 +104,7 @@ bool z80DefObj::isValid() const
  */
 bool z80DefObj::is_at_addr(quint32 addr) const
 {
-    return addr == m_addr0;
+    return addr == m_orig;
 }
 
 /**
@@ -162,9 +165,9 @@ QStringList z80DefObj::line_comments() const
  * @brief Return the original (unmodified) address for the definition
  * @return 32 bit (actually 16 bit used) address
  */
-quint32 z80DefObj::addr0() const
+quint32 z80DefObj::orig() const
 {
-    return m_addr0;
+    return m_orig;
 }
 
 /**
@@ -222,7 +225,7 @@ z80DefObj z80DefObj::operator=(const z80DefObj& other)
     m_symbol = other.m_symbol;
     m_block_comment = other.m_block_comment;
     m_line_comment = other.m_line_comment;
-    m_addr0 = other.m_addr0;
+    m_orig = other.m_orig;
     m_addr = other.m_addr;
     m_type = other.m_type;
     m_arg0 = other.m_arg0;
@@ -262,9 +265,9 @@ void z80DefObj::set_line_comments(const QStringList& lines)
  * @brief Set a new original symbol address
  * @param addr address value
  */
-void z80DefObj::set_addr0(const quint32 addr)
+void z80DefObj::set_orig(const quint32 addr)
 {
-    m_addr0 = m_addr = addr;
+    m_orig = m_addr = addr;
 }
 
 /**
@@ -332,14 +335,14 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 
     att = xml_att_addr;
     if (elm.attribute(att).isEmpty()) {
-	def.m_addr0 = def.m_addr = 0;
+	def.m_orig = def.m_addr = 0;
     } else {
 	QString val = elm.attribute(att);
 	bool ok;
-	def.m_addr0 = def.m_addr = val.toUInt(&ok, 16);
+	def.m_orig = def.m_addr = val.toUInt(&ok, 16);
 	if (!ok) {
 	    qDebug("%s: unknown attribute %s value '%s'", __func__, qPrintable(att), qPrintable(val));
-	    def.m_addr0 = def.m_addr = 0;
+	    def.m_orig = def.m_addr = 0;
 	}
     }
 
@@ -382,21 +385,8 @@ z80DefObj z80DefObj::fromDomElement(const QDomElement& elm)
 	def.m_type = CODE;
     } else {
 	QString type = elm.attribute(att).toLower();
-	if (type == xml_val_code) {
-	    def.m_type = CODE;
-	} else if (type == xml_val_defb) {
-	    def.m_type = DEFB;
-	} else if (type == xml_val_defw) {
-	    def.m_type = DEFW;
-	} else if (type == xml_val_defd) {
-	    def.m_type = DEFD;
-	} else if (type == xml_val_defs) {
-	    def.m_type = DEFS;
-	} else if (type == xml_val_text) {
-	    def.m_type = TEXT;
-	} else if (type == xml_val_token) {
-	    def.m_type = TOKEN;
-	} else {
+	def.m_type = g_type_hash.key(type, INVALID);
+	if (INVALID == def.m_type) {
 	    qDebug("%s: unknown type value '%s'", __func__, qPrintable(type));
 	    def.m_type = CODE;
 	}
@@ -480,38 +470,12 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
     if (def.isNull())
 	return QDomElement();
 
-    if (!def->is_at_addr(def->addr0())) {
+    if (!def->is_at_addr(def->orig())) {
 	// Not an original address
 	return QDomElement();
     }
 
-    QString type;
-    switch (def->type()) {
-    case CODE:
-	type = xml_val_code;
-	break;
-    case DEFB:
-	type = xml_val_defb;
-	break;
-    case DEFW:
-	type = xml_val_defw;
-	break;
-    case DEFD:
-	type = xml_val_defd;
-	break;
-    case DEFS:
-	type = xml_val_defs;
-	break;
-    case TEXT:
-	type = xml_val_text;
-	break;
-    case TOKEN:
-	type = xml_val_token;
-	break;
-    default:
-	return QDomElement();
-    }
-
+    QString type = g_type_hash.value(def->type());
     QDomElement elm = doc.createElement(xml_tag_entry);
 
     if (def->has_symbol()) {
@@ -524,14 +488,15 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
     if (def->has_line_comments()) {
 	int line = 0;
 	if (1 == def->line_comments().count()) {
-	    // Simple case: just one line
+	    // Simple case: just one line of comment after the code
 	    QString comment = def->line_comments().first();
 	    QDomElement cmt = doc.createElement(xml_tag_comment);
 	    QDomText txt = doc.createTextNode(comment);
 	    cmt.appendChild(txt);
 	    elm.appendChild(cmt);
 	} else {
-	    // Multiple lines, will be indented to the comment column
+	    // Multiple lines for one opcode
+	    // They will be indented to the comment column
 	    foreach(const QString& comment, def->line_comments()) {
 		QDomElement cmt = doc.createElement(xml_tag_comment);
 		cmt.setAttribute(xml_att_symbol_scope, xml_val_scope_line);
@@ -555,7 +520,7 @@ QDomElement z80DefObj::toDomElement(QDomDocument& doc, const z80Def& def)
 	}
     }
 
-    elm.setAttribute(xml_att_addr, QString("%1").arg(def->addr0(), 4, 16, QChar('0')));
+    elm.setAttribute(xml_att_addr, util::x16(def->orig()));
     elm.setAttribute(xml_att_type, type);
     if (!def->arg0().isEmpty())
 	elm.setAttribute(xml_att_arg0, def->arg0());

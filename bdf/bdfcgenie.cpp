@@ -35,28 +35,38 @@
 #include "bdfglyph.h"
 
 bdfCgenie::bdfCgenie(int pixelsize)
-    : bdfData(pixelsize)
-    , m_font_w(8)
-    , m_font_h(8)
-    , PIXEL_SIZE(pixelsize)
-    , POINT_SIZE(10*pixelsize)
-    , AVERAGE_WIDTH(10*pixelsize)
-    , CAP_HEIGHT(pixelsize)
-    , X_HEIGHT(pixelsize*3/4)
-    , SCALABLE_WIDTH(1000*RESOLUTION_X/72)
-    , SCALABLE_HEIGHT(0)
-    , DEVICE_WIDTH(pixelsize)
-    , DEVICE_HEIGHT(pixelsize)
-    , BDF_BBOX_W(pixelsize)
-    , BDF_BBOX_H(pixelsize)
-    , BDF_BBOX_X(0)
-    , BDF_BBOX_Y(0)
-    , m_glyphs()
-    , m_properties()
-    , m_to_unicode()
-    , m_from_unicode()
-
+    : bdfData(pixelsize, 8, 8)
 {
+    set_FOUNDRY("EACA");
+    set_FONTNAME_REGISTRY("ColourGenie");
+    set_FAMILY_NAME("ColourGenie");
+    set_WEIGHT_NAME("Regular");
+    set_SLANT("Upright");
+    set_SETWIDTH_NAME("Normal");
+    set_ADD_STYLE_NAME("Ancient");
+    set_RESOLUTION_X(75);
+    set_RESOLUTION_Y(75);
+    set_SPACING("Monospaced");
+    set_CHARSET_REGISTRY("ISO8859");
+    set_CHARSET_ENCODING("1");
+    set_DEFAULT_CHAR(0);
+    set_FONT_DESCENT(0);
+    set_FONT_ASCENT(m_pixelsize);
+    set_COPYRIGHT("EACA Ltd. Hong Kong (1982)");
+    set_PIXEL_SIZE(m_pixelsize);
+    set_POINT_SIZE(10*m_pixelsize);
+    set_AVERAGE_WIDTH(10*m_font_w);
+    set_CAP_HEIGHT(m_font_h);
+    set_X_HEIGHT(m_font_h*3/4);
+    set_SCALABLE_WIDTH(1000*RESOLUTION_X/72);
+    set_SCALABLE_HEIGHT(0);
+    set_DEVICE_WIDTH(m_font_w);
+    set_DEVICE_HEIGHT(m_font_h);
+    set_BDF_BBOX_W(m_font_w);
+    set_BDF_BBOX_H(m_font_h);
+    set_BDF_BBOX_X(0);
+    set_BDF_BBOX_Y(0);
+
     /**** 0   (0x00) ****/
     /* ················ */
     /* ················ */
@@ -67,7 +77,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x00,0x0000,"control nul"));
+    insert(new bdfGlyphObj(0x00,0x0000,"control NULL"));
 
     /**** 1   (0x01) ****/
     /* ················ */
@@ -79,7 +89,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x01,0x0001,"control soh"));
+    insert(new bdfGlyphObj(0x01,0x0001,"control START OF HEADING "));
 
     /**** 2   (0x02) ****/
     /* ················ */
@@ -91,7 +101,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x02,0x0002,"control stx"));
+    insert(new bdfGlyphObj(0x02,0x0002,"control START OF TEXT "));
 
     /**** 3   (0x03) ****/
     /* ················ */
@@ -103,7 +113,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x03,0x0003,"control etx"));
+    insert(new bdfGlyphObj(0x03,0x0003,"control END OF TEXT "));
 
     /**** 4   (0x04) ****/
     /* ················ */
@@ -115,7 +125,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x04,0x0004,"control eot"));
+    insert(new bdfGlyphObj(0x04,0x0004,"control END OF TRANSMISSION "));
 
     /**** 5   (0x05) ****/
     /* ················ */
@@ -127,7 +137,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x05,0x0005,"control enq"));
+    insert(new bdfGlyphObj(0x05,0x0005,"control ENQUIRY "));
 
     /**** 6   (0x06) ****/
     /* ················ */
@@ -139,7 +149,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x06,0x0006,"control ack"));
+    insert(new bdfGlyphObj(0x06,0x0006,"control ACKNOWLEDGE "));
 
     /**** 7   (0x07) ****/
     /* ················ */
@@ -151,7 +161,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x07,0x0007,"control bel"));
+    insert(new bdfGlyphObj(0x07,0x0007,"control BELL "));
 
     /**** 8   (0x08) ****/
     /* ················ */
@@ -163,7 +173,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x08,0x0008,"control bs"));
+    insert(new bdfGlyphObj(0x08,0x0008,"control BACKSPACE "));
 
     /**** 9   (0x09) ****/
     /* ················ */
@@ -175,7 +185,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x09,0x0009,"control ht"));
+    insert(new bdfGlyphObj(0x09,0x0009,"control CHARACTER TABULATION "));
 
     /**** 10  (0x0a) ****/
     /* ················ */
@@ -187,7 +197,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x0a,0x000a,"control lf"));
+    insert(new bdfGlyphObj(0x0a,0x000a,"control LINE FEED (LF) "));
 
     /**** 11  (0x0b) ****/
     /* ················ */
@@ -199,7 +209,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x0b,0x000b,"control vt"));
+    insert(new bdfGlyphObj(0x0b,0x000b,"control LINE TABULATION "));
 
     /**** 12  (0x0c) ****/
     /* ················ */
@@ -211,7 +221,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x0c,0x000c,"control ff"));
+    insert(new bdfGlyphObj(0x0c,0x000c,"control FORM FEED (FF) "));
 
     /**** 13  (0x0d) ****/
     /* ················ */
@@ -223,7 +233,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x0d,0x000d,"control cr"));
+    insert(new bdfGlyphObj(0x0d,0x000d,"control CARRIAGE RETURN (CR) "));
 
     /**** 14  (0x0e) ****/
     /* ················ */
@@ -235,7 +245,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x0e,0x000e,"control so"));
+    insert(new bdfGlyphObj(0x0e,0x000e,"control SHIFT OUT "));
 
     /**** 15  (0x0f) ****/
     /* ················ */
@@ -247,7 +257,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x0f,0x000f,"control si"));
+    insert(new bdfGlyphObj(0x0f,0x000f,"control SHIFT IN "));
 
     /**** 16  (0x10) ****/
     /* ··[]······[]···· */
@@ -259,7 +269,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x10,0x0010,"control dle"));
+    insert(new bdfGlyphObj(0x10,0x0010,"control DATA LINK ESCAPE "));
 
     /**** 17  (0x11) ****/
     /* ··[]······[]···· */
@@ -271,7 +281,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x11,0x0011,"control dc1"));
+    insert(new bdfGlyphObj(0x11,0x0011,"control DEVICE CONTROL ONE "));
 
     /**** 18  (0x12) ****/
     /* ··[]······[]···· */
@@ -283,7 +293,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x12,0x0012,"control dc2"));
+    insert(new bdfGlyphObj(0x12,0x0012,"control DEVICE CONTROL TWO "));
 
     /**** 19  (0x13) ****/
     /* ··[]······[]···· */
@@ -295,7 +305,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x13,0x0013,"control dc3"));
+    insert(new bdfGlyphObj(0x13,0x0013,"control DEVICE CONTROL THREE "));
 
     /**** 20  (0x14) ****/
     /* ··[]······[]···· */
@@ -307,7 +317,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x14,0x0014,"control dc4"));
+    insert(new bdfGlyphObj(0x14,0x0014,"control DEVICE CONTROL FOUR "));
 
     /**** 21  (0x15) ****/
     /* ··[]······[]···· */
@@ -319,7 +329,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]··[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x15,0x0015,"control nak"));
+    insert(new bdfGlyphObj(0x15,0x0015,"control NEGATIVE ACKNOWLEDGE "));
 
     /**** 22  (0x16) ****/
     /* ····[][][]······ */
@@ -331,7 +341,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][]······ */
     /* ··[]············ */
     /********************/
-    insert(new bdfGlyphObj(0x16,0x0016,"control syn"));
+    insert(new bdfGlyphObj(0x16,0x0016,"control SYNCHRONOUS IDLE "));
 
     /**** 23  (0x17) ****/
     /* ··[][][][][][]·· */
@@ -343,7 +353,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][]·· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x17,0x0017,"control etb"));
+    insert(new bdfGlyphObj(0x17,0x0017,"control END OF TRANSMISSION BLOCK "));
 
     /**** 24  (0x18) ****/
     /* ······[]········ */
@@ -355,7 +365,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x18,0x0018,"control can"));
+    insert(new bdfGlyphObj(0x18,0x0018,"control CANCEL "));
 
     /**** 25  (0x19) ****/
     /* ··········[][]·· */
@@ -367,7 +377,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][]·· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x19,0x0019,"control em"));
+    insert(new bdfGlyphObj(0x19,0x0019,"control END OF MEDIUM "));
 
     /**** 26  (0x1a) ****/
     /* ··[][]·········· */
@@ -379,7 +389,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][]·· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x1a,0x001a,"control sub"));
+    insert(new bdfGlyphObj(0x1a,0x001a,"control SUBSTITUTE "));
 
     /**** 27  (0x1b) ****/
     /* ········[][][][] */
@@ -391,7 +401,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ········[]······ */
     /********************/
-    insert(new bdfGlyphObj(0x1b,0x001b,"control esc"));
+    insert(new bdfGlyphObj(0x1b,0x001b,"control ESCAPE "));
 
     /**** 28  (0x1c) ****/
     /* ················ */
@@ -403,7 +413,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x1c,0x001c,"control fs"));
+    insert(new bdfGlyphObj(0x1c,0x001c,"control INFORMATION SEPARATOR FOUR "));
 
     /**** 29  (0x1d) ****/
     /* ····[][]········ */
@@ -415,7 +425,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x1d,0x001d,"control gs"));
+    insert(new bdfGlyphObj(0x1d,0x001d,"control INFORMATION SEPARATOR THREE "));
 
     /**** 30  (0x1e) ****/
     /* ··[]··[]········ */
@@ -427,7 +437,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x1e,0x001e,"control rs"));
+    insert(new bdfGlyphObj(0x1e,0x001e,"control INFORMATION SEPARATOR TWO "));
 
     /**** 31  (0x1f) ****/
     /* ················ */
@@ -439,7 +449,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x1f,0x001f,"control us"));
+    insert(new bdfGlyphObj(0x1f,0x001f,"control INFORMATION SEPARATOR ONE "));
 
     /**** 32  (0x20) ****/
     /* ················ */
@@ -451,7 +461,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x20,0x0020,"space"));
+    insert(new bdfGlyphObj(0x20,0x0020,"SPACE"));
 
     /**** 33  (0x21) ****/
     /* ······[]········ */
@@ -463,7 +473,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x21,0x0021,"exclamation mark"));
+    insert(new bdfGlyphObj(0x21,0x0021,"EXCLAMATION MARK"));
 
     /**** 34  (0x22) ****/
     /* ····[]··[]······ */
@@ -475,7 +485,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x22,0x0022,"quotation mark"));
+    insert(new bdfGlyphObj(0x22,0x0022,"QUOTATION MARK"));
 
     /**** 35  (0x23) ****/
     /* ····[]··[]······ */
@@ -487,7 +497,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]··[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x23,0x0023,"number sign"));
+    insert(new bdfGlyphObj(0x23,0x0023,"NUMBER SIGN"));
 
     /**** 36  (0x24) ****/
     /* ······[]········ */
@@ -499,7 +509,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x24,0x0024,"dollar sign"));
+    insert(new bdfGlyphObj(0x24,0x0024,"DOLLAR SIGN"));
 
     /**** 37  (0x25) ****/
     /* ··[][]·········· */
@@ -511,7 +521,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x25,0x0025,"percent sign"));
+    insert(new bdfGlyphObj(0x25,0x0025,"PERCENT SIGN"));
 
     /**** 38  (0x26) ****/
     /* ····[]·········· */
@@ -523,7 +533,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]··[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x26,0x0026,"ampersand"));
+    insert(new bdfGlyphObj(0x26,0x0026,"AMPERSAND"));
 
     /**** 39  (0x27) ****/
     /* ······[]········ */
@@ -535,7 +545,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x27,0x0027,"apostrophe"));
+    insert(new bdfGlyphObj(0x27,0x0027,"APOSTROPHE"));
 
     /**** 40  (0x28) ****/
     /* ········[]······ */
@@ -547,7 +557,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x28,0x0028,"left parenthesis"));
+    insert(new bdfGlyphObj(0x28,0x0028,"LEFT PARENTHESIS"));
 
     /**** 41  (0x29) ****/
     /* ····[]·········· */
@@ -559,7 +569,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]·········· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x29,0x0029,"right parenthesis"));
+    insert(new bdfGlyphObj(0x29,0x0029,"RIGHT PARENTHESIS"));
 
     /**** 42  (0x2a) ****/
     /* ······[]········ */
@@ -571,7 +581,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x2a,0x002a,"asterisk"));
+    insert(new bdfGlyphObj(0x2a,0x002a,"ASTERISK"));
 
     /**** 43  (0x2b) ****/
     /* ················ */
@@ -583,7 +593,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x2b,0x002b,"plus sign"));
+    insert(new bdfGlyphObj(0x2b,0x002b,"PLUS SIGN"));
 
     /**** 44  (0x2c) ****/
     /* ················ */
@@ -595,7 +605,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ····[]·········· */
     /********************/
-    insert(new bdfGlyphObj(0x2c,0x002c,"comma"));
+    insert(new bdfGlyphObj(0x2c,0x002c,"COMMA"));
 
     /**** 45  (0x2d) ****/
     /* ················ */
@@ -607,7 +617,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x2d,0x002d,"hypen minus"));
+    insert(new bdfGlyphObj(0x2d,0x002d,"HYPHEN-MINUS"));
 
     /**** 46  (0x2e) ****/
     /* ················ */
@@ -619,7 +629,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x2e,0x002e,"full stop"));
+    insert(new bdfGlyphObj(0x2e,0x002e,"FULL STOP"));
 
     /**** 47  (0x2f) ****/
     /* ················ */
@@ -631,7 +641,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x2f,0x002f,"solidus"));
+    insert(new bdfGlyphObj(0x2f,0x002f,"SOLIDUS"));
 
     /**** 48  (0x30) ****/
     /* ····[][][]······ */
@@ -643,7 +653,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x30,0x0030,"digit zero"));
+    insert(new bdfGlyphObj(0x30,0x0030,"DIGIT ZERO"));
 
     /**** 49  (0x31) ****/
     /* ······[]········ */
@@ -655,7 +665,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x31,0x0031,"digit one"));
+    insert(new bdfGlyphObj(0x31,0x0031,"DIGIT ONE"));
 
     /**** 50  (0x32) ****/
     /* ····[][][]······ */
@@ -667,7 +677,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x32,0x0032,"digit two"));
+    insert(new bdfGlyphObj(0x32,0x0032,"DIGIT TWO"));
 
     /**** 51  (0x33) ****/
     /* ··[][][][][]···· */
@@ -679,7 +689,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x33,0x0033,"digit three"));
+    insert(new bdfGlyphObj(0x33,0x0033,"DIGIT THREE"));
 
     /**** 52  (0x34) ****/
     /* ········[]······ */
@@ -691,7 +701,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x34,0x0034,"digit four"));
+    insert(new bdfGlyphObj(0x34,0x0034,"DIGIT FOUR"));
 
     /**** 53  (0x35) ****/
     /* ··[][][][][]···· */
@@ -703,7 +713,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x35,0x0035,"digit five"));
+    insert(new bdfGlyphObj(0x35,0x0035,"DIGIT FIVE"));
 
     /**** 54  (0x36) ****/
     /* ······[][][]···· */
@@ -715,7 +725,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x36,0x0036,"digit six"));
+    insert(new bdfGlyphObj(0x36,0x0036,"DIGIT SIX"));
 
     /**** 55  (0x37) ****/
     /* ··[][][][][]···· */
@@ -727,7 +737,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]············ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x37,0x0037,"digit seven"));
+    insert(new bdfGlyphObj(0x37,0x0037,"DIGIT SEVEN"));
 
     /**** 56  (0x38) ****/
     /* ····[][][]······ */
@@ -739,7 +749,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x38,0x0038,"digit eight"));
+    insert(new bdfGlyphObj(0x38,0x0038,"DIGIT EIGHT"));
 
     /**** 57  (0x39) ****/
     /* ····[][][]······ */
@@ -751,7 +761,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x39,0x0039,"digit nine"));
+    insert(new bdfGlyphObj(0x39,0x0039,"DIGIT NINE"));
 
     /**** 58  (0x3a) ****/
     /* ················ */
@@ -763,7 +773,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x3a,0x003a,"colon"));
+    insert(new bdfGlyphObj(0x3a,0x003a,"COLON"));
 
     /**** 59  (0x3b) ****/
     /* ················ */
@@ -775,7 +785,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ····[]·········· */
     /********************/
-    insert(new bdfGlyphObj(0x3b,0x003b,"semicolon"));
+    insert(new bdfGlyphObj(0x3b,0x003b,"SEMICOLON"));
 
     /**** 60  (0x3c) ****/
     /* ········[]······ */
@@ -787,7 +797,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x3c,0x003c,"less-than sign"));
+    insert(new bdfGlyphObj(0x3c,0x003c,"LESS-THAN SIGN"));
 
     /**** 61  (0x3d) ****/
     /* ················ */
@@ -799,7 +809,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x3d,0x003d,"equals sign"));
+    insert(new bdfGlyphObj(0x3d,0x003d,"EQUALS SIGN"));
 
     /**** 62  (0x3e) ****/
     /* ····[]·········· */
@@ -811,7 +821,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]·········· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x3e,0x003e,"greater-than sign"));
+    insert(new bdfGlyphObj(0x3e,0x003e,"GREATER-THAN SIGN"));
 
     /**** 63  (0x3f) ****/
     /* ····[][][]······ */
@@ -823,7 +833,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x3f,0x003f,"question mark"));
+    insert(new bdfGlyphObj(0x3f,0x003f,"QUESTION MARK"));
 
     /**** 64  (0x40) ****/
     /* ····[][][]······ */
@@ -835,7 +845,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x40,0x0040,"commercial at"));
+    insert(new bdfGlyphObj(0x40,0x0040,"COMMERCIAL AT"));
 
     /**** 65  (0x41) ****/
     /* ······[]········ */
@@ -847,7 +857,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x41,0x0041,"latin capital letter a"));
+    insert(new bdfGlyphObj(0x41,0x0041,"LATIN CAPITAL LETTER A"));
 
     /**** 66  (0x42) ****/
     /* ··[][][][]······ */
@@ -859,7 +869,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x42,0x0042,"latin capital letter b"));
+    insert(new bdfGlyphObj(0x42,0x0042,"LATIN CAPITAL LETTER B"));
 
     /**** 67  (0x43) ****/
     /* ····[][][]······ */
@@ -871,7 +881,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x43,0x0043,"latin capital letter c"));
+    insert(new bdfGlyphObj(0x43,0x0043,"LATIN CAPITAL LETTER C"));
 
     /**** 68  (0x44) ****/
     /* ··[][][][]······ */
@@ -883,7 +893,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x44,0x0044,"latin capital letter d"));
+    insert(new bdfGlyphObj(0x44,0x0044,"LATIN CAPITAL LETTER D"));
 
     /**** 69  (0x45) ****/
     /* ··[][][][][]···· */
@@ -895,7 +905,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x45,0x0045,"latin capital letter e"));
+    insert(new bdfGlyphObj(0x45,0x0045,"LATIN CAPITAL LETTER E"));
 
     /**** 70  (0x46) ****/
     /* ··[][][][][]···· */
@@ -907,7 +917,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]············ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x46,0x0046,"latin capital letter f"));
+    insert(new bdfGlyphObj(0x46,0x0046,"LATIN CAPITAL LETTER F"));
 
     /**** 71  (0x47) ****/
     /* ····[][][]······ */
@@ -919,7 +929,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x47,0x0047,"latin capital letter g"));
+    insert(new bdfGlyphObj(0x47,0x0047,"LATIN CAPITAL LETTER G"));
 
     /**** 72  (0x48) ****/
     /* ··[]······[]···· */
@@ -931,7 +941,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x48,0x0048,"latin capital letter h"));
+    insert(new bdfGlyphObj(0x48,0x0048,"LATIN CAPITAL LETTER H"));
 
     /**** 73  (0x49) ****/
     /* ····[][][]······ */
@@ -943,7 +953,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x49,0x0049,"latin capital letter i"));
+    insert(new bdfGlyphObj(0x49,0x0049,"LATIN CAPITAL LETTER I"));
 
     /**** 74  (0x4a) ****/
     /* ··[][][][][]···· */
@@ -955,7 +965,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x4a,0x004a,"latin capital letter j"));
+    insert(new bdfGlyphObj(0x4a,0x004a,"LATIN CAPITAL LETTER J"));
 
     /**** 75  (0x4b) ****/
     /* ··[]······[]···· */
@@ -967,7 +977,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x4b,0x004b,"latin capital letter k"));
+    insert(new bdfGlyphObj(0x4b,0x004b,"LATIN CAPITAL LETTER K"));
 
     /**** 76  (0x4c) ****/
     /* ··[]············ */
@@ -979,7 +989,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x4c,0x004c,"latin capital letter l"));
+    insert(new bdfGlyphObj(0x4c,0x004c,"LATIN CAPITAL LETTER L"));
 
     /**** 77  (0x4d) ****/
     /* ··[]······[]···· */
@@ -991,7 +1001,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x4d,0x004d,"latin capital letter m"));
+    insert(new bdfGlyphObj(0x4d,0x004d,"LATIN CAPITAL LETTER M"));
 
     /**** 78  (0x4e) ****/
     /* ··[]······[]···· */
@@ -1003,7 +1013,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x4e,0x004e,"latin capital letter n"));
+    insert(new bdfGlyphObj(0x4e,0x004e,"LATIN CAPITAL LETTER N"));
 
     /**** 79  (0x4f) ****/
     /* ····[][][]······ */
@@ -1015,7 +1025,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x4f,0x004f,"latin capital letter o"));
+    insert(new bdfGlyphObj(0x4f,0x004f,"LATIN CAPITAL LETTER O"));
 
     /**** 80  (0x50) ****/
     /* ··[][][][]······ */
@@ -1027,7 +1037,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]············ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x50,0x0050,"latin capital letter p"));
+    insert(new bdfGlyphObj(0x50,0x0050,"LATIN CAPITAL LETTER P"));
 
     /**** 81  (0x51) ****/
     /* ····[][][]······ */
@@ -1039,7 +1049,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]··[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x51,0x0051,"latin capital letter q"));
+    insert(new bdfGlyphObj(0x51,0x0051,"LATIN CAPITAL LETTER Q"));
 
     /**** 82  (0x52) ****/
     /* ··[][][][]······ */
@@ -1051,7 +1061,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x52,0x0052,"latin capital letter r"));
+    insert(new bdfGlyphObj(0x52,0x0052,"LATIN CAPITAL LETTER R"));
 
     /**** 83  (0x53) ****/
     /* ····[][][]······ */
@@ -1063,7 +1073,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x53,0x0053,"latin capital letter s"));
+    insert(new bdfGlyphObj(0x53,0x0053,"LATIN CAPITAL LETTER S"));
 
     /**** 84  (0x54) ****/
     /* ··[][][][][]···· */
@@ -1075,7 +1085,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x54,0x0054,"latin capital letter t"));
+    insert(new bdfGlyphObj(0x54,0x0054,"LATIN CAPITAL LETTER T"));
 
     /**** 85  (0x55) ****/
     /* ··[]······[]···· */
@@ -1087,7 +1097,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x55,0x0055,"latin capital letter u"));
+    insert(new bdfGlyphObj(0x55,0x0055,"LATIN CAPITAL LETTER U"));
 
     /**** 86  (0x56) ****/
     /* ··[]······[]···· */
@@ -1099,7 +1109,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x56,0x0056,"latin capital letter v"));
+    insert(new bdfGlyphObj(0x56,0x0056,"LATIN CAPITAL LETTER V"));
 
     /**** 87  (0x57) ****/
     /* ··[]······[]···· */
@@ -1111,7 +1121,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]··[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x57,0x0057,"latin capital letter w"));
+    insert(new bdfGlyphObj(0x57,0x0057,"LATIN CAPITAL LETTER W"));
 
     /**** 88  (0x58) ****/
     /* ··[]······[]···· */
@@ -1123,7 +1133,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x58,0x0058,"latin capital letter x"));
+    insert(new bdfGlyphObj(0x58,0x0058,"LATIN CAPITAL LETTER X"));
 
     /**** 89  (0x59) ****/
     /* ··[]······[]···· */
@@ -1135,7 +1145,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x59,0x0059,"latin capital letter y"));
+    insert(new bdfGlyphObj(0x59,0x0059,"LATIN CAPITAL LETTER Y"));
 
     /**** 90  (0x5a) ****/
     /* ··[][][][][]···· */
@@ -1147,7 +1157,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x5a,0x005a,"latin capital letter z"));
+    insert(new bdfGlyphObj(0x5a,0x005a,"LATIN CAPITAL LETTER Z"));
 
     /**** 91  (0x5b) ****/
     /* ··[][][][]······ */
@@ -1159,7 +1169,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x5b,0x005b,"left square bracket"));
+    insert(new bdfGlyphObj(0x5b,0x005b,"LEFT SQUARE BRACKET"));
 
     /**** 92  (0x5c) ****/
     /* ················ */
@@ -1171,7 +1181,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x5c,0x005c,"reverse solidus"));
+    insert(new bdfGlyphObj(0x5c,0x005c,"REVERSE SOLIDUS"));
 
     /**** 93  (0x5d) ****/
     /* ····[][][][]···· */
@@ -1183,7 +1193,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x5d,0x005d,"right square bracket"));
+    insert(new bdfGlyphObj(0x5d,0x005d,"RIGHT SQUARE BRACKET"));
 
     /**** 94  (0x5e) ****/
     /* ······[]········ */
@@ -1195,7 +1205,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x5e,0x005e,"circumflex accent"));
+    insert(new bdfGlyphObj(0x5e,0x005e,"CIRCUMFLEX ACCENT"));
 
     /**** 95  (0x5f) ****/
     /* ················ */
@@ -1207,7 +1217,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ··[][][][][]···· */
     /********************/
-    insert(new bdfGlyphObj(0x5f,0x005f,"low line"));
+    insert(new bdfGlyphObj(0x5f,0x005f,"LOW LINE"));
 
     /**** 96  (0x60) ****/
     /* ····[]·········· */
@@ -1219,7 +1229,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x60,0x0060,"grave accent"));
+    insert(new bdfGlyphObj(0x60,0x0060,"GRAVE ACCENT"));
 
     /**** 97  (0x61) ****/
     /* ················ */
@@ -1231,7 +1241,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x61,0x0061,"latin small letter a"));
+    insert(new bdfGlyphObj(0x61,0x0061,"LATIN SMALL LETTER A"));
 
     /**** 98  (0x62) ****/
     /* ··[]············ */
@@ -1243,7 +1253,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x62,0x0062,"latin small letter b"));
+    insert(new bdfGlyphObj(0x62,0x0062,"LATIN SMALL LETTER B"));
 
     /**** 99  (0x63) ****/
     /* ················ */
@@ -1255,7 +1265,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x63,0x0063,"latin small letter c"));
+    insert(new bdfGlyphObj(0x63,0x0063,"LATIN SMALL LETTER C"));
 
     /**** 100 (0x64) ****/
     /* ··········[]···· */
@@ -1267,7 +1277,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x64,0x0064,"latin small letter d"));
+    insert(new bdfGlyphObj(0x64,0x0064,"LATIN SMALL LETTER D"));
 
     /**** 101 (0x65) ****/
     /* ················ */
@@ -1279,7 +1289,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x65,0x0065,"latin small letter e"));
+    insert(new bdfGlyphObj(0x65,0x0065,"LATIN SMALL LETTER E"));
 
     /**** 102 (0x66) ****/
     /* ······[][]······ */
@@ -1291,7 +1301,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]·········· */
     /* ····[]·········· */
     /********************/
-    insert(new bdfGlyphObj(0x66,0x0066,"latin small letter f"));
+    insert(new bdfGlyphObj(0x66,0x0066,"LATIN SMALL LETTER F"));
 
     /**** 103 (0x67) ****/
     /* ················ */
@@ -1303,7 +1313,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[]···· */
     /* ····[][][]······ */
     /********************/
-    insert(new bdfGlyphObj(0x67,0x0067,"latin small letter g"));
+    insert(new bdfGlyphObj(0x67,0x0067,"LATIN SMALL LETTER G"));
 
     /**** 104 (0x68) ****/
     /* ··[]············ */
@@ -1315,7 +1325,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x68,0x0068,"latin small letter h"));
+    insert(new bdfGlyphObj(0x68,0x0068,"LATIN SMALL LETTER H"));
 
     /**** 105 (0x69) ****/
     /* ······[]········ */
@@ -1327,7 +1337,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x69,0x0069,"latin small letter i"));
+    insert(new bdfGlyphObj(0x69,0x0069,"LATIN SMALL LETTER I"));
 
     /**** 106 (0x6a) ****/
     /* ··········[]···· */
@@ -1339,7 +1349,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]····[]···· */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyphObj(0x6a,0x006a,"latin small letter j"));
+    insert(new bdfGlyphObj(0x6a,0x006a,"LATIN SMALL LETTER J"));
 
     /**** 107 (0x6b) ****/
     /* ··[]············ */
@@ -1351,7 +1361,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]····[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x6b,0x006b,"latin small letter k"));
+    insert(new bdfGlyphObj(0x6b,0x006b,"LATIN SMALL LETTER K"));
 
     /**** 108 (0x6c) ****/
     /* ····[][]········ */
@@ -1363,7 +1373,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x6c,0x006c,"latin small letter l"));
+    insert(new bdfGlyphObj(0x6c,0x006c,"LATIN SMALL LETTER L"));
 
     /**** 109 (0x6d) ****/
     /* ················ */
@@ -1375,7 +1385,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]··[]··[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x6d,0x006d,"latin small letter m"));
+    insert(new bdfGlyphObj(0x6d,0x006d,"LATIN SMALL LETTER M"));
 
     /**** 110 (0x6e) ****/
     /* ················ */
@@ -1387,7 +1397,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x6e,0x006e,"latin small letter n"));
+    insert(new bdfGlyphObj(0x6e,0x006e,"LATIN SMALL LETTER N"));
 
     /**** 111 (0x6f) ****/
     /* ················ */
@@ -1399,7 +1409,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x6f,0x006f,"latin small letter o"));
+    insert(new bdfGlyphObj(0x6f,0x006f,"LATIN SMALL LETTER O"));
 
     /**** 112 (0x70) ****/
     /* ················ */
@@ -1411,7 +1421,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]············ */
     /* ··[]············ */
     /********************/
-    insert(new bdfGlyphObj(0x70,0x0070,"latin small letter p"));
+    insert(new bdfGlyphObj(0x70,0x0070,"LATIN SMALL LETTER P"));
 
     /**** 113 (0x71) ****/
     /* ················ */
@@ -1423,7 +1433,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[]···· */
     /* ··········[]···· */
     /********************/
-    insert(new bdfGlyphObj(0x71,0x0071,"latin small letter q"));
+    insert(new bdfGlyphObj(0x71,0x0071,"LATIN SMALL LETTER Q"));
 
     /**** 114 (0x72) ****/
     /* ················ */
@@ -1435,7 +1445,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]············ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x72,0x0072,"latin small letter r"));
+    insert(new bdfGlyphObj(0x72,0x0072,"LATIN SMALL LETTER R"));
 
     /**** 115 (0x73) ****/
     /* ················ */
@@ -1447,7 +1457,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x73,0x0073,"latin small letter s"));
+    insert(new bdfGlyphObj(0x73,0x0073,"LATIN SMALL LETTER S"));
 
     /**** 116 (0x74) ****/
     /* ····[]·········· */
@@ -1459,7 +1469,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x74,0x0074,"latin small letter t"));
+    insert(new bdfGlyphObj(0x74,0x0074,"LATIN SMALL LETTER T"));
 
     /**** 117 (0x75) ****/
     /* ················ */
@@ -1471,7 +1481,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]··[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x75,0x0075,"latin small letter u"));
+    insert(new bdfGlyphObj(0x75,0x0075,"LATIN SMALL LETTER U"));
 
     /**** 118 (0x76) ****/
     /* ················ */
@@ -1483,7 +1493,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x76,0x0076,"latin small letter v"));
+    insert(new bdfGlyphObj(0x76,0x0076,"LATIN SMALL LETTER V"));
 
     /**** 119 (0x77) ****/
     /* ················ */
@@ -1495,7 +1505,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]··[]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x77,0x0077,"latin small letter w"));
+    insert(new bdfGlyphObj(0x77,0x0077,"LATIN SMALL LETTER W"));
 
     /**** 120 (0x78) ****/
     /* ················ */
@@ -1507,7 +1517,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]······[]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x78,0x0078,"latin small letter x"));
+    insert(new bdfGlyphObj(0x78,0x0078,"LATIN SMALL LETTER X"));
 
     /**** 121 (0x79) ****/
     /* ················ */
@@ -1519,7 +1529,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[]···· */
     /* ····[][][]······ */
     /********************/
-    insert(new bdfGlyphObj(0x79,0x0079,"latin small letter y"));
+    insert(new bdfGlyphObj(0x79,0x0079,"LATIN SMALL LETTER Y"));
 
     /**** 122 (0x7a) ****/
     /* ················ */
@@ -1531,7 +1541,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][]···· */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x7a,0x007a,"latin small letter z"));
+    insert(new bdfGlyphObj(0x7a,0x007a,"LATIN SMALL LETTER Z"));
 
     /**** 123 (0x7b) ****/
     /* ······[][]······ */
@@ -1543,7 +1553,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x7b,0x007b,"left curly bracket"));
+    insert(new bdfGlyphObj(0x7b,0x007b,"LEFT CURLY BRACKET"));
 
     /**** 124 (0x7c) ****/
     /* ······[]········ */
@@ -1555,7 +1565,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x7c,0x007c,"vertical line"));
+    insert(new bdfGlyphObj(0x7c,0x007c,"VERTICAL LINE"));
 
     /**** 125 (0x7d) ****/
     /* ····[][]········ */
@@ -1567,7 +1577,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]········ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x7d,0x007d,"right curly bracket"));
+    insert(new bdfGlyphObj(0x7d,0x007d,"RIGHT CURLY BRACKET"));
 
     /**** 126 (0x7e) ****/
     /* ····[][]····[]·· */
@@ -1579,7 +1589,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyphObj(0x7e,0x007e,"tilde"));
+    insert(new bdfGlyphObj(0x7e,0x007e,"TILDE"));
 
     /**** 127 (0x7f) ****/
     /* [][][][][][][][] */
@@ -1591,7 +1601,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyphObj(0x7f,0x007f,"delete"));
+    insert(new bdfGlyphObj(0x7f,0x007f,"control DELETE"));
 
 #if defined(USE_UNICODE) && (USE_UNICODE != 0)
     /**** 128 (0x80) ****/
@@ -1604,7 +1614,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[][][] */
     /* ··········[][][] */
     /********************/
-    insert(new bdfGlyph(0x80,0x259c,"quadrant upper left and upper right and lower right"));
+    insert(new bdfGlyphObj(0x80,0x259c,"quadrant upper left and upper right and lower right"));
 
     /**** 129 (0x81) ****/
     /* [][][][][][][][] */
@@ -1616,7 +1626,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][]·········· */
     /* [][][]·········· */
     /********************/
-    insert(new bdfGlyph(0x81,0x259b,"quadrant upper left and upper right and lower left"));
+    insert(new bdfGlyphObj(0x81,0x259b,"quadrant upper left and upper right and lower left"));
 
     /**** 130 (0x82) ****/
     /* ··········[][][] */
@@ -1628,7 +1638,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0x82,0x259f,"quadrant upper right and lower left and lower right"));
+    insert(new bdfGlyphObj(0x82,0x259f,"quadrant upper right and lower left and lower right"));
 
     /**** 131 (0x83) ****/
     /* [][][]·········· */
@@ -1640,7 +1650,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0x83,0x2599,"quadrant upper left and lower left and lower right"));
+    insert(new bdfGlyphObj(0x83,0x2599,"quadrant upper left and lower left and lower right"));
 
     /**** 132 (0x84) ****/
     /* ······[][]······ */
@@ -1652,7 +1662,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0x84,0x252b,"box drawings heavy vertical and left"));
+    insert(new bdfGlyphObj(0x84,0x252b,"box drawings heavy vertical and left"));
 
     /**** 133 (0x85) ****/
     /* ······[][]······ */
@@ -1664,7 +1674,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0x85,0x2523,"box drawings heavy vertical and right"));
+    insert(new bdfGlyphObj(0x85,0x2523,"box drawings heavy vertical and right"));
 
     /**** 134 (0x86) ****/
     /* ······[][]······ */
@@ -1676,7 +1686,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x86,0x253b,"box drawings heavy up and horizontal"));
+    insert(new bdfGlyphObj(0x86,0x253b,"box drawings heavy up and horizontal"));
 
     /**** 135 (0x87) ****/
     /* ················ */
@@ -1688,7 +1698,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0x87,0x2533,"box drawings heavy down and horizontal"));
+    insert(new bdfGlyphObj(0x87,0x2533,"box drawings heavy down and horizontal"));
 
     /**** 136 (0x88) ****/
     /* ················ */
@@ -1700,7 +1710,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x88,0x2501,"box drawings heavy horizontal"));
+    insert(new bdfGlyphObj(0x88,0x2501,"box drawings heavy horizontal"));
 
     /**** 137 (0x89) ****/
     /* []·············· */
@@ -1712,7 +1722,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []·············· */
     /* []·············· */
     /********************/
-    insert(new bdfGlyph(0x89,0x258f,"left one eighth block"));
+    insert(new bdfGlyphObj(0x89,0x258f,"left one eighth block"));
 
     /**** 138 (0x8a) ****/
     /* ··············[] */
@@ -1724,7 +1734,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··············[] */
     /* ··············[] */
     /********************/
-    insert(new bdfGlyph(0x8a,0x2595,"right one eighth block"));
+    insert(new bdfGlyphObj(0x8a,0x2595,"right one eighth block"));
 
     /**** 139 (0x8b) ****/
     /* [][][][][][][][] */
@@ -1736,7 +1746,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x8b,0x2594,"upper one eighth block"));
+    insert(new bdfGlyphObj(0x8b,0x2594,"upper one eighth block"));
 
     /**** 140 (0x8c) ****/
     /* ················ */
@@ -1748,7 +1758,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0x8c,0x2581,"lower one eighth block"));
+    insert(new bdfGlyphObj(0x8c,0x2581,"lower one eighth block"));
 
     /**** 141 (0x8d) ****/
     /* [][][][][][][][] */
@@ -1760,7 +1770,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []············[] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0x8d,0x25a2,"white square"));
+    insert(new bdfGlyphObj(0x8d,0x25a2,"white square"));
 
     /**** 142 (0x8e) ****/
     /* ······[][]······ */
@@ -1772,7 +1782,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0x8e,0x2503,"heavy vertical"));
+    insert(new bdfGlyphObj(0x8e,0x2503,"heavy vertical"));
 
     /**** 143 (0x8f) ****/
     /* ················ */
@@ -1784,7 +1794,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x8f,0x00b7,"middle dot"));
+    insert(new bdfGlyphObj(0x8f,0x00b7,"middle dot"));
 
     /**** 144 (0x90) ****/
     /* ····[][][][]···· */
@@ -1796,7 +1806,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ····[][][][]···· */
     /********************/
-    insert(new bdfGlyph(0x90,0xe090,"ultra heavy vertical"));
+    insert(new bdfGlyphObj(0x90,0xe090,"ultra heavy vertical"));
 
     /**** 145 (0x91) ****/
     /* ················ */
@@ -1808,7 +1818,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x91,0xe091,"ultra heavy horizontal"));
+    insert(new bdfGlyphObj(0x91,0xe091,"ultra heavy horizontal"));
 
     /**** 146 (0x92) ****/
     /* [][][][][]······ */
@@ -1820,7 +1830,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]············ */
     /* [][]············ */
     /********************/
-    insert(new bdfGlyph(0x92,0xe092,"U+e092"));
+    insert(new bdfGlyphObj(0x92,0xe092,"U+e092"));
 
     /**** 147 (0x93) ****/
     /* ······[][][][][] */
@@ -1832,7 +1842,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ············[][] */
     /********************/
-    insert(new bdfGlyph(0x93,0xe093,"U+e093"));
+    insert(new bdfGlyphObj(0x93,0xe093,"U+e093"));
 
     /**** 148 (0x94) ****/
     /* ··[][]·········· */
@@ -1844,7 +1854,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][]·········· */
     /* ··[][]·········· */
     /********************/
-    insert(new bdfGlyph(0x94,0xe094,"U+e094"));
+    insert(new bdfGlyphObj(0x94,0xe094,"U+e094"));
 
     /**** 149 (0x95) ****/
     /* ··········[][]·· */
@@ -1856,7 +1866,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[][]·· */
     /* ··········[][]·· */
     /********************/
-    insert(new bdfGlyph(0x95,0xe095,"U+e095"));
+    insert(new bdfGlyphObj(0x95,0xe095,"U+e095"));
 
     /**** 150 (0x96) ****/
     /* [][]············ */
@@ -1868,7 +1878,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]············ */
     /* [][]············ */
     /********************/
-    insert(new bdfGlyph(0x96,0xe096,"U+e096"));
+    insert(new bdfGlyphObj(0x96,0xe096,"U+e096"));
 
     /**** 151 (0x97) ****/
     /* ············[][] */
@@ -1880,7 +1890,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ············[][] */
     /********************/
-    insert(new bdfGlyph(0x97,0xe097,"U+e097"));
+    insert(new bdfGlyphObj(0x97,0xe097,"U+e097"));
 
     /**** 152 (0x98) ****/
     /* ················ */
@@ -1892,7 +1902,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x98,0x25aa,"black small square"));
+    insert(new bdfGlyphObj(0x98,0x25aa,"black small square"));
 
     /**** 153 (0x99) ****/
     /* ········[][]···· */
@@ -1904,7 +1914,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]········ */
     /* ····[][]········ */
     /********************/
-    insert(new bdfGlyph(0x99,0xe099,"U+e099"));
+    insert(new bdfGlyphObj(0x99,0xe099,"U+e099"));
 
     /**** 154 (0x9a) ****/
     /* ················ */
@@ -1916,7 +1926,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x9a,0xe09a,"U+e09a"));
+    insert(new bdfGlyphObj(0x9a,0xe09a,"U+e09a"));
 
     /**** 155 (0x9b) ****/
     /* [][]············ */
@@ -1928,7 +1938,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][]···· */
     /* [][][][][][]···· */
     /********************/
-    insert(new bdfGlyph(0x9b,0xe09b,"U+e09b"));
+    insert(new bdfGlyphObj(0x9b,0xe09b,"U+e09b"));
 
     /**** 156 (0x9c) ****/
     /* ············[][] */
@@ -1940,7 +1950,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][][][] */
     /* ····[][][][][][] */
     /********************/
-    insert(new bdfGlyph(0x9c,0xe09c,"U+e09c"));
+    insert(new bdfGlyphObj(0x9c,0xe09c,"U+e09c"));
 
     /**** 157 (0x9d) ****/
     /* ················ */
@@ -1952,7 +1962,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x9d,0xe09d,"U+e09d"));
+    insert(new bdfGlyphObj(0x9d,0xe09d,"U+e09d"));
 
     /**** 158 (0x9e) ****/
     /* ················ */
@@ -1964,7 +1974,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0x9e,0xe09e,"U+e09e"));
+    insert(new bdfGlyphObj(0x9e,0xe09e,"U+e09e"));
 
     /**** 159 (0x9f) ****/
     /* ················ */
@@ -1976,7 +1986,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0x9f,0xe09f,"U+e09f"));
+    insert(new bdfGlyphObj(0x9f,0xe09f,"U+e09f"));
 
     /**** 160 (0xa0) ****/
     /* [][][][][][][][] */
@@ -1988,7 +1998,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xa0,0xe0a0,"U+e0a0"));
+    insert(new bdfGlyphObj(0xa0,0xe0a0,"U+e0a0"));
 
     /**** 161 (0xa1) ****/
     /* ················ */
@@ -2000,7 +2010,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][]·· */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xa1,0x25fc,"black medium square"));
+    insert(new bdfGlyphObj(0xa1,0x25fc,"black medium square"));
 
     /**** 162 (0xa2) ****/
     /* [][][][][][][][] */
@@ -2012,7 +2022,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xa2,0xe0a2,"U+e0a2"));
+    insert(new bdfGlyphObj(0xa2,0xe0a2,"U+e0a2"));
 
     /**** 163 (0xa3) ****/
     /* ····[][][][]···· */
@@ -2024,7 +2034,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ····[][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xa3,0x25ae,"vertical black rectangle"));
+    insert(new bdfGlyphObj(0xa3,0x25ae,"vertical black rectangle"));
 
     /**** 164 (0xa4) ****/
     /* [][][][][][][][] */
@@ -2036,7 +2046,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* [][]········[][] */
     /********************/
-    insert(new bdfGlyph(0xa4,0xe0a4,"U+e0a4"));
+    insert(new bdfGlyphObj(0xa4,0xe0a4,"U+e0a4"));
 
     /**** 165 (0xa5) ****/
     /* [][]········[][] */
@@ -2048,7 +2058,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xa5,0xe0a5,"U+e0a5"));
+    insert(new bdfGlyphObj(0xa5,0xe0a5,"U+e0a5"));
 
     /**** 166 (0xa6) ****/
     /* ····[][][][]···· */
@@ -2060,7 +2070,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ····[][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xa6,0xe0a6,"U+e0a6"));
+    insert(new bdfGlyphObj(0xa6,0xe0a6,"U+e0a6"));
 
     /**** 167 (0xa7) ****/
     /* ····[]····[]···· */
@@ -2072,7 +2082,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]····[]···· */
     /* ····[]····[]···· */
     /********************/
-    insert(new bdfGlyph(0xa7,0xe0a7,"U+e0a7"));
+    insert(new bdfGlyphObj(0xa7,0xe0a7,"U+e0a7"));
 
     /**** 168 (0xa8) ****/
     /* [][]········[][] */
@@ -2084,7 +2094,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* [][]········[][] */
     /********************/
-    insert(new bdfGlyph(0xa8,0xe0a8,"U+e0a8"));
+    insert(new bdfGlyphObj(0xa8,0xe0a8,"U+e0a8"));
 
     /**** 169 (0xa9) ****/
     /* [][][][][][][][] */
@@ -2096,7 +2106,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xa9,0xe0a9,"U+e0a9"));
+    insert(new bdfGlyphObj(0xa9,0xe0a9,"U+e0a9"));
 
     /**** 170 (0xaa) ****/
     /* ······[][]······ */
@@ -2108,7 +2118,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xaa,0xe0aa,"U+e0aa"));
+    insert(new bdfGlyphObj(0xaa,0xe0aa,"U+e0aa"));
 
     /**** 171 (0xab) ****/
     /* [][]············ */
@@ -2120,7 +2130,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]············ */
     /* [][]············ */
     /********************/
-    insert(new bdfGlyph(0xab,0x258e,"left one quarter block"));
+    insert(new bdfGlyphObj(0xab,0x258e,"left one quarter block"));
 
     /**** 172 (0xac) ****/
     /* [][][][][][][][] */
@@ -2132,7 +2142,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xac,0xe0ac,"U+e0ac"));
+    insert(new bdfGlyphObj(0xac,0xe0ac,"U+e0ac"));
 
     /**** 173 (0xad) ****/
     /* [][][][][][][][] */
@@ -2144,7 +2154,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[][][][] */
     /* ········[][][][] */
     /********************/
-    insert(new bdfGlyph(0xad,0xe0ad,"U+e0ad"));
+    insert(new bdfGlyphObj(0xad,0xe0ad,"U+e0ad"));
 
     /**** 174 (0xae) ****/
     /* ········[][][][] */
@@ -2156,7 +2166,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xae,0xe0ae,"U+e0ae"));
+    insert(new bdfGlyphObj(0xae,0xe0ae,"U+e0ae"));
 
     /**** 175 (0xaf) ****/
     /* [][][][][][]···· */
@@ -2168,7 +2178,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* [][]········[][] */
     /********************/
-    insert(new bdfGlyph(0xaf,0xe0af,"U+e0af"));
+    insert(new bdfGlyphObj(0xaf,0xe0af,"U+e0af"));
 
     /**** 176 (0xb0) ****/
     /* [][]········[][] */
@@ -2180,7 +2190,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][]···· */
     /* [][][][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xb0,0xe0b0,"U+e0b0"));
+    insert(new bdfGlyphObj(0xb0,0xe0b0,"U+e0b0"));
 
     /**** 177 (0xb1) ****/
     /* [][][][][][]···· */
@@ -2192,7 +2202,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][]···· */
     /* [][][][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xb1,0x258a,"left three quarters block"));
+    insert(new bdfGlyphObj(0xb1,0x258a,"left three quarters block"));
 
     /**** 178 (0xb2) ****/
     /* [][]········[][] */
@@ -2204,7 +2214,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][][][] */
     /* ····[][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xb2,0xe0b2,"U+e0b2"));
+    insert(new bdfGlyphObj(0xb2,0xe0b2,"U+e0b2"));
 
     /**** 179 (0xb3) ****/
     /* ········[][][][] */
@@ -2216,7 +2226,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]····[][] */
     /* ····[][]····[][] */
     /********************/
-    insert(new bdfGlyph(0xb3,0xe0b3,"U+e0b3"));
+    insert(new bdfGlyphObj(0xb3,0xe0b3,"U+e0b3"));
 
     /**** 180 (0xb4) ****/
     /* ················ */
@@ -2228,7 +2238,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xb4,0x2582,"lower one quarter block"));
+    insert(new bdfGlyphObj(0xb4,0x2582,"lower one quarter block"));
 
     /**** 181 (0xb5) ****/
     /* [][][][][][][][] */
@@ -2240,7 +2250,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xb5,0xe0b5,"U+e0b5"));
+    insert(new bdfGlyphObj(0xb5,0xe0b5,"U+e0b5"));
 
     /**** 182 (0xb6) ****/
     /* ············[][] */
@@ -2252,7 +2262,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ············[][] */
     /********************/
-    insert(new bdfGlyph(0xb6,0xe0b6,"U+e0b6"));
+    insert(new bdfGlyphObj(0xb6,0xe0b6,"U+e0b6"));
 
     /**** 183 (0xb7) ****/
     /* [][][][][][][][] */
@@ -2264,7 +2274,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []············[] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xb7,0xe0b7,"U+e0b7"));
+    insert(new bdfGlyphObj(0xb7,0xe0b7,"U+e0b7"));
 
     /**** 184 (0xb8) ****/
     /* [][][]····[][][] */
@@ -2276,7 +2286,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xb8,0xe0b8,"U+e0b8"));
+    insert(new bdfGlyphObj(0xb8,0xe0b8,"U+e0b8"));
 
     /**** 185 (0xb9) ****/
     /* ················ */
@@ -2288,7 +2298,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xb9,0xe0b9,"U+e0b9"));
+    insert(new bdfGlyphObj(0xb9,0xe0b9,"U+e0b9"));
 
     /**** 186 (0xba) ****/
     /* ······[][]······ */
@@ -2300,7 +2310,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xba,0xe0ba,"U+e0ba"));
+    insert(new bdfGlyphObj(0xba,0xe0ba,"U+e0ba"));
 
     /**** 187 (0xbb) ****/
     /* ················ */
@@ -2312,7 +2322,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][]···· */
     /* [][][][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xbb,0xe0bb,"U+e0bb"));
+    insert(new bdfGlyphObj(0xbb,0xe0bb,"U+e0bb"));
 
     /**** 188 (0xbc) ****/
     /* ················ */
@@ -2324,7 +2334,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][][][] */
     /* ····[][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xbc,0xe0bc,"U+e0bc"));
+    insert(new bdfGlyphObj(0xbc,0xe0bc,"U+e0bc"));
 
     /**** 189 (0xbd) ****/
     /* ········[][][][] */
@@ -2336,7 +2346,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xbd,0x259d,"quadrant upper right"));
+    insert(new bdfGlyphObj(0xbd,0x259d,"quadrant upper right"));
 
     /**** 190 (0xbe) ****/
     /* ················ */
@@ -2348,7 +2358,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][]········ */
     /* [][][][]········ */
     /********************/
-    insert(new bdfGlyph(0xbe,0x2596,"quadrant lower left"));
+    insert(new bdfGlyphObj(0xbe,0x2596,"quadrant lower left"));
 
     /**** 191 (0xbf) ****/
     /* [][][][]········ */
@@ -2360,7 +2370,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xbf,0xe0bf,"U+e0bf"));
+    insert(new bdfGlyphObj(0xbf,0xe0bf,"U+e0bf"));
 
     /**** 192 (0xc0) ****/
     /* ······[][]······ */
@@ -2372,7 +2382,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []············[] */
     /* []············[] */
     /********************/
-    insert(new bdfGlyph(0xc0,0xe0c0,"U+e0c0"));
+    insert(new bdfGlyphObj(0xc0,0xe0c0,"U+e0c0"));
 
     /**** 193 (0xc1) ****/
     /* ················ */
@@ -2384,7 +2394,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xc1,0xe0c1,"U+e0c1"));
+    insert(new bdfGlyphObj(0xc1,0xe0c1,"U+e0c1"));
 
     /**** 194 (0xc2) ****/
     /* ······[][]······ */
@@ -2396,7 +2406,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xc2,0x254b,"box drawings heavy vertical and horizontal"));
+    insert(new bdfGlyphObj(0xc2,0x254b,"box drawings heavy vertical and horizontal"));
 
     /**** 195 (0xc3) ****/
     /* [][]····[][]···· */
@@ -2408,7 +2418,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]····[][] */
     /* ····[][]····[][] */
     /********************/
-    insert(new bdfGlyph(0xc3,0xe0c3,"U+e0c3"));
+    insert(new bdfGlyphObj(0xc3,0xe0c3,"U+e0c3"));
 
     /**** 196 (0xc4) ****/
     /* []··[]··[]··[]·· */
@@ -2420,7 +2430,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []··[]··[]··[]·· */
     /* ··[]··[]··[]··[] */
     /********************/
-    insert(new bdfGlyph(0xc4,0x2592,"medium shade"));
+    insert(new bdfGlyphObj(0xc4,0x2592,"medium shade"));
 
     /**** 197 (0xc5) ****/
     /* [][]········[][] */
@@ -2432,7 +2442,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* []············[] */
     /********************/
-    insert(new bdfGlyph(0xc5,0x2573,"box drawings light diagonal cross"));
+    insert(new bdfGlyphObj(0xc5,0x2573,"box drawings light diagonal cross"));
 
     /**** 198 (0xc6) ****/
     /* ··[][]··[][]···· */
@@ -2444,7 +2454,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ······[]········ */
     /********************/
-    insert(new bdfGlyph(0xc6,0x2665,"black heart suit"));
+    insert(new bdfGlyphObj(0xc6,0x2665,"black heart suit"));
 
     /**** 199 (0xc7) ****/
     /* []············[] */
@@ -2456,7 +2466,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []············[] */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xc7,0xe0c7,"tie fighter"));
+    insert(new bdfGlyphObj(0xc7,0xe0c7,"tie fighter"));
 
     /**** 200 (0xc8) ****/
     /* ······[]········ */
@@ -2468,7 +2478,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ··[][][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xc8,0x2660,"black spade suit"));
+    insert(new bdfGlyphObj(0xc8,0x2660,"black spade suit"));
 
     /**** 201 (0xc9) ****/
     /* ······[]········ */
@@ -2480,7 +2490,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ··[][][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xc9,0x2663,"black club suit"));
+    insert(new bdfGlyphObj(0xc9,0x2663,"black club suit"));
 
     /**** 202 (0xca) ****/
     /* [][][][][][][][] */
@@ -2492,7 +2502,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xca,0x2588,"full block"));
+    insert(new bdfGlyphObj(0xca,0x2588,"full block"));
 
     /**** 203 (0xcb) ****/
     /* ····[][]····[][] */
@@ -2504,7 +2514,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][]····[][] */
     /* ····[][]····[][] */
     /********************/
-    insert(new bdfGlyph(0xcb,0xe0cb,"U+e0cb"));
+    insert(new bdfGlyphObj(0xcb,0xe0cb,"U+e0cb"));
 
     /**** 204 (0xcc) ****/
     /* []····[]····[]·· */
@@ -2516,7 +2526,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []····[]····[]·· */
     /* []····[]····[]·· */
     /********************/
-    insert(new bdfGlyph(0xcc,0xe0cc,"U+e0cc"));
+    insert(new bdfGlyphObj(0xcc,0xe0cc,"U+e0cc"));
 
     /**** 205 (0xcd) ****/
     /* ··············[] */
@@ -2528,7 +2538,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xcd,0x25e2,"black lower right triangle"));
+    insert(new bdfGlyphObj(0xcd,0x25e2,"black lower right triangle"));
 
     /**** 206 (0xce) ****/
     /* [][][][][][][][] */
@@ -2540,7 +2550,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xce,0xe0ce,"U+e0ce"));
+    insert(new bdfGlyphObj(0xce,0xe0ce,"U+e0ce"));
 
     /**** 207 (0xcf) ****/
     /* [][]············ */
@@ -2552,7 +2562,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]············ */
     /* [][]············ */
     /********************/
-    insert(new bdfGlyph(0xcf,0xe0cf,"U+e0cf"));
+    insert(new bdfGlyphObj(0xcf,0xe0cf,"U+e0cf"));
 
     /**** 208 (0xd0) ****/
     /* ················ */
@@ -2564,7 +2574,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xd0,0xe0d0,"U+e0d0"));
+    insert(new bdfGlyphObj(0xd0,0xe0d0,"U+e0d0"));
 
     /**** 209 (0xd1) ****/
     /* [][][][][][][][] */
@@ -2576,7 +2586,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xd1,0xe0d1,"upper half block"));
+    insert(new bdfGlyphObj(0xd1,0xe0d1,"upper half block"));
 
     /**** 210 (0xd2) ****/
     /* ················ */
@@ -2588,7 +2598,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xd2,0x2584,"lower half block"));
+    insert(new bdfGlyphObj(0xd2,0x2584,"lower half block"));
 
     /**** 211 (0xd3) ****/
     /* [][][][][][][][] */
@@ -2600,7 +2610,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xd3,0xe0d3,"upper quarter block"));
+    insert(new bdfGlyphObj(0xd3,0xe0d3,"upper quarter block"));
 
     /**** 212 (0xd4) ****/
     /* ········[][][][] */
@@ -2612,7 +2622,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[][][][] */
     /* ········[][][][] */
     /********************/
-    insert(new bdfGlyph(0xd4,0xe0d4,"right half block"));
+    insert(new bdfGlyphObj(0xd4,0xe0d4,"right half block"));
 
     /**** 213 (0xd5) ****/
     /* [][][][]········ */
@@ -2624,7 +2634,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][]········ */
     /* [][][][]········ */
     /********************/
-    insert(new bdfGlyph(0xd5,0x258c,"left half block"));
+    insert(new bdfGlyphObj(0xd5,0x258c,"left half block"));
 
     /**** 214 (0xd6) ****/
     /* [][][][]········ */
@@ -2636,7 +2646,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[][][][] */
     /* ········[][][][] */
     /********************/
-    insert(new bdfGlyph(0xd6,0x259a,"quadrant upper left and lower right"));
+    insert(new bdfGlyphObj(0xd6,0x259a,"quadrant upper left and lower right"));
 
     /**** 215 (0xd7) ****/
     /* [][][][][][][][] */
@@ -2648,7 +2658,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xd7,0xe0d7,"U+e0d7"));
+    insert(new bdfGlyphObj(0xd7,0xe0d7,"U+e0d7"));
 
     /**** 216 (0xd8) ****/
     /* []··[][]··[][]·· */
@@ -2660,7 +2670,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []··[][]··[][]·· */
     /* []··[][]··[][]·· */
     /********************/
-    insert(new bdfGlyph(0xd8,0xe0d8,"U+e0d8"));
+    insert(new bdfGlyphObj(0xd8,0xe0d8,"U+e0d8"));
 
     /**** 217 (0xd9) ****/
     /* ················ */
@@ -2672,7 +2682,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xd9,0xe0d9,"U+e0d9"));
+    insert(new bdfGlyphObj(0xd9,0xe0d9,"U+e0d9"));
 
     /**** 218 (0xda) ****/
     /* ················ */
@@ -2684,7 +2694,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xda,0xe0da,"U+e0da"));
+    insert(new bdfGlyphObj(0xda,0xe0da,"U+e0da"));
 
     /**** 219 (0xdb) ****/
     /* ············[][] */
@@ -2696,7 +2706,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ············[][] */
     /********************/
-    insert(new bdfGlyph(0xdb,0xe0db,"U+e0db"));
+    insert(new bdfGlyphObj(0xdb,0xe0db,"U+e0db"));
 
     /**** 220 (0xdc) ****/
     /* ··········[]···· */
@@ -2708,7 +2718,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ····[]·········· */
     /********************/
-    insert(new bdfGlyph(0xdc,0xe0dc,"U+e0dc"));
+    insert(new bdfGlyphObj(0xdc,0xe0dc,"U+e0dc"));
 
     /**** 221 (0xdd) ****/
     /* [][]····[][]···· */
@@ -2720,7 +2730,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]····[][]···· */
     /* [][]····[][]···· */
     /********************/
-    insert(new bdfGlyph(0xdd,0xe0dd,"U+e0dd"));
+    insert(new bdfGlyphObj(0xdd,0xe0dd,"U+e0dd"));
 
     /**** 222 (0xde) ****/
     /* ····[]·········· */
@@ -2732,7 +2742,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[]······ */
     /* ··········[]···· */
     /********************/
-    insert(new bdfGlyph(0xde,0xe0de,"U+e0de"));
+    insert(new bdfGlyphObj(0xde,0xe0de,"U+e0de"));
 
     /**** 223 (0xdf) ****/
     /* ··············[] */
@@ -2744,7 +2754,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][]·········· */
     /* [][]············ */
     /********************/
-    insert(new bdfGlyph(0xdf,0x2571,"box drawings light diagonal upper right to lower left"));
+    insert(new bdfGlyphObj(0xdf,0x2571,"box drawings light diagonal upper right to lower left"));
 
     /**** 224 (0xe0) ****/
     /* []·············· */
@@ -2756,7 +2766,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][]·· */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xe0,0x25e3,"black lower left triangle"));
+    insert(new bdfGlyphObj(0xe0,0x25e3,"black lower left triangle"));
 
     /**** 225 (0xe1) ****/
     /* ······[][]······ */
@@ -2768,7 +2778,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xe1,0xe0e1,"U+e0e1"));
+    insert(new bdfGlyphObj(0xe1,0xe0e1,"U+e0e1"));
 
     /**** 226 (0xe2) ****/
     /* [][][][][][][][] */
@@ -2780,7 +2790,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]············ */
     /* []·············· */
     /********************/
-    insert(new bdfGlyph(0xe2,0x25e4,"black upper left triangle"));
+    insert(new bdfGlyphObj(0xe2,0x25e4,"black upper left triangle"));
 
     /**** 227 (0xe3) ****/
     /* [][]············ */
@@ -2792,7 +2802,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ··············[] */
     /********************/
-    insert(new bdfGlyph(0xe3,0x2572,"box drawings light diagonal upper left to lower right"));
+    insert(new bdfGlyphObj(0xe3,0x2572,"box drawings light diagonal upper left to lower right"));
 
     /**** 228 (0xe4) ****/
     /* [][][][][][][][] */
@@ -2804,7 +2814,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ··············[] */
     /********************/
-    insert(new bdfGlyph(0xe4,0x25e5,"black upper right triangle"));
+    insert(new bdfGlyphObj(0xe4,0x25e5,"black upper right triangle"));
 
     /**** 229 (0xe5) ****/
     /* [][][][][][][][] */
@@ -2816,7 +2826,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xe5,0x2bcb,"bottom half black circle"));
+    insert(new bdfGlyphObj(0xe5,0x2bcb,"bottom half black circle"));
 
     /**** 230 (0xe6) ****/
     /* ····[][][][]···· */
@@ -2828,7 +2838,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][]·· */
     /* ····[][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xe6,0x2b24,"black large circle"));
+    insert(new bdfGlyphObj(0xe6,0x2b24,"black large circle"));
 
     /**** 231 (0xe7) ****/
     /* []····[][]····[] */
@@ -2840,7 +2850,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xe7,0xe0e7,"U+e0e7"));
+    insert(new bdfGlyphObj(0xe7,0xe0e7,"U+e0e7"));
 
     /**** 232 (0xe8) ****/
     /* ······[][]······ */
@@ -2852,7 +2862,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xe8,0x2191,"upwards arrow"));
+    insert(new bdfGlyphObj(0xe8,0x2191,"upwards arrow"));
 
     /**** 233 (0xe9) ****/
     /* [][][][][][][][] */
@@ -2864,7 +2874,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []············[] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xe9,0x25a3,"white square containing black small square"));
+    insert(new bdfGlyphObj(0xe9,0x25a3,"white square containing black small square"));
 
     /**** 234 (0xea) ****/
     /* [][]············ */
@@ -2876,7 +2886,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ············[][] */
     /* ············[][] */
     /********************/
-    insert(new bdfGlyph(0xea,0x2682,"die face-3"));
+    insert(new bdfGlyphObj(0xea,0x2682,"die face-3"));
 
     /**** 235 (0xeb) ****/
     /* ····[][][][]···· */
@@ -2888,7 +2898,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][][][][][]·· */
     /* ····[][][][]···· */
     /********************/
-    insert(new bdfGlyph(0xeb,0x2b55,"heavy large circle"));
+    insert(new bdfGlyphObj(0xeb,0x2b55,"heavy large circle"));
 
     /**** 236 (0xec) ****/
     /* ················ */
@@ -2900,7 +2910,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ········[]······ */
     /* ········[]······ */
     /********************/
-    insert(new bdfGlyph(0xec,0x250c,"box drawing light down and right"));
+    insert(new bdfGlyphObj(0xec,0x250c,"box drawing light down and right"));
 
     /**** 237 (0xed) ****/
     /* ················ */
@@ -2912,7 +2922,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[]········ */
     /* ······[]········ */
     /********************/
-    insert(new bdfGlyph(0xed,0x2510,"box drawing light down and left"));
+    insert(new bdfGlyphObj(0xed,0x2510,"box drawing light down and left"));
 
     /**** 238 (0xee) ****/
     /* ············[][] */
@@ -2924,7 +2934,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[][][] */
     /* ············[][] */
     /********************/
-    insert(new bdfGlyph(0xee,0x25d6,"left half black circle"));
+    insert(new bdfGlyphObj(0xee,0x25d6,"left half black circle"));
 
     /**** 239 (0xef) ****/
     /* ········[]······ */
@@ -2936,7 +2946,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xef,0x2514,"box drawings light up and right"));
+    insert(new bdfGlyphObj(0xef,0x2514,"box drawings light up and right"));
 
     /**** 240 (0xf0) ****/
     /* ······[]········ */
@@ -2948,7 +2958,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xf0,0x2518,"box drawings light up and left"));
+    insert(new bdfGlyphObj(0xf0,0x2518,"box drawings light up and left"));
 
     /**** 241 (0xf1) ****/
     /* [][][]····[][][] */
@@ -2960,7 +2970,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* []············[] */
     /* []············[] */
     /********************/
-    insert(new bdfGlyph(0xf1,0xe0f1,"U+e0f1"));
+    insert(new bdfGlyphObj(0xf1,0xe0f1,"U+e0f1"));
 
     /**** 242 (0xf2) ****/
     /* ······[]········ */
@@ -2972,7 +2982,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][]······ */
     /* ······[]········ */
     /********************/
-    insert(new bdfGlyph(0xf2,0x2666,"black diamond suit"));
+    insert(new bdfGlyphObj(0xf2,0x2666,"black diamond suit"));
 
     /**** 243 (0xf3) ****/
     /* ····[]····[]···· */
@@ -2984,7 +2994,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[]········[]·· */
     /* ····[]····[]···· */
     /********************/
-    insert(new bdfGlyph(0xf3,0xe0f3,"U+e0f3"));
+    insert(new bdfGlyphObj(0xf3,0xe0f3,"U+e0f3"));
 
     /**** 244 (0xf4) ****/
     /* ················ */
@@ -2996,7 +3006,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xf4,0x2bca,"top half black circle"));
+    insert(new bdfGlyphObj(0xf4,0x2bca,"top half black circle"));
 
     /**** 245 (0xf5) ****/
     /* [][]············ */
@@ -3008,7 +3018,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][]·········· */
     /* [][]············ */
     /********************/
-    insert(new bdfGlyph(0xf5,0x25d7,"right half black circle"));
+    insert(new bdfGlyphObj(0xf5,0x25d7,"right half black circle"));
 
     /**** 246 (0xf6) ****/
     /* ················ */
@@ -3020,7 +3030,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ················ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xf6,0x2680,"die face-1"));
+    insert(new bdfGlyphObj(0xf6,0x2680,"die face-1"));
 
     /**** 247 (0xf7) ****/
     /* ················ */
@@ -3032,7 +3042,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][]····[][]·· */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xf7,0x2683,"die face-4"));
+    insert(new bdfGlyphObj(0xf7,0x2683,"die face-4"));
 
     /**** 248 (0xf8) ****/
     /* [][][][][][][][] */
@@ -3044,7 +3054,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* [][][][][][][][] */
     /********************/
-    insert(new bdfGlyph(0xf8,0xe0f8,"U+e0f8"));
+    insert(new bdfGlyphObj(0xf8,0xe0f8,"U+e0f8"));
 
     /**** 249 (0xf9) ****/
     /* [][]········[][] */
@@ -3056,7 +3066,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][]········[][] */
     /* [][]········[][] */
     /********************/
-    insert(new bdfGlyph(0xf9,0x2684,"die face-5"));
+    insert(new bdfGlyphObj(0xf9,0x2684,"die face-5"));
 
     /**** 250 (0xfa) ****/
     /* ··[][]····[][]·· */
@@ -3068,7 +3078,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* [][][][][][][][] */
     /* ··[][]····[][]·· */
     /********************/
-    insert(new bdfGlyph(0xfa,0xe0fa,"U+e0fa"));
+    insert(new bdfGlyphObj(0xfa,0xe0fa,"U+e0fa"));
 
     /**** 251 (0xfb) ****/
     /* ······[][]······ */
@@ -3080,7 +3090,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[][][][]···· */
     /* ······[][]······ */
     /********************/
-    insert(new bdfGlyph(0xfb,0x2193,"downwards arrow"));
+    insert(new bdfGlyphObj(0xfb,0x2193,"downwards arrow"));
 
     /**** 252 (0xfc) ****/
     /* ················ */
@@ -3092,7 +3102,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ······[][]······ */
     /* ················ */
     /********************/
-    insert(new bdfGlyph(0xfc,0x2681,"die face-2"));
+    insert(new bdfGlyphObj(0xfc,0x2681,"die face-2"));
 
     /**** 253 (0xfd) ****/
     /* ······[]········ */
@@ -3104,7 +3114,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ····[]·········· */
     /* ······[]········ */
     /********************/
-    insert(new bdfGlyph(0xfd,0x2190,"leftwards arrow"));
+    insert(new bdfGlyphObj(0xfd,0x2190,"leftwards arrow"));
 
     /**** 254 (0xfe) ****/
     /* ··[][]····[][]·· */
@@ -3116,7 +3126,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··[][]····[][]·· */
     /* ··[][]····[][]·· */
     /********************/
-    insert(new bdfGlyph(0xfe,0x2685,"die face-6"));
+    insert(new bdfGlyphObj(0xfe,0x2685,"die face-6"));
 
     /**** 255 (0xff) ****/
     /* ········[]······ */
@@ -3128,7 +3138,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     /* ··········[]···· */
     /* ········[]······ */
     /********************/
-    insert(new bdfGlyph(0xff,0x2192,"rightwards arrow"));
+    insert(new bdfGlyphObj(0xff,0x2192,"rightwards arrow"));
 #else
     /**** 128 (0x80) ****/
     /* [][][][][][][][] */
@@ -4667,92 +4677,7 @@ bdfCgenie::bdfCgenie(int pixelsize)
     insert(new bdfGlyphObj(0xff,0xe0ff,"U+e0ff"));
 #endif
 
-    for (uint ch = 0; ch < 256; ch++) {
-	quint32 uc = m_glyphs.value(ch)->uc();
-	m_to_unicode.insert(static_cast<uchar>(ch), uc);
-	m_from_unicode.insert(uc, static_cast<uchar>(ch));
-    }
-
     setup_properties();
-}
-
-quint32 bdfCgenie::toUnicode(uchar ch) const
-{
-    return m_to_unicode.value(ch);
-}
-
-uchar bdfCgenie::fromUnicode(quint32 uc) const
-{
-    return m_from_unicode.value(uc);
-}
-
-void bdfCgenie::setup_properties()
-{
-
-    PIXEL_SIZE = m_pixelsize;
-    POINT_SIZE = 10 * m_pixelsize;
-    AVERAGE_WIDTH = 10 * m_pixelsize;
-
-    CAP_HEIGHT = m_pixelsize;
-    X_HEIGHT = m_pixelsize * 3 / 4;
-    SCALABLE_WIDTH = 1000 * RESOLUTION_X / 72;
-    SCALABLE_HEIGHT = 0;
-    DEVICE_WIDTH = m_pixelsize;
-    DEVICE_HEIGHT = m_pixelsize;
-
-    BDF_BBOX_W = m_pixelsize;
-    BDF_BBOX_H = m_pixelsize;
-    BDF_BBOX_X = 0;
-    BDF_BBOX_Y = 0;
-    m_font_w = 8;
-    m_font_h = 8;
-
-    m_properties.clear();
-
-    m_properties += QString("%1 \"%2\"").arg("FONTNAME_REGISTRY").arg(FONTNAME_REGISTRY);
-    m_properties += QString("%1 \"%2\"").arg("FOUNDRY").arg(FOUNDRY);
-    m_properties += QString("%1 \"%2\"").arg("FAMILY_NAME").arg(FAMILY_NAME);
-    m_properties += QString("%1 \"%2\"").arg("WEIGHT_NAME").arg(WEIGHT_NAME);
-    m_properties += QString("%1 \"%2\"").arg("SLANT").arg(SLANT);
-    m_properties += QString("%1 \"%2\"").arg("SETWIDTH_NAME").arg(SETWIDTH_NAME);
-    m_properties += QString("%1 \"%2\"").arg("ADD_STYLE_NAME").arg(ADD_STYLE_NAME);
-    m_properties += QString("%1 %2").arg("PIXEL_SIZE").arg(PIXEL_SIZE);
-    m_properties += QString("%1 %2").arg("POINT_SIZE").arg(POINT_SIZE);
-    m_properties += QString("%1 %2").arg("RESOLUTION_X").arg(RESOLUTION_X);
-    m_properties += QString("%1 %2").arg("RESOLUTION_Y").arg(RESOLUTION_Y);
-    m_properties += QString("%1 \"%2\"").arg("SPACING").arg(SPACING);
-    m_properties += QString("%1 %2").arg("AVERAGE_WIDTH").arg(AVERAGE_WIDTH);
-    m_properties += QString("%1 \"%2\"").arg("CHARSET_REGISTRY").arg(CHARSET_REGISTRY);
-    m_properties += QString("%1 \"%2\"").arg("CHARSET_ENCODING").arg(CHARSET_ENCODING);
-    m_properties += QString("%1 %2").arg("DEFAULT_CHAR").arg(DEFAULT_CHAR);
-    m_properties += QString("%1 %2").arg("FONT_DESCENT").arg(FONT_DESCENT);
-    m_properties += QString("%1 %2").arg("FONT_ASCENT").arg(FONT_ASCENT);
-    m_properties += QString("%1 \"%2\"").arg("COPYRIGHT").arg(COPYRIGHT);
-    m_properties += QString("%1 %2").arg("CAP_HEIGHT").arg(CAP_HEIGHT);
-    m_properties += QString("%1 %2").arg("X_HEIGHT").arg(X_HEIGHT);
-}
-
-void bdfCgenie::insert(bdfGlyphObj* glyph)
-{
-    m_glyphs.insert(glyph->ch(), bdfGlyph(glyph));
-}
-
-int bdfCgenie::bit_chk(const QByteArray& buff, int x, int y)
-{
-    if (y < 0 || y >= m_font_h)
-	return 0;
-    if (x < 0 || x >= m_font_w)
-	return 0;
-    const uchar bits = *reinterpret_cast<const uchar *>(buff.constData() + y);
-    return (bits >> (7 - (x % 8))) & 1;
-}
-
-void bdfCgenie::bit_set(QByteArray& bitmap, int x)
-{
-    if (x < 0 || x >= PIXEL_SIZE)
-	return;
-    uchar* bits = reinterpret_cast<uchar *>(bitmap.data() + x / 8);
-    *bits |= 0x80 >> (x % 8);
 }
 
 void bdfCgenie::emit_bitmap(QTextStream& bdf, const QByteArray& buff)
@@ -4828,13 +4753,15 @@ bool bdfCgenie::generate(const QString& fntname, const QString& bdfname)
 	    .arg(BDF_BBOX_X)
 	    .arg(BDF_BBOX_Y);
 
-    bdf << QString("STARTPROPERTIES %1\n")
-	   .arg(m_properties.count());
-    foreach(const QString& property, m_properties) {
-	bdf << QString("%1\n")
-	       .arg(property);
+    if (m_properties.count() > 0) {
+	bdf << QString("STARTPROPERTIES %1\n")
+	       .arg(m_properties.count());
+	foreach(const QString& property, m_properties) {
+	    bdf << QString("%1\n")
+		   .arg(property);
+	}
+	bdf << QString("ENDPROPERTIES\n");
     }
-    bdf << QString("ENDPROPERTIES\n");
 
     bdf << QString("CHARS 256\n");
 
@@ -4863,12 +4790,12 @@ bool bdfCgenie::generate(const QString& fntname, const QString& bdfname)
 	bmp << QString("/********************/\n");
 	bdfGlyph glyph = m_glyphs.value(code);
 	if (glyph.isNull()) {
-	    bmp << QString("m_glyphs.insert(0x%1, new bdfGlyph(0x%1,0x%2,\"%3\"));\n\n")
+	    bmp << QString("insert(new bdfGlyphObj(0x%1,0x%2,\"%3\"));\n\n")
 		   .arg(code, 2, 16, QChar('0'))
-		   .arg(0xe000 + code, 4, 16, QChar('0'))
-		   .arg(QString("U+%1").arg(0xe000 + code, 4, 16, QChar('0')));
+		   .arg(code, 4, 16, QChar('0'))
+		   .arg(QString("U+%1").arg(code, 4, 16, QChar('0')));
 	} else {
-	    bmp << QString("m_glyphs.insert(0x%1, new bdfGlyph(0x%1,0x%2,\"%3\"));\n\n")
+	    bmp << QString("insert(new bdfGlyphObj(0x%1,0x%2,\"%3\"));\n\n")
 	       .arg(glyph->ch(), 2, 16, QChar('0'))
 	       .arg(glyph->uc(), 4, 16, QChar('0'))
 	       .arg(glyph->name());

@@ -33,13 +33,21 @@
  ****************************************************************************/
 #pragma once
 #include <QString>
+#include "z80def.h"
+#include "z80defs.h"
 
-class z80Defs;
-
-class listing2xml
+class def2xml
 {
 public:
-    listing2xml();
+    def2xml();
 
     bool parse(const QString& input, const QString& output);
+
+private:
+    void add_def(z80Defs* defs,
+		 quint32 pc,
+		 z80DefObj::EntryType type,
+		 const QString& symbol,
+		 const QStringList& blockcmt,
+		 const QStringList& linecmt);
 };

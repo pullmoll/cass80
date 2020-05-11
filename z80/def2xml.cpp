@@ -33,16 +33,14 @@
  ****************************************************************************/
 #include <QFile>
 #include <QTextStream>
-#include "z80def.h"
-#include "z80defs.h"
-#include "listing2xml.h"
+#include "def2xml.h"
 
 typedef struct cgenie_symbol_s {
     quint16 addr;
     const char* name;
 }   cgenie_symbol_t;
 
-static const cgenie_symbol_t cgenie_symbols[] = {
+static const QHash<quint32,const char*> cgenie_symbols({
     {0x0000, "COLD"},
     {0x0008, "RST08"},
     {0x0010, "RST10"},
@@ -57,6 +55,7 @@ static const cgenie_symbol_t cgenie_symbols[] = {
     {0x0033, "PUTCH"},
     {0x0038, "RST38"},
     {0x003b, "PRTCH"},
+    {0x0046, "DCBIO"},
     {0x0049, "INKEY"},
     {0x0050, "KBTABLE"},
     {0x0060, "SLEEP"},
@@ -158,6 +157,7 @@ static const cgenie_symbol_t cgenie_symbols[] = {
     {0x400f, "VRST30"},
     {0x4012, "VRST38"},
     {0x4015, "KBDDCB"},
+    {0x40A7, "LINEBP"},
     {0x4152, "CVI"},
     {0x4158, "CVS"},
     {0x415b, "DEF"},
@@ -182,132 +182,126 @@ static const cgenie_symbol_t cgenie_symbols[] = {
     {0x419a, "RSET"},
     {0x41a0, "SAVE"},
     {0x41a3, "LINE"},
-    {0, NULL}
-};
+    {0x4400, "LGR"},
+    {0x4800, "FGR"}
+});
 
-listing2xml::listing2xml()
+static const QHash<QString, z80DefObj::EntryType> type_codes({
+    {QLatin1String("CODE"), z80DefObj::CODE},
+    {QLatin1String("ENTRY"), z80DefObj::CODE},
+    {QLatin1String("ASCII"), z80DefObj::TEXT},
+    {QLatin1String("BYTE"), z80DefObj::DEFB},
+    {QLatin1String("BYTES"), z80DefObj::DEFB},
+    {QLatin1String("WORD"), z80DefObj::DEFW},
+    {QLatin1String("WORDS"), z80DefObj::DEFW},
+    {QLatin1String("SPACE"), z80DefObj::DEFS},
+    {QLatin1String("NONE"), z80DefObj::INVALID},
+});
+
+def2xml::def2xml()
 {
-
 }
 
-bool listing2xml::parse(const QString& input, const QString& output)
+bool def2xml::parse(const QString& input, const QString& output)
 {
-    QFile listfile(input);
-    if (!listfile.open(QIODevice::ReadOnly)) {
+    QFile deffile(input);
+    if (!deffile.open(QIODevice::ReadOnly)) {
 	qCritical("Could not open '%s' for reading:\n%s", qPrintable(input),
-		  qPrintable(listfile.errorString()));
+		  qPrintable(deffile.errorString()));
 	return false;
     }
 
-    QTextStream stream(&listfile);
-    QStringList block_comments;
-    QStringList line_comments;
+    QTextStream stream(&deffile);
+    QStringList blockcmt;
+    QStringList linecmt;
+    QString symbol;
+    quint32 addr_old = ~0u;
     int lno = 0;
 
     z80Defs* defs = new z80Defs(output);
+    z80DefObj::EntryType type = z80DefObj::CODE;
 
-    quint32 prev_pc = ~0u;
     while (!stream.atEnd()) {
-	const QString line = stream.readLine();
+	const QString line = stream.readLine().trimmed();
 
 	++lno;
-	if (line.isEmpty()) {
+
+	if (line.isEmpty())
+	    continue;
+
+	if (line.startsWith(QChar('#')))
+	    continue;
+
+	QStringList fields = line.split(QChar::Tabulation);
+	QString addr_str = fields.count() > 0 ? fields.at(0) : QString();
+	QString type_str = fields.count() > 1 ? fields.at(1) : QString();
+	QString cmnt_str = fields.count() > 2 ? fields.at(2) : QString();
+
+	if (addr_str == QLatin1String("*")) {
+	    // block comment continued
+	    blockcmt.append(cmnt_str.mid(1).trimmed());
 	    continue;
 	}
-
-	if (line.startsWith(QChar(';'))) {
-	    block_comments += line.mid(1);
-	    continue;
-	}
-
-	QString addr = line.mid(2, 5).trimmed();	// columns 2-6 are the address
-	QString dasm = line.mid(24, 24).trimmed();	// columns 24-48 are the disassembly
-	QString cmnt = line.mid(49).trimmed();		// columns 48- are a comment (starts with ';')
-	bool continuation = addr.isEmpty() && dasm.isEmpty();
 
 	bool ok;
-	quint32 pc = addr.toUInt(&ok, 16);
-	if (ok) {
-	    if (line_comments.count() > 1) {
-		z80Def prev = defs->entry(prev_pc);
-		if (!prev.isNull())
-		    prev->set_line_comments(line_comments);
-	    }
-	    line_comments.clear();
-	} else {
-	    // no valid pc so use the previous one
-	    pc = prev_pc;
+	quint32 addr = addr_str.toUInt(&ok, 16);
+	Q_ASSERT(ok);
+
+	if (addr_old != ~0u) {
+	    add_def(defs, addr_old, type, symbol, blockcmt, linecmt);
+	    blockcmt.clear();
+	    linecmt.clear();
+	    symbol.clear();
 	}
 
-	if (!cmnt.isEmpty()) {
-	    line_comments += cmnt;
+	addr_old = addr;
+	symbol = cgenie_symbols.value(addr);
+	z80DefObj::EntryType type_new = type_codes.value(type_str.toUpper(), z80DefObj::INVALID);
+	if (z80DefObj::INVALID != type_new) {
+	    type = type_new;
+	} else if (!type_codes.contains(type_str.toUpper())) {
+	    qDebug("%s: line #%d invalid entry type (%s)", __func__,
+		   lno, qPrintable(type_str));
+	    return false;
 	}
 
-	if (continuation) {
-	    continue;
-	}
-
-	z80DefObj* def = new z80DefObj();
-	def->set_addr0(pc);
-	if (!block_comments.isEmpty()) {
-	    // comment line(s) before an address
-	    def->set_block_comments(block_comments);
-	}
-
-	if (!line_comments.isEmpty()) {
-	    def->set_line_comments(line_comments);
-	}
-
-	z80DefObj::EntryType type = z80DefObj::CODE;
-	if (dasm.indexOf(QLatin1String("DEFB")) >= 0) {
-	    type = z80DefObj::DEFB;
-	    if (dasm.indexOf(QChar('"')) > 0) {
-		// Text string in double quotes
-		type = z80DefObj::TEXT;
-		if (dasm.indexOf(QLatin1String("128+")) > 0) {
-		    // Probably a token list
-		    type = z80DefObj::TOKEN;
-		}
-	    }
-	}
-	if (dasm.indexOf(QLatin1String("DEFW")) >= 0) {
-	    type = z80DefObj::DEFW;
-	}
-	if (dasm.indexOf(QLatin1String("DEFM")) >= 0) {
-	    type = z80DefObj::TEXT;
-	}
-	def->set_type(type);
-
-	// Scan for known symbol for pc
-	for (size_t i = 0; cgenie_symbols[i].name && pc <= cgenie_symbols[i].addr; i++) {
-	    if (pc == cgenie_symbols[i].addr) {
-		def->set_symbol(QString::fromLatin1(cgenie_symbols[i].name));
-		break;
-	    }
-	}
-
-	// If no symbol, try to extract from first block comment line
-	if (!def->has_symbol() && block_comments.count() > 0) {
-	    QString first = block_comments.first();
-	    if (first.endsWith(QLatin1String(" statement"))) {
-		QStringList words = first.split(QChar::Space, Qt::SkipEmptyParts);
-		QString symbol = words.first();
-		def->set_symbol(symbol);
-	    }
-	}
-
-	prev_pc = pc;
-
-	if (def->has_symbol() || def->has_line_comments() || def->has_block_comments()) {
-	    defs->insert(pc, def);
-	    line_comments.clear();
-	    block_comments.clear();
-	} else {
-	    delete def;
+	if (cmnt_str.startsWith(QChar(';'))) {
+	    blockcmt.append(cmnt_str.mid(1).trimmed());
+	} else if (!cmnt_str.isEmpty()) {
+	    linecmt.append(cmnt_str);
 	}
     }
 
-    defs->save();
+    defs->save(output);
+    delete defs;
 
-    return defs;
+    return true;
+}
+
+void def2xml::add_def(z80Defs* defs, quint32 pc, z80DefObj::EntryType type, const QString& symbol, const QStringList& blockcmt, const QStringList& linecmt)
+{
+    if (symbol.isEmpty() && blockcmt.isEmpty() && linecmt.isEmpty())
+	return;
+
+    z80Def old = defs->entry(pc);
+    if (old.isNull()) {
+	z80DefObj *def = new z80DefObj();
+	def->set_symbol(symbol);
+	def->set_block_comments(blockcmt);
+	def->set_line_comments(linecmt);
+	def->set_orig(pc);
+	def->set_type(type);
+	def->set_arg0();
+	def->set_param(0);
+	def->set_maxelem(0);
+	defs->insert(pc, def);
+    } else {
+	old->set_type(type);
+	if (!symbol.isEmpty())
+	    old->set_symbol(symbol);
+	if (!blockcmt.isEmpty())
+	    old->set_block_comments(blockcmt);
+	if (!linecmt.isEmpty())
+	    old->set_line_comments(linecmt);
+    }
 }

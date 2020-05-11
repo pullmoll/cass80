@@ -34,6 +34,7 @@
 #pragma once
 #include <QDomDocument>
 #include <QDomElement>
+#include <QHash>
 #include <QStringList>
 #include <QSharedPointer>
 
@@ -66,7 +67,7 @@ public:
     QString symbol(bool upper = false) const;
     QStringList block_comments() const;
     QStringList line_comments() const;
-    quint32 addr0() const;
+    quint32 orig() const;
     quint32 addr() const;
     EntryType type() const;
     QString arg0() const;
@@ -78,7 +79,7 @@ public:
     void set_symbol(const QString& symbol = QString());
     void set_block_comments(const QStringList& lines = QStringList());
     void set_line_comments(const QStringList& lines = QStringList());
-    void set_addr0(const quint32 addr = 0);
+    void set_orig(const quint32 addr = 0);
     void set_addr(const quint32 addr = 0);
     void set_type(const EntryType type = CODE);
     void set_arg0(const QString& arg0 = QString());
@@ -91,7 +92,7 @@ private:
     QString	m_symbol;
     QStringList	m_block_comment;
     QStringList	m_line_comment;
-    quint32	m_addr0;
+    quint32	m_orig;
     quint32	m_addr;
     EntryType	m_type;
     QString	m_arg0;

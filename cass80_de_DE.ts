@@ -167,7 +167,7 @@
     <message>
         <location filename="cass80main.ui" line="175"/>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Strg+L</translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="184"/>
@@ -177,7 +177,7 @@
     <message>
         <location filename="cass80main.ui" line="187"/>
         <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
+        <translation>Strg+Q</translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="196"/>
@@ -187,7 +187,7 @@
     <message>
         <location filename="cass80main.ui" line="199"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Strg+S</translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="208"/>
@@ -197,7 +197,7 @@
     <message>
         <location filename="cass80main.ui" line="211"/>
         <source>Ctrl+U</source>
-        <translation type="unfinished"></translation>
+        <translation>Strg+U</translation>
     </message>
     <message>
         <location filename="cass80main.ui" line="220"/>
@@ -205,32 +205,47 @@
         <translation>&amp;Informationen …</translation>
     </message>
     <message>
-        <location filename="cass80main.ui" line="229"/>
+        <location filename="cass80main.ui" line="223"/>
+        <source>Ctrl+I</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cass80main.ui" line="232"/>
         <source>&amp;Preferences</source>
         <translation>&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="cass80main.ui" line="234"/>
+        <location filename="cass80main.ui" line="237"/>
         <source>&amp;About …</source>
         <translation>&amp;Über …</translation>
     </message>
     <message>
-        <location filename="cass80main.ui" line="239"/>
+        <location filename="cass80main.ui" line="240"/>
+        <source>F1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cass80main.ui" line="245"/>
         <source>About &amp;Qt</source>
         <translation>Über &amp;Qt</translation>
     </message>
     <message>
-        <location filename="src/cass80main.cpp" line="81"/>
+        <location filename="cass80main.ui" line="248"/>
+        <source>Shift+F1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cass80main.cpp" line="83"/>
         <source>Cassette Manager for TRS80 and EG2000 - Version %1</source>
         <translation>Kassetten-Manager für TRS80 und EG2000 - Version %1</translation>
     </message>
     <message>
-        <location filename="src/cass80main.cpp" line="156"/>
+        <location filename="src/cass80main.cpp" line="161"/>
         <source>Cassette (*.cas)</source>
         <translation>Kassette (*.cas)</translation>
     </message>
     <message>
-        <location filename="src/cass80main.cpp" line="180"/>
+        <location filename="src/cass80main.cpp" line="185"/>
         <source>Found LMOFFSET loader</source>
         <translation>LMOFFSET Loader gefunden</translation>
     </message>
